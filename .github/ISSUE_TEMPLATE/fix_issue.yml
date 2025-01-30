@@ -1,0 +1,28 @@
+name: '[fix]기능 추가/수정 이슈'
+description: '버그 이슈를 작성해주세요.'
+labels: fix
+title: '이슈 이름을 작성해주세요'
+body:
+  - type: input
+    id: branch
+    attributes:
+      label: '기능'
+      description: '어떤 기능에서 버그가 발생했는지 적어주세요'
+    validations:
+      required: true
+
+  - type: input
+    id: description
+    attributes:
+      label: '💬 상세 내용'
+      description: '어떤 상황에서 발생한 버그인지 Given-When-Then 형식으로 서술해주세요'
+    validations:
+      required: true
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: '📝 참고자료'
+      description: '참고 자료가 있다면 작성해주세요.'
+    validations:
+      required: false

@@ -1,0 +1,28 @@
+name: '[refactor]기능 추가/수정 이슈'
+description: '기능 추가/수정 이슈를 작성해주세요.'
+labels: refactor
+title: '이슈 이름을 작성해주세요'
+body:
+  - type: input
+    id: branch
+    attributes:
+      label: '기능'
+      description: '리펙터링할 기능을 적어주세요'
+    validations:
+      required: true
+
+  - type: input
+    id: description
+    attributes:
+      label: '💬 상세 내용'
+      description: '어느부분을 개선할지에 대해서 간략히 설명해주세요'
+    validations:
+      required: true
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: '📝 참고자료'
+      description: '참고 자료가 있다면 작성해주세요.'
+    validations:
+      required: false
