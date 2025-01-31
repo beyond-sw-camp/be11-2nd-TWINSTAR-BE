@@ -1,7 +1,7 @@
 name: '[feat]기능 추가/수정 이슈'
 description: '기능 추가/수정 이슈를 작성해주세요.'
 labels: feat
-title: '이슈 이름을 작성해주세요'
+title: '[feat]'
 body:
   - type: input
     id: branch
