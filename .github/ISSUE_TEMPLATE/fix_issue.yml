@@ -1,7 +1,7 @@
 name: '[fix]기능 추가/수정 이슈'
 description: '버그 이슈를 작성해주세요.'
 labels: fix
-title: ''
+title: '[fix]'
 body:
   - type: input
     id: branch
