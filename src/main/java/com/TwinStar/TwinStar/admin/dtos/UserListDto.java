@@ -17,12 +17,7 @@ public class UserListDto {
     private Long id;
     private String email;
     private String nickName;
-    private String profileImg;//프론트에서 어떻게 정보를 줄거냐에 따라 타입 바뀔 수도
-    private String profileTxt;
     private Sex sex;
-    private IdVisibility idVisibility;
-    private UserStatus userStatus;
-    private String delYn;
 
 
 }

@@ -1,5 +1,6 @@
 package com.TwinStar.TwinStar.commonDomain;
 
+import com.TwinStar.TwinStar.admin.dtos.UserDetailDto;
 import com.TwinStar.TwinStar.admin.dtos.UserListDto;
 import com.TwinStar.TwinStar.common.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -58,13 +59,13 @@ public class User extends BaseTimeEntity {
                 .id(this.id)
                 .email(this.email)
                 .nickName(this.nickName)
-                .profileImg(this.profileImg)
-                .profileTxt(this.profileTxt)
                 .sex(this.sex)
-                .idVisibility(this.idVisibility)
-                .userStatus(this.userStatus)
                 .build();
     }
+    public UserDetailDto detailFromEntity(){
+        return new UserDetailDto(this.email,this.profileImg,this.profileTxt,this.idVisibility,this.userStatus,this.delYn);
+    }
+
     @PrePersist
     public void prePersist(){
         if (delYn == null){
