@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -19,24 +17,35 @@ public class Post extends BaseTimeEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 50, nullable = false)
-    private String title;
-
     @Column(length = 3000)
     private String contents;
-
-    private String appointment;
-
-    private LocalDateTime appointmentTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "group_id")
+    private Long groupId;
+
+    @Column(name = "share_post_id")
+    private Long sharePostId;
+
+    @Column(name = "post_visibility")
+    @Enumerated(EnumType.STRING)
+    private Enum postVisibility;
+
+    @Column(name = "post_del")
+    private int postDel;
+
+    @Column(name = "score")
+    private Long score;
+
+    @Column(name = "hot_issue_yn")
+    private int hotIssueYn;
+
     public PostListRes postListFromEntity(){
         return PostListRes.builder()
                 .id(this.id)
-                .title(this.title)
                 .userNickname(this.user.getNickname())
                 .build();
     }
@@ -44,7 +53,6 @@ public class Post extends BaseTimeEntity{
     public PostDetailRes detailFromEntity(){
         return PostDetailRes.builder()
                 .id(this.id)
-                .title(this.title)
                 .contents(this.contents)
                 .userNickname(this.user.getNickname())
                 .createdTime(this.getCreatedTime())

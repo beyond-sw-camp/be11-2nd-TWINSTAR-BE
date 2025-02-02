@@ -8,14 +8,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class PostCreateReq {
+    private String content;
+    private String file;
+    private 
 
-    public Post toEntity(USER user, LocalDateTime appointmentTime){
+
+    public Post toEntity(User user) {
         return Post.builder()
-                .title(this.title)
-                .user(this.user)
-                .contents(this.contents)
-                .appointment(this.appointment)
-                .appointmentTime(this.appointmentTime)
+                .content(content)
+                .file(file)
+                .user(user.getNickname())
                 .build();
     }
     
