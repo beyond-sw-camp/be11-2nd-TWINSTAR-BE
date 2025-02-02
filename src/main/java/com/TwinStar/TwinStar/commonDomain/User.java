@@ -48,10 +48,11 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)//자동저장/ 삭제는 메소드 사용
-    @Builder.Default //회원가입하면 게시물이 0개
+    @Builder.Default //posts에 값이 지정되지 않으면 기본값인 기본생성자가 적용됨.
+//    Default값을 사용하지 않으면 기본값이 유지되지 않고, null또는 0으로 초기화됨
     private List<Post> posts = new ArrayList<>();
     @OneToMany(mappedBy = "userId", cascade = CascadeType.PERSIST)
-    @Builder.Default
+    @Builder.Default //
     private List<Report> reports = new ArrayList<>();
 
     public UserListDto listFromEntity(){

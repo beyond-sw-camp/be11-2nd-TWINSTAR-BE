@@ -1,5 +1,6 @@
 package com.TwinStar.TwinStar.commonDomain;
 
+import com.TwinStar.TwinStar.admin.dtos.AdminPostListDto;
 import com.TwinStar.TwinStar.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -43,7 +44,7 @@ public class Post extends BaseTimeEntity {
     @Column(nullable = false)
     private PostStatus postStatus;
 
-    @PrePersist
+    @PrePersist //null값이 들어올 경우 자동으로 기본값 설정
     public void prePersist(){
         if (postDel == null){
             postDel = "N";
@@ -53,4 +54,30 @@ public class Post extends BaseTimeEntity {
             updateStatus = "N";
         }
     }
+
+    public AdminPostListDto listFromEntity(){
+        return AdminPostListDto.builder()
+                .id(this.id)
+                .nickName(nickName)
+                .postVisibility(this.postVisibility)
+                .postDel(this.postDel)
+                .postStatus(this.postStatus)
+                .sharePostId(this.sharePostId)
+                .content(this.content)
+                .hotIssueYn(this.hotIssueYn)
+                .build();
+    }
+
+//    public AdminPostListDto toDetailDto(String nickName,Long groupId){
+//        return AdminPostListDto.builder()
+//                .id(this.id)
+//                .nickName(nickName)
+//                .postVisibility(this.postVisibility)
+//                .postDel(this.postDel)
+//                .postStatus(this.postStatus)
+//                .sharePostId(this.sharePostId)
+//                .content(this.content)
+//                .hotIssueYn(this.hotIssueYn)
+//                .build();
+//    }
 }

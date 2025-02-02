@@ -35,4 +35,9 @@ public class AdminController {
         UserDetailDto dto = adminService.findById(id);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found", dto), HttpStatus.OK);
     }
+    @GetMapping("/post_list")
+    public ResponseEntity<?> postList(){
+
+    }
+
 }
