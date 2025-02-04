@@ -1,14 +1,13 @@
 package com.TwinStar.TwinStar.admin.dtos;
 
-import com.TwinStar.TwinStar.commonDomain.IdVisibility;
-import com.TwinStar.TwinStar.commonDomain.Sex;
-import com.TwinStar.TwinStar.commonDomain.UserStatus;
+import com.TwinStar.TwinStar.user.domain.IdVisibility;
+import com.TwinStar.TwinStar.user.domain.Sex;
+import com.TwinStar.TwinStar.user.domain.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Blob;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

@@ -1,5 +1,6 @@
-package com.TwinStar.TwinStar.common;
+package com.TwinStar.TwinStar.common.controller;
 
+import com.TwinStar.TwinStar.common.dto.CommonErrorDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

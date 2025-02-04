@@ -1,6 +1,6 @@
 package com.TwinStar.TwinStar.admin.repostiory;
 
-import com.TwinStar.TwinStar.commonDomain.User;
+import com.TwinStar.TwinStar.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

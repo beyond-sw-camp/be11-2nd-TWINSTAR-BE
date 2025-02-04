@@ -1,7 +1,8 @@
-package com.TwinStar.TwinStar.commonDomain;
+package com.TwinStar.TwinStar.user.domain;
 
 import com.TwinStar.TwinStar.admin.dtos.UserListDto;
-import com.TwinStar.TwinStar.common.BaseTimeEntity;
+import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
+import com.TwinStar.TwinStar.commonDomain.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

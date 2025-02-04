@@ -1,6 +1,7 @@
 package com.TwinStar.TwinStar.commonDomain;
 
-import com.TwinStar.TwinStar.common.BaseTimeEntity;
+import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
+import com.TwinStar.TwinStar.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.TwinStar.TwinStar.common;
+package com.TwinStar.TwinStar.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
