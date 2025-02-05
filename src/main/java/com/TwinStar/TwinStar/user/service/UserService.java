@@ -1,51 +1,32 @@
 package com.TwinStar.TwinStar.user.service;
 
+
+import com.TwinStar.TwinStar.report.UserStatus;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
+@RequiredArgsConstructor
 public class UserService {
+    public final UserRepository userRepository;
+//
+//    public UserService(UserRepository userRepository) {
+//        this.userRepository = userRepository;
+//    }
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    public void checkUserRestrictions(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
+//
+//        if (user.getUserStatus() == UserStatus.RESTRICTED) {
+//            throw new RuntimeException("제재된 유저는 게시물 및 댓글 작성이 불가합니다.");
+//        }
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-
-    public Long create(UserSaveReqDto dto) throws IllegalArgumentException {
-        if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("중복 이메일입니다.");
+        if (user.getUserStatus() == UserStatus.BAN) {
+            throw new RuntimeException("정지된 유저는 접근할 수 없습니다.");
         }
-
-        User user = userRepository.save(dto.toEntity(passwordEncoder.encode(dto.getPassword())));
-        return user.getId();
-    }
-
-    public List<UserResDto> findMemberList() {
-        return userRepository.findAll().stream().map(m->m.userListResDtoFromEntity()).toList();
-    }
-
-    public User login(LoginDto dto){
-        boolean check = true;
-//        email존재여부
-        Optional<User> optionalMember = userRepository.findByEmail(dto.getEmail());
-        if(!optionalMember.isPresent()){
-            check = false;
-        }
-//        password일치 여부
-        if(!passwordEncoder.matches(dto.getPassword(), optionalMember.get().getPassword())){
-            check =false;
-        }
-        if(!check){
-            throw new IllegalArgumentException("email 또는 비밀번호가 일치하지 않습니다.");
-        }
-        return optionalMember.get();
     }
 }

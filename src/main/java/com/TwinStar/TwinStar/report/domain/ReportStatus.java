@@ -1,4 +1,4 @@
-package com.TwinStar.TwinStar.commonDomain;
+package com.TwinStar.TwinStar.report.domain;
 
 public enum ReportStatus {
     PENDING, //처리 대기 중

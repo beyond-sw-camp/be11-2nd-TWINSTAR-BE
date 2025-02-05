@@ -1,4 +1,4 @@
-package com.TwinStar.TwinStar.commonDomain;
+package com.TwinStar.TwinStar.report.domain;
 
 import com.TwinStar.TwinStar.user.domain.User;
 import jakarta.persistence.*;

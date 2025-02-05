@@ -1,4 +1,4 @@
-package com.TwinStar.TwinStar.commonDomain;
+package com.TwinStar.TwinStar.post.domain;
 
 import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
 import com.TwinStar.TwinStar.user.domain.User;

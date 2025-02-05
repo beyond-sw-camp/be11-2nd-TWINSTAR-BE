@@ -22,6 +22,4 @@ public class UserListDto {
     private IdVisibility idVisibility;
     private UserStatus userStatus;
     private String delYn;
-
-
 }

@@ -1,4 +1,4 @@
-package com.TwinStar.TwinStar.commonDomain;
+package com.TwinStar.TwinStar.post.domain;
 
 public enum PostVisibility {
     ALL,
