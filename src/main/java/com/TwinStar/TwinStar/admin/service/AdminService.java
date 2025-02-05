@@ -2,13 +2,14 @@ package com.TwinStar.TwinStar.admin.service;
 
 import com.TwinStar.TwinStar.admin.dtos.UserListDto;
 import com.TwinStar.TwinStar.admin.repostiory.AdminRepository;
-import com.TwinStar.TwinStar.commonDomain.User;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class AdminService {
     private final AdminRepository adminRepository;
 

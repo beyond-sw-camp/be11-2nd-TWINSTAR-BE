@@ -1,14 +1,12 @@
 package com.TwinStar.TwinStar.user.service;
 
 
-import com.TwinStar.TwinStar.commonDomain.UserStatus;
+import com.TwinStar.TwinStar.report.UserStatus;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
