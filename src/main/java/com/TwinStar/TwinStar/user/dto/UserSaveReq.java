@@ -32,9 +32,6 @@ public class UserSaveReq {
     private String profileImg;
     private String profileTxt;
 
-    private String delYn = "N";//기본값 설정
-    private String adminYn = "N";//기본값 설정
-
     public User user(String encodedPassword){
         return User.builder()
                 .email(this.email)
@@ -45,8 +42,6 @@ public class UserSaveReq {
                 .userStatus(this.userStatus)
                 .profileImg(this.profileImg)
                 .profileTxt(this.profileTxt)
-                .delYn(this.delYn)
-                .adminYn(this.adminYn)
                 .build();
     }
     public User toEntity(String encodedPassword) {
@@ -59,8 +54,6 @@ public class UserSaveReq {
                 .userStatus(this.userStatus)
                 .profileImg(this.profileImg)
                 .profileTxt(this.profileTxt)
-                .delYn(this.delYn)
-                .adminYn(this.adminYn)
                 .build();
     }
 

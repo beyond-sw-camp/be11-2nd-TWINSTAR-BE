@@ -1,7 +1,7 @@
 package com.TwinStar.TwinStar.user.domain;
 
-import com.TwinStar.TwinStar.admin.dtos.UserListDto;
 import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
+import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.follow.domain.Follow;
 import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.report.domain.Report;
@@ -34,7 +34,8 @@ public class User extends BaseTimeEntity {
     private String profileImg;
     private String profileTxt;
     @Column(nullable = false)
-    private String delYn;
+    @Builder.Default
+    private YN delYn = YN.valueOf("N");
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Sex sex;
@@ -42,7 +43,9 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private IdVisibility idVisibility;
     @Column(nullable = false)
-    private String adminYn;
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private YN adminYn = YN.valueOf("N");
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
@@ -60,26 +63,26 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Follow> followers = new ArrayList<>();
 
-    public UserListDto listFromEntity(){
-        return UserListDto.builder()
-                .id(this.id)
-                .email(this.email)
-                .nickName(this.nickName)
-                .profileImg(this.profileImg)
-                .profileTxt(this.profileTxt)
-                .sex(this.sex)
-                .idVisibility(this.idVisibility)
-                .userStatus(this.userStatus)
-                .build();
-    }
-    @PrePersist
-    public void prePersist(){
-        if (delYn == null){
-            delYn = "N";
-        } else if (adminYn == null) {
-            adminYn = "N";
-        } else if (userStatus == null) {
-            userStatus = UserStatus.ACTIVE;
-        }
-    }
+//    public UserListDto listFromEntity(){
+//        return UserListDto.builder()
+//                .id(this.id)
+//                .email(this.email)
+//                .nickName(this.nickName)
+//                .profileImg(this.profileImg)
+//                .profileTxt(this.profileTxt)
+//                .sex(this.sex)
+//                .idVisibility(this.idVisibility)
+//                .userStatus(this.userStatus)
+//                .build();
+//    }
+//    @PrePersist
+//    public void prePersist(){
+//        if (delYn == null){
+//            delYn = "N";
+//        } else if (adminYn == null) {
+//            adminYn = "N";
+//        } else if (userStatus == null) {
+//            userStatus = UserStatus.ACTIVE;
+//        }
+//    }
 }
