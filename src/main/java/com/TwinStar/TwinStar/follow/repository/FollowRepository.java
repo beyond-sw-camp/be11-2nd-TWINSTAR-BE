@@ -10,15 +10,6 @@ import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
 
-//    팔로우 관계 조회
-    Optional<Follow> findByFollowerIdAndFollowingId(Long followerId, Long followingId);
-
-//    팔로워 목록 조회
-    List<User> findFollowersByUserId(Long userId);
-
-//    팔로잉 목록 조회
-    List<User> findFollowingByUserId(Long userId);
-
     boolean existsByFollowerAndFollowing(User follower, User following);
     void deleteByFollowerAndFollowing(User follower, User following);
     long countByFollowing(User following); // 팔로워 수
