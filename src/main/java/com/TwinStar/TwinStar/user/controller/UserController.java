@@ -28,6 +28,7 @@ public class UserController {
     @Value("${jwt.secretKeyRt}")
     private String secretKeyRt;
 
+
     public UserController(UserService userService, JwtTokenProvider jwtTokenProvider,@Qualifier("rtdb") RedisTemplate<String, Object> redisTemplate) {
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
@@ -49,6 +50,7 @@ public class UserController {
         loginInfo.put("id", user.getId());
         loginInfo.put("token", token);
         loginInfo.put("refreshToken", refreshToken);
+
         return new ResponseEntity<>(loginInfo, HttpStatus.OK);
     }
 
@@ -57,7 +59,24 @@ public class UserController {
         Long memberId = userService.create(dto);
         return new ResponseEntity<>(memberId, HttpStatus.CREATED);
     }
+    // ✅ 리프레시 토큰을 이용한 액세스 토큰 재발급
+    // --to do
+//    API 요청을 보낼 때, 액세스 토큰이 만료되었는지 확인
+//    만료되었다면 /user/refresh-token API를 호출하여 새 액세스 토큰을 받아오기
+//    새로운 액세스 토큰으로 다시 API 요청을 보냄
+//    새로 받은 액세스 토큰을 저장 (로컬 스토리지 or 쿠키)
+    @PostMapping("/refresh-token")
+    public ResponseEntity<Map<String, String>> refreshAccessToken(@RequestHeader("Authorization") String refreshToken) {
+        if (refreshToken.startsWith("Bearer ")) {
+            refreshToken = refreshToken.substring(7);
+        }
 
+        String newAccessToken = jwtTokenProvider.refreshAccessToken(refreshToken);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("accessToken", newAccessToken);
+        return ResponseEntity.ok(response);
+    }
 
 
 
