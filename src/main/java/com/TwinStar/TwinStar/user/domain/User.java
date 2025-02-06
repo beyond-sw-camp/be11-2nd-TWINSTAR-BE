@@ -5,12 +5,15 @@ import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.follow.domain.Follow;
 import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.report.domain.Report;
+import com.TwinStar.TwinStar.user.dto.UserListDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +34,7 @@ public class User extends BaseTimeEntity {
     private String email;
     @Column(nullable = false, unique = true)
     private String nickName;
-    private String profileImg;
+    private MultipartFile profileImg;
     private String profileTxt;
     @Column(nullable = false)
     @Builder.Default
@@ -63,26 +66,20 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Follow> followers = new ArrayList<>();
 
-//    public UserListDto listFromEntity(){
-//        return UserListDto.builder()
-//                .id(this.id)
-//                .email(this.email)
-//                .nickName(this.nickName)
-//                .profileImg(this.profileImg)
-//                .profileTxt(this.profileTxt)
-//                .sex(this.sex)
-//                .idVisibility(this.idVisibility)
-//                .userStatus(this.userStatus)
-//                .build();
-//    }
-//    @PrePersist
-//    public void prePersist(){
-//        if (delYn == null){
-//            delYn = "N";
-//        } else if (adminYn == null) {
-//            adminYn = "N";
-//        } else if (userStatus == null) {
-//            userStatus = UserStatus.ACTIVE;
-//        }
-//    }
+    public UserListDto listFromEntity(User loginUser){
+        boolean isFollowing = loginUser != null && this.followers.stream()
+                .anyMatch(follow -> follow.getFollower().getId().equals(loginUser.getId()));
+
+        return UserListDto.builder()
+                .id(this.id)
+                .email(this.email)
+                .nickName(this.nickName)
+                .profileImg(this.profileImg)
+                .profileTxt(this.profileTxt)
+                .idVisibility(this.idVisibility)
+                .userStatus(this.userStatus)
+                .follower
+                .build();
+    }
+
 }

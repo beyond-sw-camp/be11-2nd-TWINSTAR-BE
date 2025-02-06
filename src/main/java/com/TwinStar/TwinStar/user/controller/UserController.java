@@ -2,8 +2,10 @@ package com.TwinStar.TwinStar.user.controller;
 
 
 import com.TwinStar.TwinStar.common.auth.JwtTokenProvider;
+import com.TwinStar.TwinStar.common.dto.CommonDto;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.dto.LoginDto;
+import com.TwinStar.TwinStar.user.dto.UserListDto;
 import com.TwinStar.TwinStar.user.dto.UserSaveReq;
 import com.TwinStar.TwinStar.user.service.UserService;
 import jakarta.validation.Valid;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -58,6 +61,99 @@ public class UserController {
         return new ResponseEntity<>(memberId, HttpStatus.CREATED);
     }
 
+//    로그아웃(토큰 무효화)
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        return null;
+    }
+
+// 엑세스 토큰 재발행
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken() {
+        return null;
+    }
+//    회원탈퇴
+    @DeleteMapping("/delete/{userid}")
+    public ResponseEntity<?> del_user() {
+
+        return null;
+    }
+
+//    사용자 상세조회
+    @GetMapping("/detail/{userid}")
+    public ResponseEntity<?> userDetail() {
+        List<UserListDto> userListDtos = userService.findAll();
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"user list is found",userListDtos),HttpStatus.OK);
+    }
+//    현재 로그인한 사용자 정보 조회
+    @GetMapping("/myInfo")
+    public ResponseEntity<?> myInfo() {
+        return null;
+    }
+
+
+//  사용자 프로필 정보 수정
+    @PatchMapping("/profile/update/{userid}")
+    public ResponseEntity<?> profileUpdate() {
+        return null;
+    }
+//   비밀번호 변경
+    @PatchMapping("/profile/update/{userid}")
+    public ResponseEntity<?> passwordChange() {
+        return null;
+    }
+
+//    프로필 이미지 변경
+    @PatchMapping("/profile/update/{userid}")
+    public ResponseEntity<?> profileImgUpdate() {
+        return null;
+    }
+
+//    사용자 공개 범위 변경
+    @PatchMapping("/status/{userid}")
+    public ResponseEntity<?> userStatusUpdate() {
+        return null;
+    }
+
+
+//    관리자 권한 부여/회수
+    @PatchMapping("/admin/{userid}")
+    public ResponseEntity<?> adminUpdate() {
+        return null;
+    }
+
+//    특정 사용자 신고
+    @PostMapping("/report/{userid}")
+    public ResponseEntity<?> userReport() {
+        return null;
+    }
+
+//    사용자 검색
+    @GetMapping("/search")
+    public ResponseEntity<?> userSearch() {
+        return null;
+    }
+
+//    관리자용 엔드포인트
+
+//    전체 사용자 리스트 조회
+    @GetMapping("/admin/userList")
+    public ResponseEntity<?> adminUserList() {
+        return null;
+    }
+
+//    신고 목록 조회
+    @GetMapping("/reports")
+    public ResponseEntity<?> adminReportList() {
+        return null;
+    }
+//   신고처리
+
+//특정 사용자 정지
+    @GetMapping("/admin/report/{userid}")
+    public ResponseEntity<?> reported() {
+        return null;
+    }
 
 
 
