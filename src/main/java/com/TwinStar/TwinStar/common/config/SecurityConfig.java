@@ -15,6 +15,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -27,32 +28,31 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-//                spring security에서 cors 정책 지정.
                 .cors(c -> c.configurationSource(corsConfiguration()))
-                .csrf(AbstractHttpConfigurer::disable) //csrf(보안공격 중 하나) 비활성화
-                .httpBasic(AbstractHttpConfigurer::disable) //http basic 보안방식 비활성화
-//                세션로그인 방식 사용하지 않는다는 것을 의미.
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                token을 검증하고, token을 통해 Authentication객체 생성
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class) //Username... -> Authentication객체가 있는지 검사하는 클래스
-//                .authenticated() : 모든 요청에 대해 Authentication 객체가 생성되기를 요구
-                .authorizeHttpRequests(a -> a.requestMatchers("/user/create","/user/doLogin","user/refresh-token").permitAll().anyRequest().authenticated())
+                .csrf(AbstractHttpConfigurer::disable) // CSRF 보호 비활성화 (JWT 사용 시 필요 없음)
+                .httpBasic(AbstractHttpConfigurer::disable) // HTTP Basic 인증 비활성화
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 미사용 (Stateless)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/user/create", "/user/doLogin", "/user/refresh-token").permitAll() // 인증 없이 접근 허용
+                        .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
+                )
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
                 .build();
     }
 
     private CorsConfigurationSource corsConfiguration() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("*")); // 모든 HTTP(get, post 등) 메서드 허용
-        configuration.setAllowedHeaders(Arrays.asList("*")); // 모든 헤더 허용
-        configuration.setAllowCredentials(true); // 자격 증명 허용
+        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // 프론트엔드 도메인
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 HTTP 메서드
+        configuration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
+        configuration.setAllowCredentials(true); // 쿠키, 인증 정보 포함 허용
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); //모든 url패턴에 대해 cors설정 적용
+        source.registerCorsConfiguration("/**", configuration); // 모든 URL에 CORS 설정 적용
         return source;
     }
 
     @Bean
-    public PasswordEncoder makePassword() {
+    public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }
