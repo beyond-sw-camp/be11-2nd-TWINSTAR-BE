@@ -6,6 +6,7 @@ import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.report.domain.Report;
 import com.TwinStar.TwinStar.user.dto.UserListDto;
 import com.TwinStar.TwinStar.user.dto.UserProfileDto;
+import com.TwinStar.TwinStar.user.dto.UserProfileUpdateDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -94,6 +95,16 @@ public class User extends BaseTimeEntity {
                 .idVisibility(this.idVisibility)
                 .userStatus(this.userStatus)
                 .posts(posts)
+                .build();
+    }
+
+     //    사용자 프로필 업데이트
+    public void updateProfile(String nickName, String profileTxt, Sex sex, IdVisibility idVisibility) {
+        UserProfileUpdateDto.builder()
+                .nickName(this.nickName)
+                .profileTxt(this.profileTxt)
+                .sex(this.sex)
+                .idVisibility(this.idVisibility)
                 .build();
     }
 }

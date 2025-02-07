@@ -91,6 +91,23 @@ public class UserService {
                 .detailFromEntity(followerCount,followingCount,user.getPosts());//프로필 데이터
     }
 
+    @Transactional
+    public void updateUserProfile(Long id, UserProfileUpdateDto updateDto) {
+        // 1. 사용자 조회
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 2. 닉네임 중복 체크 (옵션)
+        if (!user.getNickName().equals(updateDto.getNickName()) &&
+                userRepository.existsByNickName(updateDto.getNickName())) {
+            throw new RuntimeException("This nickname is already taken.");
+        }
+
+        // 3. 사용자 정보 변경
+        user.updateProfile(updateDto.getNickName(), updateDto.getProfileTxt()
+                , updateDto.getSex(), updateDto.getIdVisibility());
+    }
+
         //    관리자용 유저 리스트
     public List<UserListDto> userList(){
         return userRepository.findAll().stream().map(m->m.listFromEntity()).toList();

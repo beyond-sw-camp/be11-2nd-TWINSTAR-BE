@@ -95,6 +95,13 @@ public class UserController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK);
     }
 
+    //    사용자 프로필 수정
+    @PatchMapping("/{id}/profile")
+    public ResponseEntity<String> updateProfile(@PathVariable Long userId,
+                                                @RequestBody UserProfileUpdateDto updateDto) {
+        userService.updateUserProfile(userId, updateDto);
+        return ResponseEntity.ok("Profile updated successfully.");
+    }
 
 // 관리자용 유저목록 조회
     @GetMapping("/admin/user/list")
