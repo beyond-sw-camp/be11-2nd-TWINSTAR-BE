@@ -69,13 +69,13 @@ public class Post extends BaseTimeEntity {
         }
     }
 
-
-    public Post update(PostUpdateReqDto dto){
-        this.content = dto.getContent();
-        this.updatedStatus = YN.Y;
-        this.postFileUrl = dto.toEntity().getPostFileUrl();
-        this.profileImgUrl = dto.getProfileImgUrl();
-        this.visibility = dto.getVisibility();
-        return this;
-    }
+//
+//    public Post update(PostUpdateReqDto dto){
+//        this.content = dto.getContent();
+//        this.updatedStatus = YN.Y;
+//        this.postFileUrl = dto.toEntity().getPostFileUrl();
+//        this.profileImgUrl = dto.getProfileImgUrl();
+//        this.visibility = dto.getVisibility();
+//        return this;
+//    }
 }
