@@ -4,10 +4,7 @@ package com.TwinStar.TwinStar.user.controller;
 import com.TwinStar.TwinStar.common.auth.JwtTokenProvider;
 import com.TwinStar.TwinStar.common.dto.CommonDto;
 import com.TwinStar.TwinStar.user.domain.User;
-import com.TwinStar.TwinStar.user.dto.LoginDto;
-import com.TwinStar.TwinStar.user.dto.UserListDto;
-import com.TwinStar.TwinStar.user.dto.UserProfileDto;
-import com.TwinStar.TwinStar.user.dto.UserSaveReq;
+import com.TwinStar.TwinStar.user.dto.*;
 import com.TwinStar.TwinStar.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -99,6 +96,7 @@ public class UserController {
     }
 
 
+// 관리자용 유저목록 조회
     @GetMapping("/admin/user/list")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> list(){

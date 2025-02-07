@@ -1,19 +1,16 @@
 package com.TwinStar.TwinStar.user.service;
 
-;
 import com.TwinStar.TwinStar.follow.domain.Follow;
 import com.TwinStar.TwinStar.follow.repository.FollowRepository;
 import com.TwinStar.TwinStar.user.domain.User;
-import com.TwinStar.TwinStar.user.dto.LoginDto;
-import com.TwinStar.TwinStar.user.dto.UserListDto;
-import com.TwinStar.TwinStar.user.dto.UserProfileDto;
-import com.TwinStar.TwinStar.user.dto.UserSaveReq;
+import com.TwinStar.TwinStar.user.dto.*;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -94,9 +91,7 @@ public class UserService {
                 .detailFromEntity(followerCount,followingCount,user.getPosts());//프로필 데이터
     }
 
-
-
-    //    관리자용 유저 리스트
+        //    관리자용 유저 리스트
     public List<UserListDto> userList(){
         return userRepository.findAll().stream().map(m->m.listFromEntity()).toList();
     }

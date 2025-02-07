@@ -2,7 +2,6 @@ package com.TwinStar.TwinStar.user.domain;
 
 import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
 import com.TwinStar.TwinStar.common.domain.YN;
-import com.TwinStar.TwinStar.follow.domain.Follow;
 import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.report.domain.Report;
 import com.TwinStar.TwinStar.user.dto.UserListDto;
