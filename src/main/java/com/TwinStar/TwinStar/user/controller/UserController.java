@@ -5,6 +5,7 @@ import com.TwinStar.TwinStar.common.auth.JwtTokenProvider;
 import com.TwinStar.TwinStar.common.dto.CommonDto;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.dto.LoginDto;
+import com.TwinStar.TwinStar.user.dto.UserListDto;
 import com.TwinStar.TwinStar.user.dto.UserProfileDto;
 import com.TwinStar.TwinStar.user.dto.UserSaveReq;
 import com.TwinStar.TwinStar.user.service.UserService;
@@ -14,9 +15,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -83,10 +86,17 @@ public class UserController {
 //    상대방 프로필 들어가면 정보를 얻는다.
     @GetMapping("/detail/{id}")
     public ResponseEntity<?> userDetail(@PathVariable Long id){
-        UserProfileDto dto = userService.findById(id);
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK)
+        UserProfileDto dto = userService.searchProfile(id);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK);
 
     }
 
+
+    @GetMapping("/admin/user/list")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> list(){
+        List<UserListDto> userListDto = userService.userList();
+        return new ResponseEntity<>(userListDto,HttpStatus.OK);
+    }
 
 }

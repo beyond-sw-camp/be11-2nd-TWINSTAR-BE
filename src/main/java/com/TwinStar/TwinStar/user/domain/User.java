@@ -5,6 +5,8 @@ import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.follow.domain.Follow;
 import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.report.domain.Report;
+import com.TwinStar.TwinStar.user.dto.UserListDto;
+import com.TwinStar.TwinStar.user.dto.UserProfileDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,20 +59,39 @@ public class User extends BaseTimeEntity {
     @Builder.Default
     private List<Report> reports = new ArrayList<>();
 
-    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Follow> following = new ArrayList<>();
+//    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Follow> following = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Follow> followers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Follow> followers = new ArrayList<>();
-
+//    관리자용 유저 목록조회
     public UserListDto listFromEntity(){
         return UserListDto.builder()
                 .id(this.id)
                 .email(this.email)
+                .password(this.password)
                 .nickName(this.nickName)
                 .profileImg(this.profileImg)
                 .profileTxt(this.profileTxt)
                 .sex(this.sex)
+                .idVisibility(this.idVisibility)
+                .userStatus(this.userStatus)
+                .adminYn(this.adminYn)
+                .delYn(this.delYn)
+                .build();
+    }
+
+//    프로필 조회 엔티티
+    public UserProfileDto detailFromEntity(){
+        return UserProfileDto.builder()
+                .id(this.id)
+                .nickName(this.nickName)
+                .profileImg(this.profileImg)
+                .profileTxt(this.profileTxt)
+                .sex(this.sex)
+//                .followerCount()
+//                .followingCount()
                 .idVisibility(this.idVisibility)
                 .userStatus(this.userStatus)
                 .build();

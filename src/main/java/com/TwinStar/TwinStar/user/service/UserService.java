@@ -3,6 +3,7 @@ package com.TwinStar.TwinStar.user.service;
 ;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.dto.LoginDto;
+import com.TwinStar.TwinStar.user.dto.UserListDto;
 import com.TwinStar.TwinStar.user.dto.UserProfileDto;
 import com.TwinStar.TwinStar.user.dto.UserSaveReq;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
@@ -10,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -52,6 +54,8 @@ public class UserService {
 //            throw new RuntimeException("정지된 유저는 접근할 수 없습니다.");
 //        }
 //    }
+
+//    회원가입
     public Long create(UserSaveReq dto) throws IllegalArgumentException {
         if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
             throw new IllegalArgumentException("중복 이메일입니다.");
@@ -60,9 +64,15 @@ public class UserService {
         return member.getId();
     }
 
-    public UserProfileDto findById(Long id) throws NoSuchElementException, RuntimeException{
+//    프로필조회
+    public UserProfileDto searchProfile(Long id) throws NoSuchElementException, RuntimeException{
         return userRepository.findById(id)
-                .orElseThrow(()->new EntityNotFoundException("없는 id입니다."))
-                .detailFromEntity();
+                .orElseThrow(()->new EntityNotFoundException("등록되지 않은 사용자입니다."))
+                .detailFromEntity();//프로필 데이터
+    }
+
+//    관리자용 유저 리스트
+    public List<UserListDto> userList(){
+        return userRepository.findAll().stream().map(m->m.listFromEntity()).toList();
     }
 }
