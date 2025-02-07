@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -107,6 +108,24 @@ public class UserService {
         user.updateProfile(updateDto.getNickName(), updateDto.getProfileTxt()
                 , updateDto.getSex(), updateDto.getIdVisibility());
     }
+
+    @Transactional
+    public void deleteUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.parseLong(authentication.getName());
+        // userId를 이용하여 유저 조회
+        User user = userRepository.findByIdAndDelYn(userId, "N")
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        // 상태 변경 메서드 호출
+        user.deleteUser();
+
+        userRepository.save(user); // 변경사항 저장
+    }
+
+
+
+
 
         //    관리자용 유저 리스트
     public List<UserListDto> userList(){

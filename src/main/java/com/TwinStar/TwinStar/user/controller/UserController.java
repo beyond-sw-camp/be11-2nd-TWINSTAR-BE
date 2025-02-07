@@ -97,10 +97,10 @@ public class UserController {
 
     //    사용자 프로필 수정
     @PatchMapping("/{id}/profile")
-    public ResponseEntity<String> updateProfile(@PathVariable Long userId,
+    public ResponseEntity<?> updateProfile(@PathVariable Long userId,
                                                 @RequestBody UserProfileUpdateDto updateDto) {
         userService.updateUserProfile(userId, updateDto);
-        return ResponseEntity.ok("Profile updated successfully.");
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully.","null"),HttpStatus.OK);
     }
 
 // 관리자용 유저목록 조회
@@ -109,6 +109,13 @@ public class UserController {
     public ResponseEntity<?> list(){
         List<UserListDto> userListDto = userService.userList();
         return new ResponseEntity<>(userListDto,HttpStatus.OK);
+    }
+
+    // JWT 기반 회원 탈퇴 API
+    @DeleteMapping("/user/del")
+    public ResponseEntity<?> deleteUser() {
+        userService.deleteUser();
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully.","null"),HttpStatus.OK);
     }
 
 }

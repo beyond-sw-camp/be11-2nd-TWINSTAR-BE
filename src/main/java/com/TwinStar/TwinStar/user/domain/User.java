@@ -107,4 +107,14 @@ public class User extends BaseTimeEntity {
                 .idVisibility(this.idVisibility)
                 .build();
     }
+    //    프로필 이미지 변경
+    public void updateProfileImage(String profileImgUrl) {
+        this.profileImg = profileImgUrl;
+    }
+
+    //소프트 딜리트메서드 추가
+    public void deleteUser(){
+        this.delYn = YN.valueOf("Y");
+    }
+
 }

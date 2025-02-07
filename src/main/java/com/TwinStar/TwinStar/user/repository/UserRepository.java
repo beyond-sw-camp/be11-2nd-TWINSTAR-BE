@@ -13,8 +13,13 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
+//    회원id로 게시물 찾는 쿼리
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.posts WHERE u.id = :userId")
     Optional<User> findByIdWithPosts(@Param("userId") Long userId);
 
-    boolean existsByNickName(String nickName);//닉네임 중복 체크 메서드 jpa네이밍 규칙 포함
+    //닉네임 중복 체크 메서드 jpa네이밍 규칙 포함
+    boolean existsByNickName(String nickName);
+
+//    회원id로 del상태 조회
+    Optional<User> findByIdAndDelYn(Long id, String delYn);
 }
