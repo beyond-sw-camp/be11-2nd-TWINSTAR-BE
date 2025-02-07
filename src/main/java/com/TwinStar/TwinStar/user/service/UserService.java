@@ -3,11 +3,14 @@ package com.TwinStar.TwinStar.user.service;
 ;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.dto.LoginDto;
+import com.TwinStar.TwinStar.user.dto.UserProfileDto;
 import com.TwinStar.TwinStar.user.dto.UserSaveReq;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -55,5 +58,11 @@ public class UserService {
         }
         User member = userRepository.save(dto.toEntity(passwordEncoder.encode(dto.getPassword())));
         return member.getId();
+    }
+
+    public UserProfileDto findById(Long id) throws NoSuchElementException, RuntimeException{
+        return userRepository.findById(id)
+                .orElseThrow(()->new EntityNotFoundException("없는 id입니다."))
+                .detailFromEntity();
     }
 }

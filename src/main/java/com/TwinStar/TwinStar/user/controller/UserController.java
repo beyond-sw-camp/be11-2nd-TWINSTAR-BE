@@ -2,8 +2,10 @@ package com.TwinStar.TwinStar.user.controller;
 
 
 import com.TwinStar.TwinStar.common.auth.JwtTokenProvider;
+import com.TwinStar.TwinStar.common.dto.CommonDto;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.dto.LoginDto;
+import com.TwinStar.TwinStar.user.dto.UserProfileDto;
 import com.TwinStar.TwinStar.user.dto.UserSaveReq;
 import com.TwinStar.TwinStar.user.service.UserService;
 import jakarta.validation.Valid;
@@ -78,7 +80,13 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+//    상대방 프로필 들어가면 정보를 얻는다.
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<?> userDetail(@PathVariable Long id){
+        UserProfileDto dto = userService.findById(id);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK)
 
+    }
 
 
 }

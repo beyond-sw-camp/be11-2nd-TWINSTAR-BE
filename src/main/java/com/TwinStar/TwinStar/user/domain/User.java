@@ -63,26 +63,16 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Follow> followers = new ArrayList<>();
 
-//    public UserListDto listFromEntity(){
-//        return UserListDto.builder()
-//                .id(this.id)
-//                .email(this.email)
-//                .nickName(this.nickName)
-//                .profileImg(this.profileImg)
-//                .profileTxt(this.profileTxt)
-//                .sex(this.sex)
-//                .idVisibility(this.idVisibility)
-//                .userStatus(this.userStatus)
-//                .build();
-//    }
-//    @PrePersist
-//    public void prePersist(){
-//        if (delYn == null){
-//            delYn = "N";
-//        } else if (adminYn == null) {
-//            adminYn = "N";
-//        } else if (userStatus == null) {
-//            userStatus = UserStatus.ACTIVE;
-//        }
-//    }
+    public UserListDto listFromEntity(){
+        return UserListDto.builder()
+                .id(this.id)
+                .email(this.email)
+                .nickName(this.nickName)
+                .profileImg(this.profileImg)
+                .profileTxt(this.profileTxt)
+                .sex(this.sex)
+                .idVisibility(this.idVisibility)
+                .userStatus(this.userStatus)
+                .build();
+    }
 }
