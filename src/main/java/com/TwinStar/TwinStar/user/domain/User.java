@@ -83,17 +83,18 @@ public class User extends BaseTimeEntity {
     }
 
 //    프로필 조회 엔티티
-    public UserProfileDto detailFromEntity(){
+    public UserProfileDto detailFromEntity(Long followerCount,Long followingCount,List<Post> posts){
         return UserProfileDto.builder()
                 .id(this.id)
                 .nickName(this.nickName)
                 .profileImg(this.profileImg)
                 .profileTxt(this.profileTxt)
                 .sex(this.sex)
-//                .followerCount()
-//                .followingCount()
+                .followerCount(followerCount)
+                .followingCount(followingCount)
                 .idVisibility(this.idVisibility)
                 .userStatus(this.userStatus)
+                .posts(posts)
                 .build();
     }
 }

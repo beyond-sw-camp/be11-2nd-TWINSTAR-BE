@@ -1,6 +1,8 @@
 package com.TwinStar.TwinStar.user.service;
 
 ;
+import com.TwinStar.TwinStar.follow.domain.Follow;
+import com.TwinStar.TwinStar.follow.repository.FollowRepository;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.dto.LoginDto;
 import com.TwinStar.TwinStar.user.dto.UserListDto;
@@ -8,6 +10,8 @@ import com.TwinStar.TwinStar.user.dto.UserProfileDto;
 import com.TwinStar.TwinStar.user.dto.UserSaveReq;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +23,12 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final FollowRepository followRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, FollowRepository followRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.followRepository = followRepository;
     }
 
     public User login(LoginDto dto){
@@ -64,14 +70,33 @@ public class UserService {
         return member.getId();
     }
 
-//    프로필조회
+//  상대 프로필조회
     public UserProfileDto searchProfile(Long id) throws NoSuchElementException, RuntimeException{
+        Long followingCount = followRepository.countByFollowing(id);
+        Long followerCount = followRepository.countByFollower(id);//countByFollowing의 매개변수를 Long타입으로 바꿔야함
+        User user = userRepository.findByIdWithPosts(id)//프로필dto 매개변수를 위해 사용
+                .orElseThrow(() -> new RuntimeException("User not found"));
         return userRepository.findById(id)
                 .orElseThrow(()->new EntityNotFoundException("등록되지 않은 사용자입니다."))
-                .detailFromEntity();//프로필 데이터
+                .detailFromEntity(followerCount,followingCount,user.getPosts());//프로필 데이터
     }
 
-//    관리자용 유저 리스트
+    //  내 프로필조회
+    public UserProfileDto searchProfile() throws NoSuchElementException, RuntimeException{
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long id = Long.valueOf((authentication.getName()));
+        User user = userRepository.findByIdWithPosts(id)//프로필dto 매개변수를 위해 사용
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long followingCount = followRepository.countByFollowing(id);
+        Long followerCount = followRepository.countByFollower(id);
+        return userRepository.findById(id)
+                .orElseThrow(()->new EntityNotFoundException("등록되지 않은 사용자입니다."))
+                .detailFromEntity(followerCount,followingCount,user.getPosts());//프로필 데이터
+    }
+
+
+
+    //    관리자용 유저 리스트
     public List<UserListDto> userList(){
         return userRepository.findAll().stream().map(m->m.listFromEntity()).toList();
     }

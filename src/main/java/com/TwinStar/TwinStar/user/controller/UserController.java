@@ -91,6 +91,13 @@ public class UserController {
 
     }
 
+//    내 프로필 정보 조회
+    @GetMapping("/myProfile")
+    public ResponseEntity<?> myProfile(){
+        UserProfileDto dto = userService.searchProfile();
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK);
+    }
+
 
     @GetMapping("/admin/user/list")
     @PreAuthorize("hasRole('ADMIN')")

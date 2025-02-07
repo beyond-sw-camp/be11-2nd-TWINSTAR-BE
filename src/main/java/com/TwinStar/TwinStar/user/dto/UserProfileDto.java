@@ -26,6 +26,6 @@ public class UserProfileDto {
     private Long followingCount;//내가 팔로우하는 사람의 수
     private IdVisibility idVisibility;
     private UserStatus userStatus;
-//    private List<Post> posts; 게시물 리스트
+    private List<Post> posts;// 게시물 리스트
 
 }
