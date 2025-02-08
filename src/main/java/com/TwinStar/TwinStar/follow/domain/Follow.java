@@ -1,5 +1,6 @@
 package com.TwinStar.TwinStar.follow.domain;
 
+import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,20 +22,32 @@ public class Follow {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "follower_id", nullable = false)
-    private User follower; // 팔로우를 한사람 (나)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User userId; // 팔로우를 한사람 (나)
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "following_id", nullable = false)
-    private User following; // 팔로우를 당한사람 (카리나)
+    @JoinColumn(name = "receive_user_id", nullable = false)
+    private User receiveUserId; // 팔로우를 당한사람 (카리나)
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private YN followYn;
 
-    public Follow(User follower, User following) {
-        this.follower = follower;
-        this.following = following;
+    @PrePersist
+    public void prePersist() {
+        if (followYn == null) {
+            this.followYn = YN.Y; // 기본값을 Y로 설정
+        }
     }
 
+    public Follow(User userId, User receiveUserId) {
+        this.userId = userId;
+        this.receiveUserId = receiveUserId;
+        this.followYn = YN.Y; // 새로 생성 시 기본값 Y
+    }
 
+    // 팔로우 상태 변경 메서드
+    public void toggleFollow() {
+        this.followYn = (this.followYn == YN.Y) ? YN.N : YN.Y;
+    }
 }
