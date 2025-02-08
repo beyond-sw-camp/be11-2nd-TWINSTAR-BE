@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -80,28 +81,40 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-//    상대방 프로필 들어가면 정보를 얻는다.
-    @GetMapping("/detail/{id}")
-    public ResponseEntity<?> userDetail(@PathVariable Long id){
-        UserProfileDto dto = userService.searchProfile(id);
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK);
+//    비밀번호 변경
+    @PatchMapping("/{id}/password")
+    public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody PasswordChangeRequest request
+            , Authentication authentication){
+
+        userService.changePassword(id, request,authentication);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"Password changed successfully",null),HttpStatus.OK);
 
     }
 
-//    내 프로필 정보 조회
-    @GetMapping("/myProfile")
-    public ResponseEntity<?> myProfile(){
-        UserProfileDto dto = userService.searchProfile();
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK);
-    }
 
-    //    사용자 프로필 수정
-    @PatchMapping("/{id}/profile")
-    public ResponseEntity<?> updateProfile(@PathVariable Long userId,
-                                                @RequestBody UserProfileUpdateDto updateDto) {
-        userService.updateUserProfile(userId, updateDto);
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully.","null"),HttpStatus.OK);
-    }
+
+////    상대방 프로필 들어가면 정보를 얻는다.
+//    @GetMapping("/detail/{id}")
+//    public ResponseEntity<?> userDetail(@PathVariable Long id){
+//        UserProfileDto dto = userService.searchProfile(id);
+//        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK);
+//
+//    }
+//
+////    내 프로필 정보 조회
+//    @GetMapping("/myProfile")
+//    public ResponseEntity<?> myProfile(){
+//        UserProfileDto dto = userService.searchProfile();
+//        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK);
+//    }
+//
+//    //    사용자 프로필 수정
+//    @PatchMapping("/{id}/profile")
+//    public ResponseEntity<?> updateProfile(@PathVariable Long userId,
+//                                                @RequestBody UserProfileUpdateDto updateDto) {
+//        userService.updateUserProfile(userId, updateDto);
+//        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully.","null"),HttpStatus.OK);
+//    }
 
 // 관리자용 유저목록 조회
     @GetMapping("/admin/user/list")
@@ -111,11 +124,11 @@ public class UserController {
         return new ResponseEntity<>(userListDto,HttpStatus.OK);
     }
 
-    // JWT 기반 회원 탈퇴 API
-    @DeleteMapping("/del")
-    public ResponseEntity<?> deleteUser() {
-        userService.deleteUser();
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully.","null"),HttpStatus.OK);
-    }
+//    // JWT 기반 회원 탈퇴 API
+//    @DeleteMapping("/del")
+//    public ResponseEntity<?> deleteUser() {
+//        userService.deleteUser();
+//        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully.","null"),HttpStatus.OK);
+//    }
 
 }

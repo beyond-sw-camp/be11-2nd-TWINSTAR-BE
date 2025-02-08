@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,8 +66,8 @@ public class User extends BaseTimeEntity {
 //    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Follow> followers = new ArrayList<>();
 
-//    관리자용 유저 목록조회
-    public UserListDto listFromEntity(){
+    //    관리자용 유저 목록조회
+    public UserListDto listFromEntity() {
         return UserListDto.builder()
                 .id(this.id)
                 .email(this.email)
@@ -82,23 +83,22 @@ public class User extends BaseTimeEntity {
                 .build();
     }
 
-//    프로필 조회 엔티티
-    public UserProfileDto detailFromEntity(Long followerCount,Long followingCount,List<Post> posts){
-        return UserProfileDto.builder()
-                .id(this.id)
-                .nickName(this.nickName)
-                .profileImg(this.profileImg)
-                .profileTxt(this.profileTxt)
-                .sex(this.sex)
-                .followerCount(followerCount)
-                .followingCount(followingCount)
-                .idVisibility(this.idVisibility)
-                .userStatus(this.userStatus)
-                .posts(posts)
-                .build();
-    }
+//    //    프로필 조회 엔티티
+//    public UserProfileDto detailFromEntity(Long followerCount, Long followingCount, List<PostfilePostResDto> posts) {
+//        return UserProfileDto.builder()
+//                .id(this.id)
+//                .nickName(this.nickName)
+//                .profileImg(this.profileImg)
+//                .profileTxt(this.profileTxt)
+//                .followerCount(followerCount)
+//                .followingCount(followingCount)
+//                .idVisibility(this.idVisibility)
+//                .userStatus(this.userStatus)
+//                .posts(posts)
+//                .build();
+//    }
 
-     //    사용자 프로필 업데이트
+    //    사용자 프로필 업데이트
     public void updateProfile(String nickName, String profileTxt, Sex sex, IdVisibility idVisibility) {
         UserProfileUpdateDto.builder()
                 .nickName(this.nickName)
@@ -107,14 +107,19 @@ public class User extends BaseTimeEntity {
                 .idVisibility(this.idVisibility)
                 .build();
     }
+
     //    프로필 이미지 변경
     public void updateProfileImage(String profileImgUrl) {
         this.profileImg = profileImgUrl;
     }
 
     //소프트 딜리트메서드 추가
-    public void deleteUser(){
+    public void deleteUser() {
         this.delYn = YN.valueOf("Y");
     }
 
+    //    비밀번호 변경
+    public void changePassword(String newPassword, PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(newPassword);
+    }
 }

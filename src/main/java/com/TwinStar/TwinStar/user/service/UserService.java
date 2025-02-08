@@ -81,83 +81,109 @@ public class UserService {
         return user.getId();
     }
 
-//  상대 프로필조회
-    public UserProfileDto searchProfile(Long id) throws NoSuchElementException, RuntimeException{
-        Long followingCount = followRepository.countByFollowing(id);
-        Long followerCount = followRepository.countByFollower(id);//countByFollowing의 매개변수를 Long타입으로 바꿔야함
+////  상대 프로필조회
+//    public UserProfileDto searchProfile(Long id) throws NoSuchElementException, RuntimeException{
+//        Long followingCount = followRepository.countByFollowing(id);
+//        Long followerCount = followRepository.countByFollower(id);//countByFollowing의 매개변수를 Long타입으로 바꿔야함
+//
+//        User receiveUser = userRepository.findByIdWithPosts(id)//프로필dto 매개변수를 위해 사용
+//                .orElseThrow(() -> new RuntimeException("User not found"));
+//
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        Long myId = Long.valueOf(authentication.getName());
 
-        User receiveUser = userRepository.findByIdWithPosts(id)//프로필dto 매개변수를 위해 사용
-                .orElseThrow(() -> new RuntimeException("User not found"));
+////        분기처리후 프로필 보여야 하는것도 생각해야함
+//
+////            정지된 계정일 경우 에러 처리
+//        if (receiveUser.getUserStatus() == UserStatus.BAN){
+//            throw new SuspendedAccountException("해당 계정은 정지되었습니다.");
+//        }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long myId = Long.valueOf(authentication.getName());
+////        비공개 계정일 경우, 현재 로그인한 사용자가 친구가 아닐 경우
+//        boolean isFollow = followRepository.existsByFollowerAndFollowing(myId,receiveUser.getId());//팔로우 레포에서 매개변수 변경해야함
+//        if (receiveUser.getIdVisibility() == IdVisibility.FOLLOW && !isFollow){
+//            throw new PrivateAccountException("이 계정은 비공개 상태입니다.");
+//        }
+//        if(receiveUser.getIdVisibility() == IdVisibility.ONLYME){
+//            throw new PrivateAccountException("이 계정은 비공개 상태입니다.");
+//        }
+//
+//        return userRepository.findById(id)
+//                .orElseThrow(()->new EntityNotFoundException("등록되지 않은 사용자입니다."))
+//                .detailFromEntity(followerCount,followingCount,receiveUser.getPosts());//프로필 데이터
+//    }
 
-//        분기처리후 프로필 보여야 하는것도 생각해야함
+//    //  내 프로필조회
+//    public UserProfileDto searchProfile() throws NoSuchElementException, RuntimeException{
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        Long id = Long.valueOf((authentication.getName()));
+//        User user = userRepository.findByIdWithPosts(id)//프로필dto 매개변수를 위해 사용
+//                .orElseThrow(() -> new RuntimeException("User not found"));
+//        Long followingCount = followRepository.countByFollowing(id);
+//        Long followerCount = followRepository.countByFollower(id);
+//        return userRepository.findById(id)
+//                .orElseThrow(()->new EntityNotFoundException("등록되지 않은 사용자입니다."))
+//                .detailFromEntity(followerCount,followingCount,user.getPosts());//프로필 데이터
+//    }
 
-//            정지된 계정일 경우 에러 처리
-        if (receiveUser.getUserStatus() == UserStatus.BAN){
-            throw new SuspendedAccountException("해당 계정은 정지되었습니다.");
-        }
+//    @Transactional
+//    public void updateUserProfile(Long id, UserProfileUpdateDto updateDto) {
+//        // 1. 사용자 조회
+//        User user = userRepository.findById(id)
+//                .orElseThrow(() -> new RuntimeException("User not found"));
+//
+//        // 2. 닉네임 중복 체크 (옵션)
+//        if (!user.getNickName().equals(updateDto.getNickName()) &&
+//                userRepository.existsByNickName(updateDto.getNickName())) {
+//            throw new RuntimeException("This nickname is already taken.");
+//        }
+//
+//        // 3. 사용자 정보 변경
+//        user.updateProfile(updateDto.getNickName(), updateDto.getProfileTxt()
+//                , updateDto.getSex(), updateDto.getIdVisibility());
+//    }
 
-//        비공개 계정일 경우, 현재 로그인한 사용자가 친구가 아닐 경우
-        boolean isFollow = followRepository.existsByFollowerAndFollowing(myId,receiveUser.getId());//팔로우 레포에서 매개변수 변경해야함
-        if (receiveUser.getIdVisibility() == IdVisibility.FOLLOW && !isFollow){
-            throw new PrivateAccountException("이 계정은 비공개 상태입니다.");
-        }
-        if(receiveUser.getIdVisibility() == IdVisibility.ONLYME){
-            throw new PrivateAccountException("이 계정은 비공개 상태입니다.");
-        }
+//    @Transactional
+//    public void deleteUser() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        Long userId = Long.parseLong(authentication.getName());
+//        // userId를 이용하여 유저 조회
+//        User user = userRepository.findByIdAndDelYn(userId, YN.N)
+//                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+//
+//        // 상태 변경 메서드 호출
+//        user.deleteUser();
+//
+//        userRepository.save(user); // 변경사항 저장
+//    }
 
-        return userRepository.findById(id)
-                .orElseThrow(()->new EntityNotFoundException("등록되지 않은 사용자입니다."))
-                .detailFromEntity(followerCount,followingCount,receiveUser.getPosts());//프로필 데이터
-    }
-
-    //  내 프로필조회
-    public UserProfileDto searchProfile() throws NoSuchElementException, RuntimeException{
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long id = Long.valueOf((authentication.getName()));
-        User user = userRepository.findByIdWithPosts(id)//프로필dto 매개변수를 위해 사용
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        Long followingCount = followRepository.countByFollowing(id);
-        Long followerCount = followRepository.countByFollower(id);
-        return userRepository.findById(id)
-                .orElseThrow(()->new EntityNotFoundException("등록되지 않은 사용자입니다."))
-                .detailFromEntity(followerCount,followingCount,user.getPosts());//프로필 데이터
-    }
-
-    @Transactional
-    public void updateUserProfile(Long id, UserProfileUpdateDto updateDto) {
-        // 1. 사용자 조회
+//    비밀번호 변경
+    public void changePassword(Long id, PasswordChangeRequest request, Authentication authentication){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        // 2. 닉네임 중복 체크 (옵션)
-        if (!user.getNickName().equals(updateDto.getNickName()) &&
-                userRepository.existsByNickName(updateDto.getNickName())) {
-            throw new RuntimeException("This nickname is already taken.");
-        }
-
-        // 3. 사용자 정보 변경
-        user.updateProfile(updateDto.getNickName(), updateDto.getProfileTxt()
-                , updateDto.getSex(), updateDto.getIdVisibility());
-    }
-
-    @Transactional
-    public void deleteUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = Long.parseLong(authentication.getName());
-        // userId를 이용하여 유저 조회
-        User user = userRepository.findByIdAndDelYn(userId, YN.N)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        // 상태 변경 메서드 호출
-        user.deleteUser();
+        // 본인 인증 확인
+        if (!user.getId().toString().equals(authentication.getName())){
+            throw new SecurityException("비밀번호 변경 권한이 없습니다.");
+        }
 
-        userRepository.save(user); // 변경사항 저장
+        // 현재 비밀번호 확인
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        // 새 비밀번호 정책 검증 (예: 8자 이상, 숫자/특수문자 포함)
+        if (!isValidPassword(request.getNewPassword())) {
+            throw new IllegalArgumentException("비밀번호가 보안 정책을 충족하지 않습니다.");
+        }
+
+        // 비밀번호 변경
+        user.changePassword(request.getNewPassword(),passwordEncoder);
     }
 
-
+    private boolean isValidPassword(String password) {
+        return password.length() >= 8 && password.matches(".*[0-9].*") && password.matches(".*[!@#$%^&*()].*");
+    }
 
 
 
