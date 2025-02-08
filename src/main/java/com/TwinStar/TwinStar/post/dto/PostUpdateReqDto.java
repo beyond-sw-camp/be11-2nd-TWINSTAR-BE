@@ -19,13 +19,4 @@ public class PostUpdateReqDto {
     private String profileImgUrl;
     private PostVisibility visibility;
 
-
-    public Post toEntity(User user){
-        return Post.builder()
-                .content(this.content)
-                .postFileUrl(this.postFileUrl)
-                .profileImgUrl(this.profileImgUrl)
-                .visibility(this.visibility)
-                .build();
-    }
 }

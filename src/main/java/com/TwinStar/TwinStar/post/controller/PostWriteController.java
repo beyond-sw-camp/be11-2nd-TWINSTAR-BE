@@ -30,12 +30,4 @@ public class PostWriteController {
         postWriteService.postCreate(dto, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    @PostMapping("update")
-    public ResponseEntity<?> postUpdate(@RequestBody PostUpdateReqDto dto, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
-        String token = authorizationHeader.replace("Bearer ","");
-        Long userId = jwtUtil.getUserId(token);
-        postWriteService.postUpdate(dto, userId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }

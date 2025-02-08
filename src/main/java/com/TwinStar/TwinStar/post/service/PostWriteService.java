@@ -27,9 +27,4 @@ public class PostWriteService {
         postRepository.save(post);
     }
 
-    public void postUpdate(PostUpdateReqDto dto, Long userId){
-        User user = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("user is not found."));
-        Post post = dto.toEntity(user);
-        postRepository.save(post);
-    }
 }
