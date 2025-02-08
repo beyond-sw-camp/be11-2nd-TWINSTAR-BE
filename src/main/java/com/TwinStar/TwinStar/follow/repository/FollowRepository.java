@@ -2,8 +2,11 @@ package com.TwinStar.TwinStar.follow.repository;
 
 
 import com.TwinStar.TwinStar.follow.domain.Follow;
+import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +19,5 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     long countByFollower(User follower);   // 팔로잉 수
     List<Follow> findByFollower(User follower); // 내가 팔로우한 목록
     List<Follow> findByFollowing(User following); // 나를 팔로우한 목록
-
 
 }

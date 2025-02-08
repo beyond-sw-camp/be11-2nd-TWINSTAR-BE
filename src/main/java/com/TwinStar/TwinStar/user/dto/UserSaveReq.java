@@ -4,23 +4,23 @@ import com.TwinStar.TwinStar.user.domain.IdVisibility;
 import com.TwinStar.TwinStar.user.domain.Sex;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.domain.UserStatus;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
 public class UserSaveReq {
-    @NotBlank
-    private String email;
     @NotBlank(message = "이메일은 필수입니다.")
-    private String password;
+    @Email(message = "올바른 이메일 형식이어야 합니다.")
+    private String email;
     @NotBlank(message = "비밀번호는 필수입니다.")
+    @Size(min = 8,message = "비밀번호는 최소 8자 이상이어야 합니다.")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!@#$%^&*()_+]{8,}$",
+            message = "비밀번호는 최소 8자 이상이며, 숫자와 문자를 포함해야 합니다.")
+    private String password;
+    @NotBlank
     private String nickName;
     @NotNull
     private Sex sex;

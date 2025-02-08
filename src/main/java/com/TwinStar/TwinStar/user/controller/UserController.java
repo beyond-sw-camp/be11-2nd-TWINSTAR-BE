@@ -112,7 +112,7 @@ public class UserController {
     }
 
     // JWT 기반 회원 탈퇴 API
-    @DeleteMapping("/user/del")
+    @DeleteMapping("/del")
     public ResponseEntity<?> deleteUser() {
         userService.deleteUser();
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully.","null"),HttpStatus.OK);

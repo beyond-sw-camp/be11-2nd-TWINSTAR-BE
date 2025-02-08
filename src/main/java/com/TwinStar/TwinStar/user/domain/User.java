@@ -29,7 +29,7 @@ public class User extends BaseTimeEntity {
     private Long id;
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, name = "email")
     private String email;
     @Column(nullable = false, unique = true)
     private String nickName;

@@ -1,6 +1,7 @@
 package com.TwinStar.TwinStar.user.repository;
 
 
+import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByEmail(String email);
+    @Query("SELECT u FROM User u WHERE LOWER(u.email) = LOWER(:email)")
+    Optional<User> findByEmail(@Param("email") String email);
 
 //    회원id로 게시물 찾는 쿼리
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.posts WHERE u.id = :userId")
@@ -21,5 +23,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByNickName(String nickName);
 
 //    회원id로 del상태 조회
-    Optional<User> findByIdAndDelYn(Long id, String delYn);
+    Optional<User> findByIdAndDelYn(Long id, YN delYn);
 }
