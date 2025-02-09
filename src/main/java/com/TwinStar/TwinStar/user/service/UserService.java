@@ -1,6 +1,5 @@
 package com.TwinStar.TwinStar.user.service;
 
-;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.dto.LoginDto;
 import com.TwinStar.TwinStar.user.dto.UserSaveReq;

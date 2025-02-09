@@ -22,7 +22,7 @@ public class FollowController {
 
 //    토글 팔로우/언팔로우 요청
     @PostMapping("/toggle/{receiveUserId}")
-    public ResponseEntity<String> toggleFollow(
+    public ResponseEntity<?> toggleFollow(
             @PathVariable Long receiveUserId,@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
     ) {
         String token = authorizationHeader.replace("Bearer ", "");
