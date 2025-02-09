@@ -1,6 +1,7 @@
 package com.TwinStar.TwinStar.user.domain;
 
 import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
+import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.report.domain.Report;
@@ -46,7 +47,7 @@ public class User extends BaseTimeEntity {
     private Sex sex;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private IdVisibility idVisibility;
+    private Visibility idVisibility;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @Builder.Default
@@ -102,7 +103,7 @@ public class User extends BaseTimeEntity {
 //    }
 
     //    사용자 프로필 업데이트
-    public void updateProfile(String nickName, String profileTxt, Sex sex, IdVisibility idVisibility) {
+    public void updateProfile(String nickName, String profileTxt, Sex sex, Visibility idVisibility) {
         UserProfileUpdateDto.builder()
                 .nickName(this.nickName)
                 .profileTxt(this.profileTxt)
@@ -128,7 +129,7 @@ public class User extends BaseTimeEntity {
 
 
     //    상태 변경을 위한 메서드
-    public void changeStatus(IdVisibility newIdVisibility){
+    public void changeStatus(Visibility newIdVisibility){
         if (this.idVisibility == newIdVisibility){
             throw new IllegalStateException("이미 현재상태와 동일합니다.");
         }

@@ -1,5 +1,6 @@
 package com.TwinStar.TwinStar.user.dto;
 
+import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.user.domain.IdVisibility;
 import com.TwinStar.TwinStar.user.domain.Sex;
 import lombok.AllArgsConstructor;
@@ -15,5 +16,5 @@ public class UserProfileUpdateDto {
     private String nickName;
     private String profileTxt;
     private Sex sex;
-    private IdVisibility idVisibility;
+    private Visibility idVisibility;
 }

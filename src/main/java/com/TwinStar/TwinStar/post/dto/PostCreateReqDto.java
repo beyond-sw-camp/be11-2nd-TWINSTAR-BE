@@ -1,7 +1,7 @@
 package com.TwinStar.TwinStar.post.dto;
 
+import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.post.domain.Post;
-import com.TwinStar.TwinStar.post.domain.PostVisibility;
 import com.TwinStar.TwinStar.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +17,7 @@ public class PostCreateReqDto {
     private String file;
     private String profileImgUrl;
     private String postFileUrl;
-    private PostVisibility visibility;
+    private Visibility visibility;
     public Post toEntity(User user) {
         return Post.builder()
                 .content(this.contents)
