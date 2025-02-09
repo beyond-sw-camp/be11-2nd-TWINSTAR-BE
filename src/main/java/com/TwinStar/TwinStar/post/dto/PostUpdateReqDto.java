@@ -1,8 +1,6 @@
 package com.TwinStar.TwinStar.post.dto;
 
-import com.TwinStar.TwinStar.post.domain.Post;
-import com.TwinStar.TwinStar.post.domain.PostVisibility;
-import com.TwinStar.TwinStar.user.domain.User;
+import com.TwinStar.TwinStar.common.domain.Visibility;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +15,6 @@ public class PostUpdateReqDto {
     private String content;
     private String postFileUrl;
     private String profileImgUrl;
-    private PostVisibility visibility;
+    private Visibility visibility;
 
 }

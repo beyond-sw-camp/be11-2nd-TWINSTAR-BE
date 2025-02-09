@@ -1,33 +1,62 @@
 package com.TwinStar.TwinStar.comment.domain;
 
+import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
+import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.post.domain.Post;
+import com.TwinStar.TwinStar.user.domain.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-//@Entity
-//@Table(name = "comment")
-//@Data
-//@AllArgsConstructor
-//@NoArgsConstructor
-//public class Comment {
-//}
-//18번줄부터 삭제.이 주석도 같이 삭제.post import한거 삭제
+import java.util.ArrayList;
+import java.util.List;
+
+@Builder
 @Entity
-@Table(name = "comment") // 🔥 테이블 이름 명시적 지정
-@NoArgsConstructor
+@Table(name = "comment")
+@Data
 @AllArgsConstructor
-@Getter
-@Setter
-public class Comment {
-
+@NoArgsConstructor
+public class Comment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(length = 3000, nullable = false)
     private String content;
 
-    @ManyToOne // 🔥 Post 엔티티와 관계 설정
-    @JoinColumn(name = "post_id", nullable = false)
-    private Post post;  // 🔥 postId 대신 Post 객체 사용
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parentId;
+
+    @Column(nullable = false)
+    private YN pinnedComment;
+
+    @Column(nullable = false)
+    private YN delYn;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.PERSIST)
+    @Builder.Default
+    private List<CommentLike> commentLike = new ArrayList<>();
+
+
+    @PrePersist
+    public void prePersist() {
+        if (this.pinnedComment == null) {
+            this.pinnedComment = YN.N; // 기본값 설정
+        }
+        if (this.delYn == null) {
+            this.delYn = YN.N; // 기본값 설정
+        }
+    }
 }

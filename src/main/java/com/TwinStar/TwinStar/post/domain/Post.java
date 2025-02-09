@@ -1,6 +1,8 @@
 package com.TwinStar.TwinStar.post.domain;
 
+import com.TwinStar.TwinStar.comment.domain.Comment;
 import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
+import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.post.dto.PostUpdateReqDto;
 import com.TwinStar.TwinStar.user.domain.User;
@@ -8,6 +10,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,37 +22,37 @@ public class Post extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "content", length = 3000)
+    @Column(length = 3000)
     private String content;
 
-    @Column(name = "update_status", nullable = false)
-    private YN updatedStatus = YN.N;
+    @Column(nullable = true)
+    private Post sharePostId;
 
-    @Column(name = "share_post_id", nullable = false)
-    private Long sharePostId = 0L;
+    @Column(nullable = false)
+    Visibility postVisibility;
 
-    @Column(name = "post_visibility", nullable = false)
-    PostVisibility visibility;
-
-    @Column(name = "post_del", nullable = false)
+    @Column(nullable = false)
     private YN postDel = YN.N;
 
-    @Column(name = "like_count")
-    private Long likeCount = 0L;
-
-    @Column(name = "hot_issue_yn", nullable = false)
+    @Column(nullable = false)
     private YN hotIssueYn = YN.Y;
 
-    private String postFileUrl;
+    @Column(nullable = false)
+    private PostStatus postStatus;
 
-    private String profileImgUrl;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
+    @Builder.Default
+    private List<PostFile> postFile = new ArrayList<>();
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.PERSIST)
+    @Builder.Default
+    private List<Comment> Comment = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {
@@ -58,14 +62,8 @@ public class Post extends BaseTimeEntity {
         if (this.postDel == null) {
             this.postDel = YN.N; // 기본값 설정
         }
-        if (this.updatedStatus == null) {
-            this.updatedStatus = YN.N; // 기본값 설정
-        }
-        if (this.sharePostId == null) {
-            this.sharePostId = 0L; // 기본값 설정
-        }
-        if (this.likeCount == null) {
-            this.likeCount = 0L; // 기본값 설정
+        if (this.postStatus == null) {
+            this.postStatus = PostStatus.ACTIVE; // 기본값 설정
         }
     }
 
