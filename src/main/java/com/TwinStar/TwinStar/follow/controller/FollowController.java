@@ -1,9 +1,11 @@
 package com.TwinStar.TwinStar.follow.controller;
 
 import com.TwinStar.TwinStar.common.auth.JwtUtil;
+import com.TwinStar.TwinStar.common.dto.CommonDto;
 import com.TwinStar.TwinStar.follow.dto.FollowDto;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.follow.service.FollowService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpHeaders;
@@ -31,39 +33,39 @@ public class FollowController {
         boolean isFollowing = followService.toggleFollow(userId, receiveUserId);
 
         if (isFollowing) {
-            return ResponseEntity.ok("팔로우 되었습니다.");
+            return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "팔로우 되었습니다.",null),HttpStatus.OK);
         } else {
-            return ResponseEntity.ok("언팔로우 되었습니다.");
+            return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "언팔로우 되었습니다.",null),HttpStatus.OK);
         }
     }
 
     // 특정 유저의 팔로워 수 조회 (공개 API)
     @GetMapping("/count/userId/{userId}")
-    public ResponseEntity<Long> countFollowersByUserId(@PathVariable Long userId) {
-        long count = followService.countByUserIdAndFollowYn(userId);
-        return ResponseEntity.ok(count);
+    public ResponseEntity<?> countFollowersByUserId(@PathVariable Long userId) {
+        Long count = followService.countByUserIdAndFollowYn(userId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), count+ "명",count),HttpStatus.OK);
     }
 
     // 특정 유저의 팔로잉 수 조회 (공개 API)
     @GetMapping("/count/receiveUserId/{userId}")
-    public ResponseEntity<Long> countFollowingByUserId(@PathVariable Long userId) {
-        long count = followService.countByReceiveUserIdAndFollowYn(userId);
-        return ResponseEntity.ok(count);
+    public ResponseEntity<?> countFollowingByUserId(@PathVariable Long userId) {
+        Long count = followService.countByReceiveUserIdAndFollowYn(userId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), count+ "명",count),HttpStatus.OK);
     }
 
 //        팔로워 목록 조회
     @GetMapping("/list/userId")
-    public ResponseEntity<List<FollowDto>> getFollowerList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public ResponseEntity<?> getFollowerList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(token);
-        return ResponseEntity.ok(followService.getFollowerList(userId));
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "팔로워 목록 조회입니다",followService.getFollowerList(userId)),HttpStatus.OK);
     }
 
 //        팔로잉 목록 조회
     @GetMapping("/list/receiveUserId")
-    public ResponseEntity<List<FollowDto>> getFollowingList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public ResponseEntity<?> getFollowingList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(token);
-        return ResponseEntity.ok(followService.getFollowingList(userId));
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "팔로잉 목록 조회입니다",followService.getFollowerList(userId)),HttpStatus.OK);
     }
 }

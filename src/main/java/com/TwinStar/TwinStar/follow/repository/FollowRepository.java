@@ -13,13 +13,20 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
-
+    //    특정 Follower와 Following 간의 관계를 조회하는 메서드 *toggleFollow에서 사용
+    Optional<Follow> findByUserIdAndReceiveUserId(User userId, User receiveUserId);
+    //
+//    boolean existsByUserIdAndReceiveUserId(User userId, User receiveUserId);
     boolean existsByFollowerAndFollowing(User follower, User following);
-    void deleteByFollowerAndFollowing(User follower, User following);
-    long countByFollowing(User following); // 팔로워 수
-    long countByFollower(User follower);   // 팔로잉 수
-    List<Follow> findByFollower(User follower); // 내가 팔로우한 목록
-    List<Follow> findByFollowing(User following); // 나를 팔로우한 목록
+    //     팔로워 수
+    Long countByReceiveUserIdAndFollowYn(User receiveUserId, YN followYn);
 
+    // 팔로잉 수 조회 (내가 팔로우한 사람)
+    Long countByUserIdAndFollowYn(User userId, YN followYn);
 
+    //     나를 팔로우한 목록
+    List<Follow> findByUserIdAndFollowYn(User userId, YN followYn);
+
+    //         내가 팔로우한 목록
+    List<Follow> findByReceiveUserIdAndFollowYn(User receiveUserId, YN followYn);
 }
