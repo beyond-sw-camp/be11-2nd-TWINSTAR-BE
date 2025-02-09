@@ -1,6 +1,7 @@
 package com.TwinStar.TwinStar.user.dto;
 
 import com.TwinStar.TwinStar.common.domain.YN;
+import com.TwinStar.TwinStar.user.domain.AdminYn;
 import com.TwinStar.TwinStar.user.domain.IdVisibility;
 import com.TwinStar.TwinStar.user.domain.Sex;
 import com.TwinStar.TwinStar.user.domain.UserStatus;
@@ -25,5 +26,5 @@ public class UserListDto {
     private IdVisibility idVisibility;
     private UserStatus userStatus;
     private YN delYn;
-    private YN adminYn;
+    private AdminYn adminYn;
 }

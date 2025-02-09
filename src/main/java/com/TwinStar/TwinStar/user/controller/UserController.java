@@ -137,6 +137,21 @@ public class UserController {
         return new ResponseEntity<>(userListDto,HttpStatus.OK);
     }
 
+//    관리자 권한 부여
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/admin/grant")
+    public ResponseEntity<?> grantAdmin(@RequestBody GrantAdminId grant) { //보안 및 json으로 받기 위해 @RequestBody 씀
+        userService.grantAdminRole(grant.getId()); //유저 id로 권한 부여 서비스 메서드 호출
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "관리자 권한이 부여되었습니다.",grant),HttpStatus.OK);
+    }
+
+//    관리자 권한 회수
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/admin/revoke")
+    public ResponseEntity<?> revokeAdmin(@RequestBody GrantAdminId revoke) {
+        userService.revokeAdminRole(revoke.getId());
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "관리자 권한이 해제되었습니다.",revoke),HttpStatus.OK);
+    }
 //    // JWT 기반 회원 탈퇴 API
 //    @DeleteMapping("/del")
 //    public ResponseEntity<?> deleteUser() {

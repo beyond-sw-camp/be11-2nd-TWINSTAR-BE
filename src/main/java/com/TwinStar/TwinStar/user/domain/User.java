@@ -48,7 +48,7 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private YN adminYn = YN.valueOf("N");
+    private AdminYn adminYn = AdminYn.USER;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
@@ -132,4 +132,8 @@ public class User extends BaseTimeEntity {
         this.idVisibility = newIdVisibility;
     }
 
+    // 관리자 권한 변경 메서드
+    public void changeAdmin(AdminYn newRole){
+        this.adminYn = newRole;
+    }
 }

@@ -5,6 +5,7 @@ import com.TwinStar.TwinStar.common.exception.PrivateAccountException;
 import com.TwinStar.TwinStar.common.exception.SuspendedAccountException;
 import com.TwinStar.TwinStar.follow.domain.Follow;
 import com.TwinStar.TwinStar.follow.repository.FollowRepository;
+import com.TwinStar.TwinStar.user.domain.AdminYn;
 import com.TwinStar.TwinStar.user.domain.IdVisibility;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.domain.UserStatus;
@@ -203,5 +204,20 @@ public class UserService {
         //    관리자용 유저 리스트
     public List<UserListDto> userList(){
         return userRepository.findAll().stream().map(m->m.listFromEntity()).toList();
+    }
+
+//    관리자 권한 부여 메소드
+    @Transactional
+    public void grantAdminRole(Long userid) {
+        User user = userRepository.findById(userid)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.changeAdmin(AdminYn.ADMIN);
+    }
+//    관리자 권한 회수 메소드
+    @Transactional
+    public void revokeAdminRole(Long userid) {
+        User user = userRepository.findById(userid)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.changeAdmin(AdminYn.USER);
     }
 }
