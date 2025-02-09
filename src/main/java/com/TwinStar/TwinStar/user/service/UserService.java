@@ -207,14 +207,12 @@ public class UserService {
     }
 
 //    관리자 권한 부여 메소드
-    @Transactional
     public void grantAdminRole(Long userid) {
         User user = userRepository.findById(userid)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         user.changeAdmin(AdminYn.ADMIN);
     }
 //    관리자 권한 회수 메소드
-    @Transactional
     public void revokeAdminRole(Long userid) {
         User user = userRepository.findById(userid)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));

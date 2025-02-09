@@ -3,11 +3,13 @@ package com.TwinStar.TwinStar.user.repository;
 
 import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.user.domain.User;
+import com.TwinStar.TwinStar.user.domain.UserStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,4 +26,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 //    회원id로 del상태 조회
     Optional<User> findByIdAndDelYn(Long id, YN delYn);
+
+//    정지된계정 필터링, 정지 상태 업데이트할 때 필요
+    @Query("SELECT u FROM User u WHERE u.userStatus = :status") //:status는 SQL실행 전, 동적으로 할당될 자리(변수)
+    List<User> findAllActiveUsers(@Param("status") UserStatus status);//ACTIVE를 넣으면 ACTIVE가 들어감.
+
 }
