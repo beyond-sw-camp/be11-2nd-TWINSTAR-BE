@@ -2,9 +2,11 @@ package com.TwinStar.TwinStar.user.controller;
 
 
 import com.TwinStar.TwinStar.common.auth.JwtTokenProvider;
+import com.TwinStar.TwinStar.common.dto.CommonDto;
+import com.TwinStar.TwinStar.common.exception.MissingRequestParameterException;
+import com.TwinStar.TwinStar.user.domain.IdVisibility;
 import com.TwinStar.TwinStar.user.domain.User;
-import com.TwinStar.TwinStar.user.dto.LoginDto;
-import com.TwinStar.TwinStar.user.dto.UserSaveReq;
+import com.TwinStar.TwinStar.user.dto.*;
 import com.TwinStar.TwinStar.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,9 +14,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -78,7 +83,80 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+//    비밀번호 변경
+    @PatchMapping("/{id}/password")
+    public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody PasswordChangeRequest request
+            , Authentication authentication){
+
+        userService.changePassword(id, request,authentication);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"Password changed successfully",null),HttpStatus.OK);
+
+    }
+
+//      사용자 상태 변경
+    @PatchMapping("/status")
+    public ResponseEntity<?> changeStatus(@RequestBody ChangeIdVisibility newStatus){
+//        요청 본문이 null이거나 idVisibility가 null이면 예외 발생 방지
+        if (newStatus == null || newStatus.getIdVisibility() == null){
+            throw new MissingRequestParameterException("idVisibility 값이 필요합니다.");
+        }
 
 
+        userService.changeIdVisibility(newStatus.getIdVisibility());
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "user Visibility updeated to" + newStatus,newStatus),HttpStatus.OK);
+    }
+
+////    상대방 프로필 들어가면 정보를 얻는다.
+//    @GetMapping("/detail/{id}")
+//    public ResponseEntity<?> userDetail(@PathVariable Long id){
+//        UserProfileDto dto = userService.searchProfile(id);
+//        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK);
+//
+//    }
+//
+////    내 프로필 정보 조회
+//    @GetMapping("/myProfile")
+//    public ResponseEntity<?> myProfile(){
+//        UserProfileDto dto = userService.searchProfile();
+//        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK);
+//    }
+//
+//    //    사용자 프로필 수정
+//    @PatchMapping("/{id}/profile")
+//    public ResponseEntity<?> updateProfile(@PathVariable Long userId,
+//                                                @RequestBody UserProfileUpdateDto updateDto) {
+//        userService.updateUserProfile(userId, updateDto);
+//        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully.","null"),HttpStatus.OK);
+//    }
+
+// 관리자용 유저목록 조회
+    @GetMapping("/admin/user/list")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> list(){
+        List<UserListDto> userListDto = userService.userList();
+        return new ResponseEntity<>(userListDto,HttpStatus.OK);
+    }
+
+//    관리자 권한 부여
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/admin/grant")
+    public ResponseEntity<?> grantAdmin(@RequestBody GrantAdminId grant) { //보안 및 json으로 받기 위해 @RequestBody 씀
+        userService.grantAdminRole(grant.getId()); //유저 id로 권한 부여 서비스 메서드 호출
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "관리자 권한이 부여되었습니다.",grant),HttpStatus.OK);
+    }
+
+//    관리자 권한 회수
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/admin/revoke")
+    public ResponseEntity<?> revokeAdmin(@RequestBody GrantAdminId revoke) {
+        userService.revokeAdminRole(revoke.getId());
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "관리자 권한이 해제되었습니다.",revoke),HttpStatus.OK);
+    }
+//    // JWT 기반 회원 탈퇴 API
+//    @DeleteMapping("/del")
+//    public ResponseEntity<?> deleteUser() {
+//        userService.deleteUser();
+//        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully.","null"),HttpStatus.OK);
+//    }
 
 }
