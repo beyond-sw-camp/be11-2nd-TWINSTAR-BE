@@ -2,20 +2,22 @@ package com.TwinStar.TwinStar.post.controller;
 
 import com.TwinStar.TwinStar.common.auth.JwtUtil;
 import com.TwinStar.TwinStar.post.dto.PostCreateReqDto;
-import com.TwinStar.TwinStar.post.service.PostService;
+import com.TwinStar.TwinStar.post.dto.PostUpdateReqDto;
+import com.TwinStar.TwinStar.post.service.PostWriteService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("post")
-public class PostController {
-    private final PostService postService;
+public class PostWriteController {
+    private final PostWriteService postWriteService;
     private final JwtUtil jwtUtil;
 
-    public PostController(PostService postService, JwtUtil jwtUtil) {
-        this.postService = postService;
+    public PostWriteController(PostWriteService postService, PostWriteService postWriteServiceService, PostWriteService postWriteService, JwtUtil jwtUtil) {
+        this.postWriteService = postWriteService;
         this.jwtUtil = jwtUtil;
     }
 
@@ -25,7 +27,7 @@ public class PostController {
         String token = authorizationHeader.replace("Bearer ", "");
         // 토큰에서 userId 추출
         Long userId = jwtUtil.getUserId(token);
-        postService.postCreate(dto, userId);
+        postWriteService.postCreate(dto, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
