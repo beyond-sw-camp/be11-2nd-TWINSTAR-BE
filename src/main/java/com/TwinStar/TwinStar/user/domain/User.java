@@ -122,4 +122,14 @@ public class User extends BaseTimeEntity {
     public void changePassword(String newPassword, PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(newPassword);
     }
+
+
+    //    상태 변경을 위한 메서드
+    public void changeStatus(IdVisibility newIdVisibility){
+        if (this.idVisibility == newIdVisibility){
+            throw new IllegalStateException("이미 현재상태와 동일합니다.");
+        }
+        this.idVisibility = newIdVisibility;
+    }
+
 }

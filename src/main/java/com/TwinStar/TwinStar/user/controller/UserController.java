@@ -3,6 +3,8 @@ package com.TwinStar.TwinStar.user.controller;
 
 import com.TwinStar.TwinStar.common.auth.JwtTokenProvider;
 import com.TwinStar.TwinStar.common.dto.CommonDto;
+import com.TwinStar.TwinStar.common.exception.MissingRequestParameterException;
+import com.TwinStar.TwinStar.user.domain.IdVisibility;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.dto.*;
 import com.TwinStar.TwinStar.user.service.UserService;
@@ -91,7 +93,18 @@ public class UserController {
 
     }
 
+//      사용자 상태 변경
+    @PatchMapping("/status")
+    public ResponseEntity<?> changeStatus(@RequestBody ChangeIdVisibility newStatus){
+//        요청 본문이 null이거나 idVisibility가 null이면 예외 발생 방지
+        if (newStatus == null || newStatus.getIdVisibility() == null){
+            throw new MissingRequestParameterException("idVisibility 값이 필요합니다.");
+        }
 
+
+        userService.changeIdVisibility(newStatus.getIdVisibility());
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "user Visibility updeated to" + newStatus,newStatus),HttpStatus.OK);
+    }
 
 ////    상대방 프로필 들어가면 정보를 얻는다.
 //    @GetMapping("/detail/{id}")

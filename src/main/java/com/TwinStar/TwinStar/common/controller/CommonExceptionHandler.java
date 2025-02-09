@@ -1,6 +1,7 @@
 package com.TwinStar.TwinStar.common.controller;
 
 import com.TwinStar.TwinStar.common.dto.CommonErrorDto;
+import com.TwinStar.TwinStar.common.exception.MissingRequestParameterException;
 import com.TwinStar.TwinStar.common.exception.PrivateAccountException;
 import com.TwinStar.TwinStar.common.exception.SuspendedAccountException;
 import jakarta.persistence.EntityNotFoundException;
@@ -37,4 +38,9 @@ public class CommonExceptionHandler {
         return new ResponseEntity<>(new CommonErrorDto(HttpStatus.FORBIDDEN.value(), e.getMessage()), HttpStatus.FORBIDDEN);
     }
 
+//   변경할 공개 범위 데이터가 없을 경우
+    @ExceptionHandler(MissingRequestParameterException.class)
+    public ResponseEntity<?> missingRequestParameter(MissingRequestParameterException e){
+        return new ResponseEntity<>(new CommonErrorDto(HttpStatus.BAD_REQUEST.value(), e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
 }

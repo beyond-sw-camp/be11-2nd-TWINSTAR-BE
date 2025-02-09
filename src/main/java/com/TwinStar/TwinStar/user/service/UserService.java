@@ -180,9 +180,22 @@ public class UserService {
         // 비밀번호 변경
         user.changePassword(request.getNewPassword(),passwordEncoder);
     }
-
+    //비밀번호 검증
     private boolean isValidPassword(String password) {
         return password.length() >= 8 && password.matches(".*[0-9].*") && password.matches(".*[!@#$%^&*()].*");
+    }
+
+    //    계정범위 변경
+    public void changeIdVisibility(IdVisibility newStatus){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.valueOf(authentication.getName());
+
+        User user = userRepository.findById(userId).orElseThrow(()->new IllegalArgumentException("User is not found"));
+
+    //   상태 변경 메서드 호출
+        user.changeStatus(newStatus);
+    //   상태 변경 저장
+        userRepository.save(user);
     }
 
 
