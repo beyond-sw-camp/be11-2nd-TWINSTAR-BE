@@ -2,6 +2,7 @@ package com.TwinStar.TwinStar.user.domain;
 
 import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
 import com.TwinStar.TwinStar.common.domain.YN;
+import com.TwinStar.TwinStar.follow.domain.Follow;
 import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.report.domain.Report;
 import com.TwinStar.TwinStar.user.dto.UserListDto;
@@ -63,11 +64,11 @@ public class User extends BaseTimeEntity {
     @Builder.Default
     private List<Report> reports = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Follow> following = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Follow> followers = new ArrayList<>();
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> receiveUserId = new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiveUserId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> userId = new ArrayList<>();
 
     //    관리자용 유저 목록조회
     public UserListDto listFromEntity() {
