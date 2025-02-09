@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -46,7 +47,7 @@ public class Comment extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.PERSIST)
     @Builder.Default
-    private List<CommentLike> commentLike;
+    private List<CommentLike> commentLike = new ArrayList<>();
 
 
     @PrePersist
@@ -59,5 +60,3 @@ public class Comment extends BaseTimeEntity {
         }
     }
 }
-
-
