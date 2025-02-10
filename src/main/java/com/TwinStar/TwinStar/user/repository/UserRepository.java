@@ -27,8 +27,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 //    회원id로 del상태 조회
     Optional<User> findByIdAndDelYn(Long id, YN delYn);
 
-//    정지된계정 필터링, 정지 상태 업데이트할 때 필요
-    @Query("SELECT u FROM User u WHERE u.userStatus = :status") //:status는 SQL실행 전, 동적으로 할당될 자리(변수)
-    List<User> findAllActiveUsers(@Param("status") UserStatus status);//ACTIVE를 넣으면 ACTIVE가 들어감.
+//    정지된 사용자 조회 메서드
+    @Query("SELECT u FROM User u WHERE u.userStatus = :status AND (u.banCloseTime IS NULL OR u.banCloseTime > CURRENT_TIMESTAMP)")
+    List<User> findBannedUsers(@Param("status") UserStatus status);
+
 
 }

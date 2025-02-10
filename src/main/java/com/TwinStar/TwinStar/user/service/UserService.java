@@ -1,15 +1,10 @@
 package com.TwinStar.TwinStar.user.service;
 
 
-import com.TwinStar.TwinStar.common.domain.YN;
-import com.TwinStar.TwinStar.common.exception.PrivateAccountException;
-import com.TwinStar.TwinStar.common.exception.SuspendedAccountException;
-import com.TwinStar.TwinStar.follow.domain.Follow;
+import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.follow.repository.FollowRepository;
 import com.TwinStar.TwinStar.user.domain.AdminYn;
-import com.TwinStar.TwinStar.user.domain.IdVisibility;
 import com.TwinStar.TwinStar.user.domain.User;
-import com.TwinStar.TwinStar.user.domain.UserStatus;
 import com.TwinStar.TwinStar.user.dto.*;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,9 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -188,7 +181,7 @@ public class UserService {
     }
 
     //    계정범위 변경
-    public void changeIdVisibility(IdVisibility newStatus){
+    public void changeIdVisibility(Visibility newStatus){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = Long.valueOf(authentication.getName());
 
@@ -219,4 +212,27 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         user.changeAdmin(AdminYn.USER);
     }
+
+// 계정 정지
+    public void banUser(Integer days) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User adminId = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()->new EntityNotFoundException("없는 관리자입니다."));
+        User user = userRepository.findById(adminId.getId())
+                .orElseThrow(() -> new EntityNotFoundException("해당 사용자를 찾을 수 없습니다."));
+
+        user.ban(days); // User 엔티티 내 메서드 호출
+        userRepository.save(user);
+    }
+
+//계정 정지 해제
+    public void unbanUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User adminId = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()->new EntityNotFoundException("없는 관리자입니다."));
+        User user = userRepository.findById(adminId.getId())
+                .orElseThrow(() -> new EntityNotFoundException("해당 사용자를 찾을 수 없습니다."));
+
+        user.unban();
+        userRepository.save(user);
+    }
+
 }

@@ -31,7 +31,8 @@ public class Post extends BaseTimeEntity {
     @Column(length = 3000)
     private String content;
 
-    @Column(nullable = true)
+    @ManyToOne
+    @JoinColumn(name = "share_post_id")
     private Post sharePostId;
 
     @Column(nullable = false)
@@ -48,9 +49,9 @@ public class Post extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
     @Builder.Default
-    private List<PostFile> postFile = new ArrayList<>();
+    private List<PostFile> postFiles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
     @Builder.Default
     private List<Comment> Comment = new ArrayList<>();
 

@@ -141,4 +141,20 @@ public class User extends BaseTimeEntity {
     public void changeAdmin(AdminYn newRole){
         this.adminYn = newRole;
     }
+
+    //  계정 정지 메서드 추가
+    public void ban(Integer banCloseTime) {
+        this.userStatus = UserStatus.BAN;
+//        banCloseTime이 null값이면 무기한 정지
+        this.banCloseTime = (banCloseTime == null) ? null : LocalDateTime.now().plusDays(banCloseTime);
+    }
+
+    // 계정 정지 해제 메서드 추가
+    public void unban() {
+        this.userStatus = UserStatus.ACTIVE;
+        this.banCloseTime = null;//너는 null하면 안되는데
+    }
+
+
+
 }

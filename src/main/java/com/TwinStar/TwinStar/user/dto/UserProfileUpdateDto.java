@@ -1,7 +1,6 @@
 package com.TwinStar.TwinStar.user.dto;
 
 import com.TwinStar.TwinStar.common.domain.Visibility;
-import com.TwinStar.TwinStar.user.domain.IdVisibility;
 import com.TwinStar.TwinStar.user.domain.Sex;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

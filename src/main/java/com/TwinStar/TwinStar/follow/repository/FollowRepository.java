@@ -16,8 +16,8 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     //    특정 Follower와 Following 간의 관계를 조회하는 메서드 *toggleFollow에서 사용
     Optional<Follow> findByUserIdAndReceiveUserId(User userId, User receiveUserId);
     //
-//    boolean existsByUserIdAndReceiveUserId(User userId, User receiveUserId);
-    boolean existsByFollowerAndFollowing(User follower, User following);
+    boolean existsByUserIdAndReceiveUserId(User userId, User receiveUserId);
+//    boolean existsByFollowerAndFollowing(User follower, User following);
     //     팔로워 수
     Long countByReceiveUserIdAndFollowYn(User receiveUserId, YN followYn);
 
