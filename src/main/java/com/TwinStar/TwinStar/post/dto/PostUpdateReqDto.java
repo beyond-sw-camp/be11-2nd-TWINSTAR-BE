@@ -1,20 +1,17 @@
 package com.TwinStar.TwinStar.post.dto;
 
 import com.TwinStar.TwinStar.common.domain.Visibility;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@Builder
+import java.util.List;
+
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostUpdateReqDto {
-
+    private Long postId;  // 수정할 게시글 ID
     private String content;
-    private String postFileUrl;
-    private String profileImgUrl;
-    private Visibility visibility;
-
+    private List<String> postFileUrls;  // ✅ 파일을 여러 개 저장할 수 있도록 변경
+    private Visibility postVisibility;
 }
+
