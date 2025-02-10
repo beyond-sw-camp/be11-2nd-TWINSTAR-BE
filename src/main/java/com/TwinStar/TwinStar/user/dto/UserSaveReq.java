@@ -1,6 +1,6 @@
 package com.TwinStar.TwinStar.user.dto;
 
-import com.TwinStar.TwinStar.user.domain.IdVisibility;
+import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.user.domain.Sex;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.domain.UserStatus;
@@ -25,7 +25,7 @@ public class UserSaveReq {
     @NotNull
     private Sex sex;
     @NotNull
-    private IdVisibility idVisibility;
+    private Visibility idVisibility;
     @NotNull
     private UserStatus userStatus;
 

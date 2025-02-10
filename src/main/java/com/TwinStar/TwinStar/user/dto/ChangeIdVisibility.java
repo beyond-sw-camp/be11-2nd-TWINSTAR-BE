@@ -1,6 +1,6 @@
 package com.TwinStar.TwinStar.user.dto;
 
-import com.TwinStar.TwinStar.user.domain.IdVisibility;
+import com.TwinStar.TwinStar.common.domain.Visibility;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class ChangeIdVisibility {
-    private IdVisibility idVisibility;
+    private Visibility idVisibility;
 }

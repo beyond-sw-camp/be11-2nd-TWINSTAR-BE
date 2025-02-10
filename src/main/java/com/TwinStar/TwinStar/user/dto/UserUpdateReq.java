@@ -1,6 +1,6 @@
 package com.TwinStar.TwinStar.user.dto;
 
-import com.TwinStar.TwinStar.user.domain.IdVisibility;
+import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.user.domain.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +16,7 @@ public class UserUpdateReq {
     private String nickName;
     private String profileImg;
     private String profileTxt;
-    private IdVisibility idVisibility;
+    private Visibility idVisibility;
     private UserStatus userStatus;
 
 //    UserUpdateReq에서 값이 있는 필드만 변경

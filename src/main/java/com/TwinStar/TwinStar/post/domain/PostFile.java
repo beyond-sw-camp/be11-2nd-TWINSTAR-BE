@@ -17,8 +17,8 @@ public class PostFile {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "postFile")
-    private Post Post;
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @Column(nullable = false)
     private String fileUrl;

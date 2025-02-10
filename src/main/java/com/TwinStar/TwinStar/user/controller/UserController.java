@@ -4,7 +4,6 @@ package com.TwinStar.TwinStar.user.controller;
 import com.TwinStar.TwinStar.common.auth.JwtTokenProvider;
 import com.TwinStar.TwinStar.common.dto.CommonDto;
 import com.TwinStar.TwinStar.common.exception.MissingRequestParameterException;
-import com.TwinStar.TwinStar.user.domain.IdVisibility;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.dto.*;
 import com.TwinStar.TwinStar.user.service.UserService;
@@ -158,5 +157,23 @@ public class UserController {
 //        userService.deleteUser();
 //        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully.","null"),HttpStatus.OK);
 //    }
+
+    //  계정 정지 (관리자 전용)
+    @PostMapping("/admin/ban")
+    @PreAuthorize("hasRole('ADMIN')") // 관리자만 접근 가능
+    public ResponseEntity<?> suspendUser(@RequestParam Integer days) {
+        userService.banUser(days);
+        String message = (days == null) ? "사용자 계정이 무기한 정지되었습니다." : "사용자 계정이 " + days + "일 동안 정지되었습니다.";
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),message,null),HttpStatus.OK);
+    }
+
+    // 계정 정지 해제 (관리자 전용)
+    @PostMapping("/{userId}/unban")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> unsuspendUser(@PathVariable Long userId) {
+        userService.unbanUser();
+        return ResponseEntity.ok("사용자 계정 정지가 해제되었습니다.");
+    }
+
 
 }
