@@ -31,8 +31,7 @@ public class Post extends BaseTimeEntity {
     @Column(length = 3000)
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "share_post_id")
+    @Column(nullable = true)
     private Post sharePostId;
 
     @Column(nullable = false)
@@ -47,11 +46,10 @@ public class Post extends BaseTimeEntity {
     @Column(nullable = false)
     private PostStatus postStatus;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
-    @Builder.Default
-    private List<PostFile> postFiles = new ArrayList<>();
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<String> postFiles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.PERSIST)
     @Builder.Default
     private List<Comment> Comment = new ArrayList<>();
 
@@ -68,13 +66,9 @@ public class Post extends BaseTimeEntity {
         }
     }
 
-//
-//    public Post update(PostUpdateReqDto dto){
-//        this.content = dto.getContent();
-//        this.updatedStatus = YN.Y;
-//        this.postFileUrl = dto.toEntity().getPostFileUrl();
-//        this.profileImgUrl = dto.getProfileImgUrl();
-//        this.visibility = dto.getVisibility();
-//        return this;
-//    }
+    public void update(PostUpdateReqDto dto) {
+        this.content = dto.getContent();
+        this.postFiles = dto.getPostFileUrls();
+        this.postVisibility = dto.getPostVisibility();
+    }
 }

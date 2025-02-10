@@ -8,23 +8,32 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
 public class PostCreateReqDto {
     private String contents;
-    private String file;
-    private String profileImgUrl;
-    private String postFileUrl;
-    private Visibility visibility;
+    private List<String> files; // 이미지 및 동영상 파일 URL 리스트
+    private Visibility postVisibility;
+
+    public void validate() {
+        if (files == null || files.isEmpty()) {
+            throw new IllegalArgumentException("최소 1개의 파일을 업로드해야 합니다.");
+        }
+        if (files.size() > 10) {
+            throw new IllegalArgumentException("최대 10개의 파일만 업로드 가능합니다.");
+        }
+    }
+
     public Post toEntity(User user) {
         return Post.builder()
                 .content(this.contents)
                 .user(user)
-                .profileImgUrl(this.profileImgUrl)
-                .postFileUrl(this.postFileUrl)
-                .visibility(this.visibility)
+                .postVisibility(this.postVisibility)
                 .build();
     }
 }
+

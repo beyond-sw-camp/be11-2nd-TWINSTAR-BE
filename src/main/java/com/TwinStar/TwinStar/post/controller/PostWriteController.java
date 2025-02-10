@@ -22,12 +22,36 @@ public class PostWriteController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> postCreate(@RequestBody PostCreateReqDto dto, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader){
-        // Bearer 토큰에서 실제 토큰 값만 추출
+    public ResponseEntity<?> postCreate(@RequestBody PostCreateReqDto dto,
+                                        @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "");
+            Long userId = jwtUtil.getUserId(token);
+
+            postWriteService.postCreate(dto, userId);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("update")
+    public ResponseEntity<?> postUpdate(@RequestBody PostUpdateReqDto dto,
+                                        @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
-        // 토큰에서 userId 추출
         Long userId = jwtUtil.getUserId(token);
-        postWriteService.postCreate(dto, userId);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        postWriteService.postUpdate(dto, userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("delete/{postId}")
+    public ResponseEntity<?> postDelete(@PathVariable Long postId,
+                                        @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        String token = authorizationHeader.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(token);
+
+        postWriteService.postDelete(postId, userId);
+        return ResponseEntity.ok().build();
     }
 }
