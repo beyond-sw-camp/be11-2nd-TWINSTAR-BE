@@ -53,6 +53,10 @@ public class Post extends BaseTimeEntity {
     @Builder.Default
     private List<Comment> Comment = new ArrayList<>();
 
+    @Column(nullable = false)
+    @Builder.Default
+    private int Score = 0;
+
     @PrePersist
     public void prePersist() {
         if (this.hotIssueYn == null) {
@@ -70,5 +74,9 @@ public class Post extends BaseTimeEntity {
         this.content = dto.getContent();
         this.postFiles = dto.getPostFileUrls();
         this.postVisibility = dto.getPostVisibility();
+    }
+
+    public void updateHotIssueScore(int score) {
+        this.Score = score;
     }
 }
