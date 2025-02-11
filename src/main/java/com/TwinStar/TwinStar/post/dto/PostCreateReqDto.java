@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 public class PostCreateReqDto {
     private String contents;
-    private List<String> files; // 이미지 및 동영상 파일 URL 리스트
+    private List<String > files; // 이미지 및 동영상 파일 URL 리스트
     private Visibility postVisibility;
 
     public void validate() {
@@ -36,4 +36,3 @@ public class PostCreateReqDto {
                 .build();
     }
 }
-

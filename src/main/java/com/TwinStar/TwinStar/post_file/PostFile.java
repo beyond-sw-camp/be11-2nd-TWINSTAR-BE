@@ -2,13 +2,13 @@ package com.TwinStar.TwinStar.post_file;
 
 import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.post.domain.Post;
+import com.TwinStar.TwinStar.report.domain.Type;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Table(name = "post_file")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -29,24 +29,16 @@ public class PostFile {
     private String fileType; // "image" 또는 "video"
 
     @Column(nullable = false)
-    private YN isHide = YN.N; // 노출 시킬 파일 여부
+    @Builder.Default
+    private String isHide = "N"; // ✅ String 타입으로 변경
 
-    public void prePersist() {
-        if (this.isHide == null) {
-            this.isHide = YN.N; // 기본값 설정
-        }
+    // ✅ 파일 숨김 처리
+    public void hideFile() {
+        this.isHide = "Y";
     }
 
-    // 파일 숨김 처리
-    public void hideFile(){
-        this.isHide = YN.Y;
+    // ✅ 파일 공개 처리
+    public void restoreFile() {
+        this.isHide = "N";
     }
-
-    // 파일 공개 처리
-    public void restoreFile(){
-        this.isHide = YN.N;
-    }
-
-
 }
-

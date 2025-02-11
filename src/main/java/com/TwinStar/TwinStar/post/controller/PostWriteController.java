@@ -16,7 +16,7 @@ public class PostWriteController {
     private final PostWriteService postWriteService;
     private final JwtUtil jwtUtil;
 
-    public PostWriteController(PostWriteService postService, PostWriteService postWriteServiceService, PostWriteService postWriteService, JwtUtil jwtUtil) {
+    public PostWriteController(PostWriteService postWriteService, JwtUtil jwtUtil) {
         this.postWriteService = postWriteService;
         this.jwtUtil = jwtUtil;
     }

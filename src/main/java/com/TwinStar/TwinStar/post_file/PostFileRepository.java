@@ -12,18 +12,17 @@ public interface PostFileRepository extends JpaRepository<PostFile, Long> {
 
     List<PostFile> findByPost(Post post);
 
-    // 숨겨지지 않은 파일 조회 (isHide = N)
-    @Query("SELECT pf.url FROM PostFile pf WHERE pf.post.id = :postId AND pf.isHide = 'N'")
+    // ✅ 숨겨지지 않은 파일 조회 (isHide = 'N')
+    @Query("SELECT pf.fileUrl FROM PostFile pf WHERE pf.post.id = :postId AND pf.isHide = 'N'")
     List<String> findActiveUrlsByPostId(@Param("postId") Long postId);
 
-    // 기존 파일을 숨김 처리 (isHide = 'Y'으로 변경)
+    // ✅ 기존 파일을 숨김 처리 (isHide = 'Y')
     @Modifying
-    @Query("UPDATE PostFile pf SET pf.isHide = 'Y' WHERE pf.url IN :urls")
-    void hideFilesByUrls(@Param("urls") List<String> urls);
+    @Query("UPDATE PostFile pf SET pf.isHide = 'Y' WHERE pf.fileUrl IN :fileUrls AND pf.post.id = :postId")
+    void hideFilesByUrls(@Param("fileUrls") List<String> urls, @Param("postId") Long postId);
 
-    // 기존 파일을 다시 보이도록 처리 (isHide = 'N'으로 변경)
+    // ✅ 기존 파일을 다시 보이도록 처리 (isHide = 'N')
     @Modifying
-    @Query("UPDATE PostFile pf SET pf.isHide = 'N' WHERE pf.url IN :urls")
-    void restoreFilesByUrls(@Param("urls") List<String> urls);
+    @Query("UPDATE PostFile pf SET pf.isHide = 'N' WHERE pf.fileUrl IN :fileUrls AND pf.post.id = :postId")
+    void restoreFilesByUrls(@Param("fileUrls") List<String> urls, @Param("postId") Long postId);
 }
-

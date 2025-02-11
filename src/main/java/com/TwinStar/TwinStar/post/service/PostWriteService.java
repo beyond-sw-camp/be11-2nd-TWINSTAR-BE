@@ -6,6 +6,7 @@ import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.post.dto.PostCreateReqDto;
 import com.TwinStar.TwinStar.post.dto.PostUpdateReqDto;
 import com.TwinStar.TwinStar.post.repository.PostRepository;
+import com.TwinStar.TwinStar.post_file.PostFile;
 import com.TwinStar.TwinStar.post_file.PostFileRepository;
 import com.TwinStar.TwinStar.post_file.PostFileService;
 import com.TwinStar.TwinStar.user.domain.User;
@@ -25,7 +26,7 @@ public class PostWriteService {
     private final PostFileService postFileService;
     private final PostFileRepository postFileRepository;
 
-    public PostWriteService(PostRepository postRepository, UserRepository userRepository, PostFileRepository postFileRepository, PostFileService postFileService, PostFileRepository postFileRepository1) {
+    public PostWriteService(PostRepository postRepository, UserRepository userRepository, PostFileService postFileService, PostFileRepository postFileRepository1) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.postFileService = postFileService;
@@ -56,39 +57,29 @@ public class PostWriteService {
             throw new AccessDeniedException("You do not have permission to update this post.");
         }
 
-        // 🔹 게시글 내용 수정
+        // 게시글 내용 수정
         post.setContent(dto.getContent());
         post.setPostVisibility(dto.getPostVisibility());
 
-        // 🔹 기존 파일 목록 가져오기 (숨겨지지 않은 파일만 가져옴)
+        // 기존 파일 목록 가져오기
         List<String> existingFiles = postFileRepository.findActiveUrlsByPostId(dto.getPostId());
+        List<String> updatedFileUrls = dto.getPostFileUrls();
 
-        // 🔹 업데이트 요청에서 넘어온 파일 목록
-        List<String> updatedFiles = dto.getPostFileUrls();
-
-        // 🔹 숨길 파일 리스트 (기존에는 있었지만 업데이트 요청에 없는 파일 → isHide = 'Y')
+        // 기존 파일 중 업데이트되지 않은 파일 → 숨김 처리
         List<String> filesToHide = existingFiles.stream()
-                .filter(file -> !updatedFiles.contains(file))
+                .filter(file -> !updatedFileUrls.contains(file))
                 .toList();
 
-        // 🔹 다시 보이게 할 파일 리스트 (기존에 존재하고, 업데이트 요청에도 포함된 파일 → isHide = 'N')
-        List<String> filesToShow = existingFiles.stream()
-                .filter(updatedFiles::contains)
-                .toList();
-
-        // 🔹 추가할 파일 리스트 (새로운 파일만 추가)
-        List<String> filesToAdd = updatedFiles.stream()
-                .filter(file -> !existingFiles.contains(file))
-                .toList();
-
-        // ✅ 파일 숨김 처리
-        postFileService.hidePostFiles(filesToHide);
+        // ✅ 기존 파일을 숨김 처리
+        if (!filesToHide.isEmpty()) {
+            postFileService.hidePostFiles(dto.getPostId(), filesToHide);
+        }
 
         // ✅ 숨겨진 파일 복원 처리
-        postFileService.restorePostFiles(filesToShow);
+        postFileService.restorePostFiles(dto.getPostId(), updatedFileUrls);
 
         // ✅ 새로운 파일 저장
-        postFileService.savePostFiles(post, filesToAdd);
+        postFileService.savePostFiles(post, updatedFileUrls);
 
         postRepository.save(post);
     }
