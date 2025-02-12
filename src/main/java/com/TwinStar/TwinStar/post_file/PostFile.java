@@ -1,14 +1,12 @@
 package com.TwinStar.TwinStar.post_file;
 
-import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.post.domain.Post;
-import com.TwinStar.TwinStar.report.domain.Type;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Table(name = "post_file")
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -23,21 +21,19 @@ public class PostFile {
     private Post post;
 
     @Column(nullable = false)
-    private String fileUrl; // 이미지 또는 동영상 URL
+    private String fileUrl;
 
     @Column(nullable = false)
-    private String fileType; // "image" 또는 "video"
+    private String fileType;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1)
     @Builder.Default
-    private String isHide = "N"; // ✅ String 타입으로 변경
+    private String isHide = "N"; // "Y" 또는 "N"
 
-    // ✅ 파일 숨김 처리
     public void hideFile() {
         this.isHide = "Y";
     }
 
-    // ✅ 파일 공개 처리
     public void restoreFile() {
         this.isHide = "N";
     }

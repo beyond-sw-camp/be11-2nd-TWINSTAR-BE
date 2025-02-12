@@ -32,7 +32,7 @@ public class PostCreateReqDto {
         return Post.builder()
                 .content(this.contents)
                 .user(user)
-                .postVisibility(this.postVisibility)
+                .postVisibility(this.postVisibility != null ? this.postVisibility : Visibility.ALL) // default로 all 삽입
                 .build();
     }
 }
