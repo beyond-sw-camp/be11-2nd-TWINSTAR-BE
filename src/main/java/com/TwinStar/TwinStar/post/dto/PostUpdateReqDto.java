@@ -1,6 +1,7 @@
 package com.TwinStar.TwinStar.post.dto;
 
 import com.TwinStar.TwinStar.common.domain.Visibility;
+import com.TwinStar.TwinStar.post_file.PostFile;
 import lombok.*;
 
 import java.util.List;
@@ -14,4 +15,3 @@ public class PostUpdateReqDto {
     private List<String> postFileUrls;  // ✅ 파일을 여러 개 저장할 수 있도록 변경
     private Visibility postVisibility;
 }
-

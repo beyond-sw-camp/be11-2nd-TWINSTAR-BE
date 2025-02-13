@@ -3,21 +3,22 @@ package com.TwinStar.TwinStar.post.domain;
 import com.TwinStar.TwinStar.comment.domain.Comment;
 import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
 import com.TwinStar.TwinStar.common.domain.Visibility;
-import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.post.dto.PostUpdateReqDto;
+import com.TwinStar.TwinStar.post_file.PostFile;
+import com.TwinStar.TwinStar.post_file.PostFileService;
 import com.TwinStar.TwinStar.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
 @Builder
 @Entity
+@EqualsAndHashCode(callSuper = false)
 public class Post extends BaseTimeEntity {
 
     @Id
@@ -31,52 +32,49 @@ public class Post extends BaseTimeEntity {
     @Column(length = 3000)
     private String content;
 
-    @Column(nullable = true)
-    private Post sharePostId;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Visibility postVisibility = Visibility.ALL;
+
+    @Column(nullable = false, length = 1)
+    @Builder.Default
+    private String postDel = "N"; // "Y" 또는 "N" 값으로 변경
+
+    @Column(nullable = false, length = 1)
+    @Builder.Default
+    private String hotIssueYn = "Y"; // "Y" 또는 "N"
 
     @Column(nullable = false)
-    Visibility postVisibility;
-
-    @Column(nullable = false)
-    private YN postDel = YN.N;
-
-    @Column(nullable = false)
-    private YN hotIssueYn = YN.Y;
-
-    @Column(nullable = false)
-    private PostStatus postStatus;
+    @Builder.Default
+    private String postStatus = "ACTIVE"; // 기본값 설정
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<String> postFiles = new ArrayList<>();
-
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.PERSIST)
     @Builder.Default
-    private List<Comment> Comment = new ArrayList<>();
+    private List<PostFile> postFiles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
 
     @Column(nullable = false)
     @Builder.Default
-    private int Score = 0;
+    private int score = 0;
 
-    @PrePersist
-    public void prePersist() {
-        if (this.hotIssueYn == null) {
-            this.hotIssueYn = YN.Y; // 기본값 설정
-        }
-        if (this.postDel == null) {
-            this.postDel = YN.N; // 기본값 설정
-        }
-        if (this.postStatus == null) {
-            this.postStatus = PostStatus.ACTIVE; // 기본값 설정
-        }
-    }
-
-    public void update(PostUpdateReqDto dto) {
+    public void update(PostUpdateReqDto dto, PostFileService postFileService) {
         this.content = dto.getContent();
-        this.postFiles = dto.getPostFileUrls();
+        this.postFiles.clear();
+        this.postFiles.addAll(postFileService.convertToPostFiles(this, dto.getPostFileUrls()));
         this.postVisibility = dto.getPostVisibility();
     }
 
-    public void updateHotIssueScore(int score) {
-        this.Score = score;
+    // ✅ 게시글 삭제 처리 메서드 추가
+    public void updatePostDel(String postDel) {
+        this.postDel = postDel;
+    }
+
+    // ✅ 공개 범위 변경 메서드 추가
+    public void updatePostVisibility(Visibility visibility) {
+        this.postVisibility = visibility;
     }
 }
