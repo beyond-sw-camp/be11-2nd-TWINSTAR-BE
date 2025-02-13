@@ -59,4 +59,6 @@ public class Comment extends BaseTimeEntity {
             this.delYn = YN.N; // 기본값 설정
         }
     }
+
+
 }

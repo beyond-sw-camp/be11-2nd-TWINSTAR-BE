@@ -60,16 +60,8 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)//자동저장/ 삭제는 메소드 사용
     @Builder.Default //회원가입하면 게시물이 0개
     private List<Post> posts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.PERSIST)
-    @Builder.Default
-    private List<Report> reports = new ArrayList<>();
-
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Follow> receiveUserId = new ArrayList<>();
-
-    @OneToMany(mappedBy = "receiveUserId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Follow> userId = new ArrayList<>();
+    
+//    following, follower, reports 필드는 각 레파지토리에서 가져오는 것이 성능적으로 더 나은 것 같아서 삭제함
 
     //    관리자용 유저 목록조회
     public UserListDto listFromEntity() {
@@ -155,6 +147,9 @@ public class User extends BaseTimeEntity {
         this.banCloseTime = null;//너는 null하면 안되는데
     }
 
-
+    public boolean isBanned() {
+        // 무기한 정지이거나, banCloseTime이 현재 시간보다 이후면 로그인 차단
+        return this.userStatus == UserStatus.BAN && (banCloseTime == null || banCloseTime.isAfter(LocalDateTime.now()));
+    }
 
 }
