@@ -34,7 +34,7 @@ public class FollowService {
                 .orElseThrow(() -> new IllegalArgumentException("팔로잉 대상이 존재하지 않습니다."));
 
         // 팔로우 상태 확인
-        Optional<Follow> existingFollow = followRepository.findByUserIdAndReceiveUserId(followRequest, receiveFollowRequest);
+        Optional<Follow> existingFollow = followRepository.findByUserIdAndReceiveUserId(followRequest,receiveFollowRequest);
 
         if (existingFollow.isPresent()) {
             Follow follow = existingFollow.get();

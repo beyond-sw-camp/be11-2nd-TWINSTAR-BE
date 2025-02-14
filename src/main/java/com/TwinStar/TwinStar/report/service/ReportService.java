@@ -42,7 +42,7 @@ public class ReportService {
                 .orElseThrow(() -> new IllegalArgumentException("신고 대상 사용자가 존재하지 않습니다."));
 
 //        중복신고 방지(신고자id, 신고당한유저id,신고유형,신고id where 조건 걸어서 필터링)
-        if (reportRepository.findByReporterIdAndReportedIdAndReportedTypeAndTypeId(
+        if (reportRepository.findByReporterIdAndReportedIdAndReportTypeAndTypeId(
                 reporterId, dto.getReportedId(), dto.getReportType(), dto.getTypeId()).isPresent()) {
             throw new IllegalStateException("이미 신고한 사용자입니다.");
         }
@@ -68,7 +68,7 @@ public class ReportService {
 
     //  특정 신고 유형 목록 조회
     public List<ReportResponseDto> getReportsByType(Type reportedType) {
-        List<Report> reports = reportRepository.findByReportedType(reportedType);
+        List<Report> reports = reportRepository.findByReportType(reportedType);
         return reports.stream().map(ReportResponseDto::new).collect(Collectors.toList());
     }
 

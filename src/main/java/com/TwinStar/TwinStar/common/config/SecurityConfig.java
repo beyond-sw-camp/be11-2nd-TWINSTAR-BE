@@ -5,6 +5,8 @@ import com.TwinStar.TwinStar.common.auth.JwtAuthFilter;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,7 +34,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity,CustomAuthenticationFilter customAuthenticationFilter) throws Exception {
         return httpSecurity
                 .cors(c -> c.configurationSource(corsConfiguration()))
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 보호 비활성화 (JWT 사용 시 필요 없음)
@@ -43,7 +45,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
                 )
                 // 정지된 사용자 로그인 차단 필터 추가
-                .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
                 .build();
     }
@@ -72,7 +74,7 @@ public class SecurityConfig {
 
 //    로그인을 가로채고 정지된 사용자인지 확인하는 필터
     @Bean
-    public CustomAuthenticationFilter customAuthenticationFilter() throws Exception {
-        return new CustomAuthenticationFilter(authenticationManager(new AuthenticationConfiguration()), userRepository);
+    public CustomAuthenticationFilter customAuthenticationFilter(AuthenticationManager authenticationManager) {
+        return new CustomAuthenticationFilter(authenticationManager, userRepository);
     }
 }

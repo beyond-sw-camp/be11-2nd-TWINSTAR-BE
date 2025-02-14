@@ -15,11 +15,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
 
     public CustomAuthenticationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
-        this.authenticationManager = authenticationManager;
+        super(); //부모 생성자에서 직접 AuthenticationManager를 받지 않음
+        this.setAuthenticationManager(authenticationManager);
         this.userRepository = userRepository;
     }
 
@@ -41,6 +41,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userId, password);
 
-        return authenticationManager.authenticate(authenticationToken);
+        return getAuthenticationManager().authenticate(authenticationToken);
     }
 }
