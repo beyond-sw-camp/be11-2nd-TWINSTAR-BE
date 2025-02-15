@@ -66,6 +66,6 @@ public class FollowController {
     public ResponseEntity<?> getFollowingList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(token);
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "팔로잉 목록 조회입니다",followService.getFollowerList(userId)),HttpStatus.OK);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "팔로잉 목록 조회입니다",followService.getFollowingList(userId)),HttpStatus.OK);
     }
 }

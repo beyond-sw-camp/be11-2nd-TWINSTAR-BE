@@ -5,6 +5,8 @@ import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.follow.domain.Follow;
 import com.TwinStar.TwinStar.post.domain.Post;
+import com.TwinStar.TwinStar.post.dto.ProfilePostResDto;
+import com.TwinStar.TwinStar.post_file.PostFile;
 import com.TwinStar.TwinStar.report.domain.Report;
 import com.TwinStar.TwinStar.user.dto.UserListDto;
 import com.TwinStar.TwinStar.user.dto.UserProfileDto;
@@ -42,6 +44,7 @@ public class User extends BaseTimeEntity {
     private String profileTxt;
     @Column(nullable = false)
     @Builder.Default
+    @Enumerated(EnumType.STRING)
     private YN delYn = YN.valueOf("N");
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -59,17 +62,9 @@ public class User extends BaseTimeEntity {
     private LocalDateTime banCloseTime; // 정지 해제 날짜
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)//자동저장/ 삭제는 메소드 사용
     @Builder.Default //회원가입하면 게시물이 0개
-    private List<Post> posts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.PERSIST)
-    @Builder.Default
-    private List<Report> reports = new ArrayList<>();
-
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Follow> receiveUserId = new ArrayList<>();
-
-    @OneToMany(mappedBy = "receiveUserId", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Follow> userId = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();//ProfilePostResDto를 가져올 수 없음.post를 가져와야함
+    
+//    following, follower, reports 필드는 각 레파지토리에서 가져오는 것이 성능적으로 더 나은 것 같아서 삭제함
 
     //    관리자용 유저 목록조회
     public UserListDto listFromEntity() {
@@ -88,20 +83,6 @@ public class User extends BaseTimeEntity {
                 .build();
     }
 
-//    //    프로필 조회 엔티티
-//    public UserProfileDto detailFromEntity(Long followerCount, Long followingCount, List<PostfilePostResDto> posts) {
-//        return UserProfileDto.builder()
-//                .id(this.id)
-//                .nickName(this.nickName)
-//                .profileImg(this.profileImg)
-//                .profileTxt(this.profileTxt)
-//                .followerCount(followerCount)
-//                .followingCount(followingCount)
-//                .idVisibility(this.idVisibility)
-//                .userStatus(this.userStatus)
-//                .posts(posts)
-//                .build();
-//    }
 
     //    사용자 프로필 업데이트
     public void updateProfile(String nickName, String profileTxt, Sex sex, Visibility idVisibility) {
@@ -155,6 +136,9 @@ public class User extends BaseTimeEntity {
         this.banCloseTime = null;//너는 null하면 안되는데
     }
 
-
+    public boolean isBanned() {
+        // 무기한 정지이거나, banCloseTime이 현재 시간보다 이후면 로그인 차단
+        return this.userStatus == UserStatus.BAN && (banCloseTime == null || banCloseTime.isAfter(LocalDateTime.now()));
+    }
 
 }

@@ -1,8 +1,14 @@
 package com.TwinStar.TwinStar.common.config;
 
+import com.TwinStar.TwinStar.common.auth.CustomAuthenticationFilter;
 import com.TwinStar.TwinStar.common.auth.JwtAuthFilter;
+import com.TwinStar.TwinStar.user.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,13 +26,15 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
     private final JwtAuthFilter authFilter;
+    private final UserRepository userRepository;
 
-    public SecurityConfig(JwtAuthFilter authFilter) {
+    public SecurityConfig(JwtAuthFilter authFilter, UserRepository userRepository) {
         this.authFilter = authFilter;
+        this.userRepository = userRepository;
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity,CustomAuthenticationFilter customAuthenticationFilter) throws Exception {
         return httpSecurity
                 .cors(c -> c.configurationSource(corsConfiguration()))
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 보호 비활성화 (JWT 사용 시 필요 없음)
@@ -36,6 +44,8 @@ public class SecurityConfig {
                         .requestMatchers("/user/create", "/user/doLogin", "/user/refresh-token").permitAll() // 인증 없이 접근 허용
                         .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
                 )
+                // 정지된 사용자 로그인 차단 필터 추가
+                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class) // JWT 필터 추가
                 .build();
     }
@@ -54,5 +64,17 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+//    이 객체를 이용해서 로그인 시 사용자의 아이디와 비밀번호를 검증. authenticationManager에 사용자 정보 조회와 비밀번호검증이 자동으로 포함되어 있음
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+//    로그인을 가로채고 정지된 사용자인지 확인하는 필터
+    @Bean
+    public CustomAuthenticationFilter customAuthenticationFilter(AuthenticationManager authenticationManager) {
+        return new CustomAuthenticationFilter(authenticationManager, userRepository);
     }
 }

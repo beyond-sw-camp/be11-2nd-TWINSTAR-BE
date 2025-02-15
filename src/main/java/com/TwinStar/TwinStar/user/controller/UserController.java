@@ -38,7 +38,7 @@ public class UserController {
         this.jwtTokenProvider = jwtTokenProvider;
         this.redisTemplate = redisTemplate;
     }
-
+//  1.로그인
     @PostMapping("/doLogin")
     public ResponseEntity<?> doLogin(@RequestBody LoginDto dto) {
 //        id,email, password 검증
@@ -57,18 +57,19 @@ public class UserController {
 
         return new ResponseEntity<>(loginInfo, HttpStatus.OK);
     }
-
+//  2.회원가입
     @PostMapping("/create")
     public ResponseEntity<?> create(@Valid @RequestBody UserSaveReq dto) {
         Long memberId = userService.create(dto);
         return new ResponseEntity<>(memberId, HttpStatus.CREATED);
     }
-    // ✅ 리프레시 토큰을 이용한 액세스 토큰 재발급
+    //  리프레시 토큰을 이용한 액세스 토큰 재발급
     // --to do
 //    API 요청을 보낼 때, 액세스 토큰이 만료되었는지 확인
 //    만료되었다면 /user/refresh-token API를 호출하여 새 액세스 토큰을 받아오기
 //    새로운 액세스 토큰으로 다시 API 요청을 보냄
 //    새로 받은 액세스 토큰을 저장 (로컬 스토리지 or 쿠키)
+//    3.rt발행
     @PostMapping("/refresh-token")
     public ResponseEntity<Map<String, String>> refreshAccessToken(@RequestHeader("Authorization") String refreshToken) {
         if (refreshToken.startsWith("Bearer ")) {
@@ -82,7 +83,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-//    비밀번호 변경
+//    4. 비밀번호 변경
     @PatchMapping("/{id}/password")
     public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody PasswordChangeRequest request
             , Authentication authentication){
@@ -92,7 +93,7 @@ public class UserController {
 
     }
 
-//      사용자 상태 변경
+//  5. 사용자 상태 변경
     @PatchMapping("/status")
     public ResponseEntity<?> changeStatus(@RequestBody ChangeIdVisibility newStatus){
 //        요청 본문이 null이거나 idVisibility가 null이면 예외 발생 방지
@@ -105,30 +106,29 @@ public class UserController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "user Visibility updeated to" + newStatus,newStatus),HttpStatus.OK);
     }
 
-////    상대방 프로필 들어가면 정보를 얻는다.
-//    @GetMapping("/detail/{id}")
-//    public ResponseEntity<?> userDetail(@PathVariable Long id){
-//        UserProfileDto dto = userService.searchProfile(id);
-//        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK);
-//
-//    }
-//
-////    내 프로필 정보 조회
-//    @GetMapping("/myProfile")
-//    public ResponseEntity<?> myProfile(){
-//        UserProfileDto dto = userService.searchProfile();
-//        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK);
-//    }
-//
-//    //    사용자 프로필 수정
-//    @PatchMapping("/{id}/profile")
-//    public ResponseEntity<?> updateProfile(@PathVariable Long userId,
-//                                                @RequestBody UserProfileUpdateDto updateDto) {
-//        userService.updateUserProfile(userId, updateDto);
-//        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully.","null"),HttpStatus.OK);
-//    }
+//  6. 상대방 프로필 들어가면 정보를 얻는다.
+    @GetMapping("/detail/{receiveUserId}")
+    public ResponseEntity<?> userDetail(@PathVariable Long receiveUserId){
+        UserProfileDto dto = userService.searchProfile(receiveUserId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK);
 
-// 관리자용 유저목록 조회
+    }
+
+//  7.  내 프로필 정보 조회
+    @GetMapping("/myProfile")
+    public ResponseEntity<?> myProfile(){
+        UserProfileDto dto = userService.searchProfile();
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK);
+    }
+
+//  8.사용자 프로필 수정
+    @PatchMapping("/profile/update")
+    public ResponseEntity<?> updateProfile(@RequestBody UserProfileUpdateDto updateDto) {
+        userService.updateUserProfile(updateDto);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully.","null"),HttpStatus.OK);
+    }
+
+//  9. 관리자용 유저목록 조회
     @GetMapping("/admin/user/list")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> list(){
@@ -136,7 +136,7 @@ public class UserController {
         return new ResponseEntity<>(userListDto,HttpStatus.OK);
     }
 
-//    관리자 권한 부여
+//   10. 관리자 권한 부여
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/grant")
     public ResponseEntity<?> grantAdmin(@RequestBody GrantAdminId grant) { //보안 및 json으로 받기 위해 @RequestBody 씀
@@ -144,21 +144,22 @@ public class UserController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "관리자 권한이 부여되었습니다.",grant),HttpStatus.OK);
     }
 
-//    관리자 권한 회수
+//  11.관리자 권한 회수
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/revoke")
     public ResponseEntity<?> revokeAdmin(@RequestBody GrantAdminId revoke) {
         userService.revokeAdminRole(revoke.getId());
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "관리자 권한이 해제되었습니다.",revoke),HttpStatus.OK);
     }
-//    // JWT 기반 회원 탈퇴 API
-//    @DeleteMapping("/del")
-//    public ResponseEntity<?> deleteUser() {
-//        userService.deleteUser();
-//        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully.","null"),HttpStatus.OK);
-//    }
 
-    //  계정 정지 (관리자 전용)
+//  12. JWT 기반 회원 탈퇴 API
+    @DeleteMapping("/del")
+    public ResponseEntity<?> deleteUser() {
+        userService.deleteUser();
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully.","null"),HttpStatus.OK);
+    }
+
+//    13.  계정 정지 (관리자 전용)
     @PostMapping("/admin/ban")
     @PreAuthorize("hasRole('ADMIN')") // 관리자만 접근 가능
     public ResponseEntity<?> suspendUser(@RequestParam Integer days) {
@@ -167,7 +168,7 @@ public class UserController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),message,null),HttpStatus.OK);
     }
 
-    // 계정 정지 해제 (관리자 전용)
+//    14. 계정 정지 해제 (관리자 전용)
     @PostMapping("/{userId}/unban")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> unsuspendUser(@PathVariable Long userId) {
