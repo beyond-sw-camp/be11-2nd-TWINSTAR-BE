@@ -1,6 +1,7 @@
 package com.TwinStar.TwinStar.post.dto;
 
 import com.TwinStar.TwinStar.common.domain.Visibility;
+import com.TwinStar.TwinStar.hashTag.domain.PostHashTag;
 import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.user.domain.User;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
 
 @AllArgsConstructor
@@ -18,6 +20,7 @@ public class PostCreateReqDto {
     private String contents;
     private List<String > files; // 이미지 및 동영상 파일 URL 리스트
     private Visibility postVisibility;
+    private List<String> hashTags;
 
     public void validate() {
         if (files == null || files.isEmpty()) {
@@ -28,11 +31,12 @@ public class PostCreateReqDto {
         }
     }
 
-    public Post toEntity(User user) {
+    public Post toEntity(User user, List<PostHashTag> postHashTags) {
         return Post.builder()
                 .content(this.contents)
                 .user(user)
                 .postVisibility(this.postVisibility != null ? this.postVisibility : Visibility.ALL) // default로 all 삽입
+                .postHashtags(new HashSet<>(postHashTags))
                 .build();
     }
 }
