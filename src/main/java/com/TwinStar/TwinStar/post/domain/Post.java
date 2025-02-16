@@ -3,6 +3,7 @@ package com.TwinStar.TwinStar.post.domain;
 import com.TwinStar.TwinStar.comment.domain.Comment;
 import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
 import com.TwinStar.TwinStar.common.domain.Visibility;
+import com.TwinStar.TwinStar.hashTag.domain.PostHashTag;
 import com.TwinStar.TwinStar.post.dto.PostUpdateReqDto;
 import com.TwinStar.TwinStar.post_file.PostFile;
 import com.TwinStar.TwinStar.post_file.PostFileService;
@@ -12,7 +13,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -51,6 +54,10 @@ public class Post extends BaseTimeEntity {
     @Builder.Default
     private String postStatus = "ACTIVE"; // 기본값 설정
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PostHashTag> postHashtags = new HashSet<>();
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<PostFile> postFiles = new ArrayList<>();
@@ -78,5 +85,16 @@ public class Post extends BaseTimeEntity {
     // ✅ 공개 범위 변경 메서드 추가
     public void updatePostVisibility(Visibility visibility) {
         this.postVisibility = visibility;
+    }
+
+    // 단일 PostHashTag 추가
+    public void addPostHashTag(PostHashTag postHashTag) {
+        this.postHashtags.add(postHashTag);
+        postHashTag.updatePost(this);  // updatePost() 사용
+    }
+
+    //   여러개의 posthashtag 추가
+    public void addPostHashTags(List<PostHashTag> postHashTags){
+        postHashTags.forEach(this::addPostHashTag);//this::addPostHashTag에서 this는 postHashTags에 있는 해시태그이고 addPostHashTag는 위에 메소드이다.
     }
 }
