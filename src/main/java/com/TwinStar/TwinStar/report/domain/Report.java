@@ -1,5 +1,8 @@
 package com.TwinStar.TwinStar.report.domain;
 
+import com.TwinStar.TwinStar.blackList.dto.BlockRequest;
+import com.TwinStar.TwinStar.report.dtos.ReportRequestDto;
+import com.TwinStar.TwinStar.report.dtos.ReportResponseDto;
 import com.TwinStar.TwinStar.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -52,6 +55,7 @@ public class Report {
     @Column(nullable = false)
     private ReportStatus reportStatus;
     @Column(nullable = false)
+    @Builder.Default
     private Boolean isDeleted = false;
 
 

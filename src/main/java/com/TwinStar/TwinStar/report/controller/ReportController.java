@@ -8,6 +8,8 @@ import com.TwinStar.TwinStar.report.dtos.ReportResponseDto;
 import com.TwinStar.TwinStar.report.service.ReportService;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +30,14 @@ public class ReportController {
         public ResponseEntity<?> reportUser(@RequestBody @Valid ReportRequestDto dto) {
             reportService.reportUser(dto);
             return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"신고가 접수되었습니다.", null),HttpStatus.OK);
+    }
+
+    // 신고 목록 조회
+    @GetMapping("/list")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getReports(Pageable pageable, ReportRequestDto dto) {
+        Page<ReportRequestDto> reports = reportService.findAllReports(pageable, dto);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "신고 유저 조회 성공",reports),HttpStatus.OK);
     }
 
     // 특정 신고 상세 조회

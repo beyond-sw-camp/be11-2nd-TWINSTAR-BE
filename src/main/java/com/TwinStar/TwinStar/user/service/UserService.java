@@ -12,7 +12,14 @@ import com.TwinStar.TwinStar.user.domain.UserStatus;
 import com.TwinStar.TwinStar.user.dto.*;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.apache.tomcat.util.http.parser.Authorization;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
@@ -22,6 +29,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -228,8 +237,25 @@ public class UserService {
 
 
 //  10. 관리자용 유저 리스트
-    public List<UserListDto> userList(){
-        return userRepository.findAll().stream().map(m->m.listFromEntity()).toList();
+    public Page<UserListDto> userList(Pageable pageable, UserSearchDto dto){
+        Specification<User> spec = new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+//                root : 엔티티의 속성을 접근하기 위한 객체, criteriabuilder : 쿼리를 생성하기 위한 객체
+                List<Predicate> predicates = new ArrayList<>();
+                if (dto.getNickName() != null){
+                    predicates.add(criteriaBuilder.equal(root.get("nickname"),dto.getNickName()));
+                }
+                Predicate[] predicateArr = new Predicate[predicates.size()];
+                for (int i =0; i<predicates.size();i++){
+                    predicateArr[i] = predicates.get(i);
+                }
+                Predicate predicate = criteriaBuilder.and(predicateArr);
+                return predicate;
+            }
+        };
+        return userRepository.findAll(spec,pageable).map(user-> user.listFromEntity());
+
     }
 
 //    11. 관리자 권한 부여 메소드

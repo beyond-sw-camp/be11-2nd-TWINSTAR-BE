@@ -10,12 +10,15 @@ import com.TwinStar.TwinStar.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -131,8 +134,8 @@ public class UserController {
 //  9. 관리자용 유저목록 조회
     @GetMapping("/admin/user/list")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> list(){
-        List<UserListDto> userListDto = userService.userList();
+    public ResponseEntity<?> list(Pageable pageable, UserSearchDto dto){
+        Page<UserListDto> userListDto = userService.userList(pageable, dto);
         return new ResponseEntity<>(userListDto,HttpStatus.OK);
     }
 
