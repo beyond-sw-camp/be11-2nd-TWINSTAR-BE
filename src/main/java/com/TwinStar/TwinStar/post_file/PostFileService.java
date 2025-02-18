@@ -37,7 +37,7 @@ public class PostFileService {
         postFileRepository.saveAll(newFiles);
     }
 
-    private String getFileType(String fileUrl) {
+    public String getFileType(String fileUrl) {
         String url = fileUrl.toLowerCase();
 
         if (url.endsWith(".jpg") || url.endsWith(".jpeg") || url.endsWith(".png") || url.endsWith(".gif")) {

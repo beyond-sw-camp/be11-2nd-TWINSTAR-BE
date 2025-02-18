@@ -70,23 +70,6 @@ public class Post extends BaseTimeEntity {
     @Builder.Default
     private int score = 0;
 
-    public void update(PostUpdateReqDto dto, PostFileService postFileService) {
-        this.content = dto.getContent();
-        this.postFiles.clear();
-        this.postFiles.addAll(postFileService.convertToPostFiles(this, dto.getPostFileUrls()));
-        this.postVisibility = dto.getPostVisibility();
-    }
-
-    // ✅ 게시글 삭제 처리 메서드 추가
-    public void updatePostDel(String postDel) {
-        this.postDel = postDel;
-    }
-
-    // ✅ 공개 범위 변경 메서드 추가
-    public void updatePostVisibility(Visibility visibility) {
-        this.postVisibility = visibility;
-    }
-
     // 단일 PostHashTag 추가
     public void addPostHashTag(PostHashTag postHashTag) {
         this.postHashtags.add(postHashTag);
@@ -97,4 +80,27 @@ public class Post extends BaseTimeEntity {
     public void addPostHashTags(List<PostHashTag> postHashTags){
         postHashTags.forEach(this::addPostHashTag);//this::addPostHashTag에서 this는 postHashTags에 있는 해시태그이고 addPostHashTag는 위에 메소드이다.
     }
+
+    // update 메서드 추가
+    public void updatePost(String content, Visibility postVisibility) {
+        this.content = content;
+        this.postVisibility = postVisibility;
+    }
+
+    // 게시글 삭제 처리 메서드 추가
+    public void updatePostDel(String postDel) {
+        this.postDel = postDel;
+    }
+
+    // 공개 범위 변경 메서드 추가
+    public void updatePostVisibility(Visibility visibility) {
+        this.postVisibility = visibility;
+    }
+
+    // ✅ PostHashTag 리스트 반환
+    public List<PostHashTag> getPostHashTags() {
+        return postHashTags;
+    }
+
+
 }
