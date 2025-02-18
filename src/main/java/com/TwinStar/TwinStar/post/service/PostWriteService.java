@@ -17,6 +17,7 @@ import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@Slf4j
 public class PostWriteService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
@@ -83,7 +85,6 @@ public class PostWriteService {
     }
 
 
-
     public void postUpdate(PostUpdateReqDto dto, Long userId) {
         // 사용자 & 게시글 확인
         User user = userRepository.findById(userId)
@@ -104,8 +105,10 @@ public class PostWriteService {
 
         // 기존 파일 중 삭제할 파일 처리 (isHide = "Y")
         existingFiles.forEach(file -> {
+            log.info("파일 숨김 시작");
             if (!updatedFileUrls.contains(file.getFileUrl())) {
                 file.hideFile();
+                log.info("파일 숨김 처리: {} -> isHide = Y", file.getFileUrl());
             }
         });
 
@@ -113,17 +116,18 @@ public class PostWriteService {
         existingFiles.forEach(file -> {
             if ("Y".equals(file.getIsHide()) && updatedFileUrls.contains(file.getFileUrl())) {
                 file.restoreFile();
+                log.info("파일 복구 처리: {} -> isHide = N", file.getFileUrl());
             }
         });
 
-        // 새 파일 업로드 (기존에 없는 파일만 S3에 업로드)
-        List<String> existingFileUrls = existingFiles.stream()
-                .map(PostFile::getFileUrl)
-                .collect(Collectors.toList());
+        // 변경 사항 강제 반영
+        postFileRepository.saveAll(existingFiles); // 변경 감지 후 강제 저장
+        postFileRepository.flush(); // 강제 반영 (JPA 변경 감지 보장)
 
+        // 새 파일 업로드 (기존에 없는 파일만 S3에 업로드)
         List<String> newFileUrls = dto.getNewFiles() != null
                 ? dto.getNewFiles().stream()
-                .map(file -> s3Service.uploadFile(file, file.getOriginalFilename())) // ✅ S3 업로드 후 URL 반환
+                .map(file -> s3Service.uploadFile(file, file.getOriginalFilename()))
                 .collect(Collectors.toList())
                 : List.of();
 
@@ -139,6 +143,7 @@ public class PostWriteService {
 
         postRepository.save(post);
     }
+
 
 
     public void postDelete(Long postId, Long userId) {

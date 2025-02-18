@@ -98,8 +98,8 @@ public class Post extends BaseTimeEntity {
     }
 
     // ✅ PostHashTag 리스트 반환
-    public List<PostHashTag> getPostHashTags() {
-        return postHashTags;
+    public Set<PostHashTag> getPostHashTags() {
+        return this.postHashtags;
     }
 
 

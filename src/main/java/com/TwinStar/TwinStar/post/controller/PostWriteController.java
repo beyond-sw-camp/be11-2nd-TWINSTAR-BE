@@ -27,18 +27,21 @@ public class PostWriteController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> postCreate(@RequestBody PostCreateReqDto dto,
-                                        @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-        try {
-            String token = authorizationHeader.replace("Bearer ", "");
-            Long userId = jwtUtil.getUserId(token);
+    public ResponseEntity<?> postCreate(
+            @RequestPart("contents") String contents,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files,
+            @RequestPart("hashTags") List<String> hashTags,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
 
-            postWriteService.postCreate(dto, userId);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        String token = authorizationHeader.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserId(token);
+
+        PostCreateReqDto dto = new PostCreateReqDto(contents, files, null, hashTags); // 파일도 같이 처리
+        String postId = postWriteService.postCreate(dto, userId);
+
+        return ResponseEntity.ok("게시글이 성공적으로 생성되었습니다. postId: " + postId);
     }
+
 
     @PostMapping("update")
     public ResponseEntity<?> postUpdate(
