@@ -17,6 +17,7 @@ public class PostUpdateReqDto {
     private Long postId;
     private String content;
     private Visibility postVisibility;
-    private List<String> postFileUrls;  // 기존 파일 URL
-    private List<MultipartFile> newFiles; // 새 파일을 위한 MultipartFile 리스트
+    private List<String> postFileUrls; // 유지할 파일 목록
+    private List<MultipartFile> newFiles; // 새로 추가할 파일 목록
+    private List<String> filesToHide; // 사용자가 삭제 요청한 파일 목록
 }

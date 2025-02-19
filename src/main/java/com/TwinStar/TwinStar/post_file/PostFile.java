@@ -33,16 +33,13 @@ public class PostFile {
 
 
     // 파일 숨김 처리
-
     public void hideFile() {
         if (!"Y".equals(this.isHide)) {
             this.isHide = "Y"; // 기존 파일 숨김 처리
         }
     }
 
-
     // 숨겨진 파일 복구
-
     public void restoreFile() {
         if (!"N".equals(this.isHide)) {
             this.isHide = "N"; // 숨김된 파일 복구

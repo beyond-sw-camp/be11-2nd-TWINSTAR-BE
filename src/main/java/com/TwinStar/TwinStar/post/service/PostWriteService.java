@@ -31,19 +31,19 @@ import java.util.stream.Collectors;
 public class PostWriteService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final PostFileService postFileService;
     private final HashTagRepository hashTagRepository;
     private final PostHashTagRepository postHashTagRepository;
     private final PostFileRepository postFileRepository;
+    private final PostFileService postFileService;
     private final S3Service s3Service;
 
     public PostWriteService(PostRepository postRepository, UserRepository userRepository, PostFileService postFileService, HashTagRepository hashTagRepository, PostHashTagRepository postHashTagRepository, PostFileRepository postFileRepository, S3Service s3Service) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
-        this.postFileService = postFileService;
         this.hashTagRepository = hashTagRepository;
         this.postHashTagRepository = postHashTagRepository;
         this.postFileRepository = postFileRepository;
+        this.postFileService = postFileService;
         this.s3Service = s3Service;
     }
 
@@ -85,61 +85,32 @@ public class PostWriteService {
     }
 
 
+    @Transactional
     public void postUpdate(PostUpdateReqDto dto, Long userId) {
-        // 사용자 & 게시글 확인
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found."));
-
         Post post = postRepository.findById(dto.getPostId())
                 .orElseThrow(() -> new EntityNotFoundException("Post not found."));
-
-        if (!post.getUser().getId().equals(user.getId())) {
+        if (!post.getUser().getId().equals(userId)) {
             throw new AccessDeniedException("You do not have permission to update this post.");
         }
 
-        // 기존 파일 목록 가져오기
-        List<PostFile> existingFiles = postFileRepository.findByPostId(post.getId());
-
-        // 유지할 파일 리스트 (isHide = "N" 상태 유지)
-        List<String> updatedFileUrls = dto.getPostFileUrls() != null ? dto.getPostFileUrls() : List.of();
-
-        // 기존 파일 중 삭제할 파일 처리 (isHide = "Y")
-        existingFiles.forEach(file -> {
-            log.info("파일 숨김 시작");
-            if (!updatedFileUrls.contains(file.getFileUrl())) {
-                file.hideFile();
-                log.info("파일 숨김 처리: {} -> isHide = Y", file.getFileUrl());
-            }
-        });
-
-        // 기존 파일 중 복구할 파일 처리 (isHide = "N")
-        existingFiles.forEach(file -> {
-            if ("Y".equals(file.getIsHide()) && updatedFileUrls.contains(file.getFileUrl())) {
-                file.restoreFile();
-                log.info("파일 복구 처리: {} -> isHide = N", file.getFileUrl());
-            }
-        });
-
-        // 변경 사항 강제 반영
-        postFileRepository.saveAll(existingFiles); // 변경 감지 후 강제 저장
-        postFileRepository.flush(); // 강제 반영 (JPA 변경 감지 보장)
-
-        // 새 파일 업로드 (기존에 없는 파일만 S3에 업로드)
-        List<String> newFileUrls = dto.getNewFiles() != null
-                ? dto.getNewFiles().stream()
-                .map(file -> s3Service.uploadFile(file, file.getOriginalFilename()))
-                .collect(Collectors.toList())
-                : List.of();
-
-        // 새 파일을 DB에 저장
-        List<PostFile> newPostFiles = newFileUrls.stream()
-                .map(url -> new PostFile(post, url, "image", "N"))
-                .collect(Collectors.toList());
-
-        postFileRepository.saveAll(newPostFiles);
-
-        // 게시글 내용 및 공개 범위 수정
+        // 게시물 내용 및 공개 범위 수정
         post.updatePost(dto.getContent(), dto.getPostVisibility());
+
+        // 기존 파일 숨김 처리
+        postFileService.updateFileVisibility(post.getId(), dto.getFilesToHide(), "Y");
+
+        // 새 파일 추가
+        if (dto.getNewFiles() != null && !dto.getNewFiles().isEmpty()) {
+            List<String> newFileUrls = dto.getNewFiles().stream()
+                    .map(file -> s3Service.uploadFile(file, file.getOriginalFilename()))
+                    .collect(Collectors.toList());
+
+            List<PostFile> newPostFiles = newFileUrls.stream()
+                    .map(url -> new PostFile(post, url, "image", "N"))
+                    .collect(Collectors.toList());
+
+            postFileRepository.saveAll(newPostFiles);
+        }
 
         postRepository.save(post);
     }

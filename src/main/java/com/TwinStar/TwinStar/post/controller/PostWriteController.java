@@ -43,12 +43,14 @@ public class PostWriteController {
     }
 
 
-    @PostMapping("update")
+    @PostMapping("/update")
     public ResponseEntity<?> postUpdate(
             @RequestPart("postId") Long postId,
             @RequestPart("content") String content,
+            @RequestPart(value = "postVisibility", required = false) String postVisibility,
+            @RequestPart(value = "postFileUrls", required = false) List<String> postFileUrls, // 유지할 파일 목록 추가
             @RequestPart(value = "newFiles", required = false) List<MultipartFile> newFiles,
-            @RequestPart(value = "postVisibility", required = false) String postVisibility, // @RequestPart로 변경
+            @RequestPart(value = "filesToHide", required = false) List<String> filesToHide, // 삭제할 파일 목록 추가
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
 
         String token = authorizationHeader.replace("Bearer ", "");
@@ -58,6 +60,11 @@ public class PostWriteController {
         List<String> existingFileUrls = postWriteService.getExistingFileUrls(postId, userId);
         if (existingFileUrls == null) {
             existingFileUrls = new ArrayList<>(); // Null 방지
+        }
+
+        // 유지할 파일 URL과 기존 파일 URL 병합
+        if (postFileUrls != null) {
+            existingFileUrls.addAll(postFileUrls);
         }
 
         // Enum 변환 (예외 발생 방지)
@@ -70,8 +77,8 @@ public class PostWriteController {
             }
         }
 
-        // DTO 생성 (기존 파일 URL 자동 추가)
-        PostUpdateReqDto dto = new PostUpdateReqDto(postId, content, visibilityEnum, existingFileUrls, newFiles);
+        // DTO 생성 (유지할 파일 목록, 새 파일 목록, 삭제할 파일 목록 포함)
+        PostUpdateReqDto dto = new PostUpdateReqDto(postId, content, visibilityEnum, existingFileUrls, newFiles, filesToHide);
         postWriteService.postUpdate(dto, userId);
 
         return ResponseEntity.ok("게시글이 성공적으로 수정되었습니다.");
