@@ -52,6 +52,7 @@ public class Report {
     @Column(nullable = false)
     private ReportStatus reportStatus;
     @Column(nullable = false)
+    @Builder.Default
     private Boolean isDeleted = false;
 
 

@@ -43,7 +43,7 @@ public class UserProfileDto {
                 .userStatus(user.getUserStatus())
                 .posts(user.getPosts().stream()
                         .filter(post -> !post.getPostDel().equals("Y")) // 삭제된 게시물 제외
-                        .map(PostResponseDto::from) //
+                        .map(PostResponseDto::fromEntity) //
                         .collect(Collectors.toList()))
                 .build();
     }
