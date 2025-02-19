@@ -1,6 +1,5 @@
 package com.TwinStar.TwinStar.post_file;
 
-import com.TwinStar.TwinStar.post.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,11 +9,9 @@ import java.util.List;
 
 public interface PostFileRepository extends JpaRepository<PostFile, Long> {
 
-    @Modifying
-    @Query("UPDATE PostFile pf SET pf.isHide = :isHideValue WHERE pf.fileUrl IN :fileUrls AND pf.post.id = :postId")
-    void hideFilesByUrls(@Param("fileUrls") List<String> urls, @Param("postId") Long postId, @Param("isHideValue") String isHideValue);
+    List<PostFile> findByPostId(Long postId);
 
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("UPDATE PostFile pf SET pf.isHide = :isHideValue WHERE pf.fileUrl IN :fileUrls AND pf.post.id = :postId")
-    void restoreFilesByUrls(@Param("fileUrls") List<String> urls, @Param("postId") Long postId, @Param("isHideValue") String isHideValue);
+    void updateFileVisibility(@Param("fileUrls") List<String> urls, @Param("postId") Long postId, @Param("isHideValue") String isHideValue);
 }

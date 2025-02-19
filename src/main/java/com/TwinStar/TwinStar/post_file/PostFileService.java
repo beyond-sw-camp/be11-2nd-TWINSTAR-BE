@@ -16,6 +16,7 @@ public class PostFileService {
         this.postFileRepository = postFileRepository;
     }
 
+
     public void savePostFiles(Post post, List<String> fileUrls) {
         if (fileUrls == null || fileUrls.isEmpty()) {
             throw new IllegalArgumentException("최소 1개 이상의 파일을 업로드해야 합니다.");
@@ -37,7 +38,7 @@ public class PostFileService {
         postFileRepository.saveAll(newFiles);
     }
 
-    private String getFileType(String fileUrl) {
+    public String getFileType(String fileUrl) {
         String url = fileUrl.toLowerCase();
 
         if (url.endsWith(".jpg") || url.endsWith(".jpeg") || url.endsWith(".png") || url.endsWith(".gif")) {
@@ -49,33 +50,11 @@ public class PostFileService {
         }
     }
 
-    // 기존 파일을 숨김 처리 (isHide = 'Y')
-    public void hidePostFiles(Long postId, List<String> fileUrls) {
-        if (!fileUrls.isEmpty()) {
-            postFileRepository.hideFilesByUrls(fileUrls, postId, "Y"); // 🔥 String 값 직접 전달
-        }
-    }
-
-    // 기존 파일을 다시 보이도록 처리 (isHide = 'N')
-    public void restorePostFiles(Long postId, List<String> fileUrls) {
-        if (!fileUrls.isEmpty()) {
-            postFileRepository.restoreFilesByUrls(fileUrls, postId, "N"); // 🔥 String 값 직접 전달
-        }
-    }
-
-
-    public List<PostFile> convertToPostFiles(Post post, List<String> fileUrls) {
+    // ✅ 기존 파일을 숨김/복구 처리 (isHide = 'Y' 또는 'N')
+    public void updateFileVisibility(Long postId, List<String> fileUrls, String isHideValue) {
         if (fileUrls == null || fileUrls.isEmpty()) {
-            return new ArrayList<>();
+            return; // 빈 리스트일 경우 업데이트 실행 X
         }
-
-        return fileUrls.stream()
-                .map(url -> PostFile.builder()
-                        .post(post)
-                        .fileUrl(url)
-                        .fileType(getFileType(url))
-                        .isHide("N")
-                        .build())
-                .toList();
+        postFileRepository.updateFileVisibility(fileUrls, postId, isHideValue);
     }
 }
