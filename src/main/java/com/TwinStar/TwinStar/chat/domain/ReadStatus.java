@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Getter
-public class ChatParticipant {
+public class ReadStatus{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +27,14 @@ public class ChatParticipant {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chat_message_id", nullable = false)
+    private ChatMessage chatMessage;
+
+    @Column(nullable = false)
+    private Boolean isRead;
+
+    public void updateIsRead(boolean isRead){
+        this.isRead = isRead;
+    }
 }
