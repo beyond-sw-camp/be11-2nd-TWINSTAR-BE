@@ -1,5 +1,6 @@
 package com.TwinStar.TwinStar.chat.domain;
 
+import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
 import com.TwinStar.TwinStar.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Builder
-public class ChatMessage {
+public class ChatMessage extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
