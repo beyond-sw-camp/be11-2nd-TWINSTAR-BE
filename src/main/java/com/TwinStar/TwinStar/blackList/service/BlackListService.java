@@ -1,14 +1,24 @@
 package com.TwinStar.TwinStar.blackList.service;
 
 import com.TwinStar.TwinStar.blackList.domain.BlackList;
+import com.TwinStar.TwinStar.blackList.dto.BlackListSearchDto;
 import com.TwinStar.TwinStar.blackList.repository.BlackListRepository;
 import com.TwinStar.TwinStar.common.exception.CustomException;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,7 +66,23 @@ public class BlackListService {
     }
 
 //    차단목록 조회
-    public List<BlackList> getBlockedUsers(Long userId) {
-        return blacklistRepository.findByUserId(userId);
+    public Page<BlackList> getBlockedUsers(Long userId, Pageable pageable, BlackListSearchDto dto) {
+        Specification<User> spec = new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+//                root : 엔티티의 속성을 접근하기 위한 객체, criteriabuilder : 쿼리를 생성하기 위한 객체
+                List<Predicate> predicates = new ArrayList<>();
+                if (dto.getBlockedUserNickName() != null){
+                    predicates.add(criteriaBuilder.equal(root.get("nickname"),dto.getBlockedUserNickName()));
+                }
+                Predicate[] predicateArr = new Predicate[predicates.size()];
+                for (int i =0; i<predicates.size();i++){
+                    predicateArr[i] = predicates.get(i);
+                }
+                Predicate predicate = criteriaBuilder.and(predicateArr);
+                return predicate;
+            }
+        };
+        return blacklistRepository.findByUserId(userId,pageable);
     }
 }

@@ -6,14 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class UserProfileUpdateDto {
+public class ProfileTextUpdateDto {
     private String nickName;
     private String profileTxt;
-    private Sex sex;
     private Visibility idVisibility;
+    private Sex sex;
 }

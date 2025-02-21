@@ -3,14 +3,9 @@ package com.TwinStar.TwinStar.user.domain;
 import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
 import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.common.domain.YN;
-import com.TwinStar.TwinStar.follow.domain.Follow;
 import com.TwinStar.TwinStar.post.domain.Post;
-import com.TwinStar.TwinStar.post.dto.ProfilePostResDto;
-import com.TwinStar.TwinStar.post_file.PostFile;
-import com.TwinStar.TwinStar.report.domain.Report;
 import com.TwinStar.TwinStar.user.dto.UserListDto;
 import com.TwinStar.TwinStar.user.dto.UserProfileDto;
-import com.TwinStar.TwinStar.user.dto.UserProfileUpdateDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,7 +35,8 @@ public class User extends BaseTimeEntity {
     private String email;
     @Column(nullable = false, unique = true)
     private String nickName;
-    private String profileImg;
+    @Builder.Default
+    private String profileImg = "/images/default_profile.png"; //기본 프로필 이미지 설정
     private String profileTxt;
     @Column(nullable = false)
     @Builder.Default
@@ -85,11 +81,10 @@ public class User extends BaseTimeEntity {
 
 
     //    사용자 프로필 업데이트
-    public void updateProfile(String nickName, String profileTxt, Sex sex, Visibility idVisibility) {
-        UserProfileUpdateDto.builder()
+    public void updateProfile(String nickName, String profileTxt, Visibility idVisibility) {
+        UserProfileDto.builder()
                 .nickName(this.nickName)
                 .profileTxt(this.profileTxt)
-                .sex(this.sex)
                 .idVisibility(this.idVisibility)
                 .build();
     }

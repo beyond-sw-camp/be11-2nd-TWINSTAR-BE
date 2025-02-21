@@ -1,5 +1,6 @@
 package com.TwinStar.TwinStar.blackList.domain;
 
+import com.TwinStar.TwinStar.blackList.dto.BlockRequest;
 import com.TwinStar.TwinStar.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,4 +26,5 @@ public class BlackList {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "blocked_user_id", nullable = false)
     private User blockedUser;
+
 }

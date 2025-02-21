@@ -1,5 +1,8 @@
 package com.TwinStar.TwinStar.report.domain;
 
+import com.TwinStar.TwinStar.blackList.dto.BlockRequest;
+import com.TwinStar.TwinStar.report.dtos.ReportRequestDto;
+import com.TwinStar.TwinStar.report.dtos.ReportResponseDto;
 import com.TwinStar.TwinStar.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -46,7 +49,6 @@ public class Report {
     private LocalDateTime reportedTime;
     @LastModifiedBy //엔티티가 수정될 때 자동으로 갱신. 레파지토리에서 save()해야만 자동갱신
     private LocalDateTime processedAt;//updatedTime에서 processedAt로 변수명 변경 , 자동으로 갱신
-    @Column(nullable = false)
     private String comment;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
