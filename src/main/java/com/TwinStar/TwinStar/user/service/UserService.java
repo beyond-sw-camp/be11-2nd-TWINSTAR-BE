@@ -5,6 +5,7 @@ import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.common.exception.PrivateAccountException;
 import com.TwinStar.TwinStar.common.exception.SuspendedAccountException;
+import com.TwinStar.TwinStar.common.service.S3Service;
 import com.TwinStar.TwinStar.follow.repository.FollowRepository;
 import com.TwinStar.TwinStar.user.domain.AdminYn;
 import com.TwinStar.TwinStar.user.domain.User;
@@ -28,8 +29,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -41,11 +45,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final FollowRepository followRepository;
+    private final S3Service s3Service;
+    private final String DEFAULT_PROFILE_IMAGE = "https://example.com/default_profile.jpg"; //기본 이미지 url
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, FollowRepository followRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, FollowRepository followRepository, S3Service s3Service) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.followRepository = followRepository;
+        this.s3Service = s3Service;
     }
 
 //   1. 로그인
@@ -138,8 +145,8 @@ public class UserService {
         return UserProfileDto.profileSearch(user,followerCount,followingCount); //프로필dto로 전환해서 리턴
     }
 
-//    5. 프로필 업데이트
-    public void updateUserProfile(UserProfileUpdateDto updateDto) {
+//    5. 프로필 텍스트 업데이트
+    public UserProfileDto updateUserProfile(UserProfileDto dto, MultipartFile profileImg) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null || authentication.getName() == null){
             throw new AuthenticationCredentialsNotFoundException("인증 정보가 존재하지 않습니다");
@@ -150,15 +157,64 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // 2. 닉네임 중복 체크 (옵션)
-        if (!user.getNickName().equals(updateDto.getNickName()) &&
-                userRepository.existsByNickName(updateDto.getNickName())) {
+        if (!user.getNickName().equals(dto.getNickName()) &&
+                userRepository.existsByNickName(dto.getNickName())) {
             throw new RuntimeException("This nickname is already taken.");
         }
 
-        // 3. 사용자 정보 변경
-        user.updateProfile(updateDto.getNickName(), updateDto.getProfileTxt()
-                , updateDto.getSex(), updateDto.getIdVisibility());
+        //  새 프로필 이미지 업로드 후 url저장
+        String existingFileName = user.getProfileImg() != null ? extractFileName(user.getProfileImg()) : null;
+        String newProfileImgUrl = s3Service.uploadFile(profileImg, profileImg.getOriginalFilename());
+        user.updateProfileImage(newProfileImgUrl);
+        userRepository.save(user);
+
+        Long followingCount = followRepository.countByUserIdAndFollowYn(user,YN.Y);
+        Long followerCount = followRepository.countByReceiveUserIdAndFollowYn(user,YN.Y);
+
+        return UserProfileDto.fromEntity(user,followerCount,followingCount);
     }
+
+//    프로필 이미지 업로드
+    public String updateProfileImage(MultipartFile file) throws IOException{
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null || authentication.getName() == null){
+            throw new AuthenticationCredentialsNotFoundException("인증 정보가 존재하지 않습니다");
+        }
+        Long userId = Long.valueOf(authentication.getName());
+        // 1. 사용자 조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+//        새 이미지 업록드
+        String imageUrl = s3Service.uploadFile(file, file.getOriginalFilename());
+        user.updateProfileImage(imageUrl);
+        userRepository.save(user);
+        return imageUrl;
+    }
+
+//    프로필 텍스트 수정
+    public void updateProfileText(ProfileTextUpdateDto dto){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null || authentication.getName() == null){
+            throw new AuthenticationCredentialsNotFoundException("인증 정보가 존재하지 않습니다");
+        }
+        Long userId = Long.valueOf(authentication.getName());
+        // 1. 사용자 조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        User.builder()
+                .nickName(dto.getNickName())
+                .profileTxt(dto.getProfileTxt())
+                .sex(dto.getSex())
+                .idVisibility(dto.getIdVisibility())
+                .build();
+
+        userRepository.save(user);
+    }
+
 
 //   6. 회원탈퇴
     public void deleteUser() {
@@ -321,6 +377,11 @@ public class UserService {
 
         user.unban();
         userRepository.save(user);
+    }
+
+//    파일 경로에서 파일명만 추출하는 메서드
+    private String extractFileName(String fileUrl){
+        return fileUrl.substring(fileUrl.lastIndexOf("/")+1);
     }
 
 }
