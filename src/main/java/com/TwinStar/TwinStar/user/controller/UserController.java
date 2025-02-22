@@ -154,6 +154,14 @@ public class UserController {
         return new ResponseEntity<>(userListDto,HttpStatus.OK);
     }
 
+//    관리자용 유저상세목록 조회
+    @GetMapping("admin/detail/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> detailList(@PathVariable Long userId){
+        UserDetailDto userDetailDto = userService.userDetailList(userId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "userDetailList is found",userDetailDto),HttpStatus.OK);
+    }
+
 //   10. 관리자 권한 부여
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin/grant")

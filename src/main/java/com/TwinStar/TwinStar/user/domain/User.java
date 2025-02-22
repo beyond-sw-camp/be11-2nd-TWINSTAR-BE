@@ -67,15 +67,13 @@ public class User extends BaseTimeEntity {
         return UserListDto.builder()
                 .id(this.id)
                 .email(this.email)
-                .password(this.password)
                 .nickName(this.nickName)
-                .profileImg(this.profileImg)
-                .profileTxt(this.profileTxt)
                 .sex(this.sex)
                 .idVisibility(this.idVisibility)
                 .userStatus(this.userStatus)
                 .adminYn(this.adminYn)
                 .delYn(this.delYn)
+                .createdAt(this.getCreatedTime())
                 .build();
     }
 

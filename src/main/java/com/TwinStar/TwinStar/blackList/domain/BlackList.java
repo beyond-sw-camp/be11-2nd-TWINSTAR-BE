@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "blacklist")
 @Getter
@@ -26,5 +28,10 @@ public class BlackList {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "blocked_user_id", nullable = false)
     private User blockedUser;
+
+    @Column(name = "ban_close_time")
+    private LocalDateTime banCloseTime;
+
+
 
 }
