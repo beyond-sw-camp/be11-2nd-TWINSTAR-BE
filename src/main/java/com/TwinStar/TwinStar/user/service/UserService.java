@@ -29,6 +29,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
@@ -289,6 +290,22 @@ public class UserService {
         user.changeStatus(newStatus);
     //   상태 변경 저장
         userRepository.save(user);
+    }
+
+//    채팅용 유저리스트
+    public Page<ChatUserListDto> chatUserList(Pageable pageable, UserSearchDto dto) {
+        Specification<User> spec = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (StringUtils.hasText(dto.getNickName())) {
+                predicates.add(criteriaBuilder.equal(root.get("nickname"), dto.getNickName()));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return userRepository.findAll(spec, pageable)
+                .map(user -> new ChatUserListDto(user)); // User → ChatUserListDto 변환
     }
 
 

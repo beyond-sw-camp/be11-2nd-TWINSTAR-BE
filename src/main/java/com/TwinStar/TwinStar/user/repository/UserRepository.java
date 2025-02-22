@@ -4,6 +4,7 @@ package com.TwinStar.TwinStar.user.repository;
 import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.domain.UserStatus;
+import com.TwinStar.TwinStar.user.dto.ChatUserListDto;
 import com.TwinStar.TwinStar.user.dto.UserListDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findBannedUsers(@Param("status") UserStatus status);
 
     Optional<User> findByNickName(String nickName);
+
+    @Query("SELECT new com.example.dto.ChatUserListDto(u.id, u.nickname, u.profileImageUrl) FROM User u WHERE u.nickname = :nickname")
+    Page<ChatUserListDto> findByNickname(@Param("nickname") String nickname, Pageable pageable);
 
     Page<User> findAll(Specification<User> spec, Pageable pageable);
 

@@ -146,6 +146,12 @@ public class UserController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully",null),HttpStatus.OK);
     }
 
+//    일반유저용 유저목록 조회
+    @GetMapping("/list")
+    public ResponseEntity<?> ChatUserList(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, UserSearchDto dto){
+        Page<ChatUserListDto> chatUserListDtos = userService.chatUserList(pageable, dto);
+        return new ResponseEntity<>(chatUserListDtos,HttpStatus.OK);
+    }
 
 //  9. 관리자용 유저목록 조회
     @GetMapping("/admin/user/list")

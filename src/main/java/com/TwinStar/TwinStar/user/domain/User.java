@@ -4,6 +4,7 @@ import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
 import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.post.domain.Post;
+import com.TwinStar.TwinStar.user.dto.ChatUserListDto;
 import com.TwinStar.TwinStar.user.dto.UserListDto;
 import com.TwinStar.TwinStar.user.dto.UserProfileDto;
 import jakarta.persistence.*;
