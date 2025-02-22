@@ -168,6 +168,13 @@ public class UserController {
         return new ResponseEntity<>(userListDto,HttpStatus.OK);
     }
 
+//    관리자용 유저목록 검색
+    @GetMapping("/admin/list/search")
+    public ResponseEntity<?> adminListSearch(@PageableDefault(size = 10) Pageable pageable,@RequestParam(required = false) String nickName){
+        Page<UserListDto> users = userService.searchListUsers(nickName,pageable);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"is good",users),HttpStatus.OK);
+    }
+
 //    관리자용 유저상세목록 조회
     @GetMapping("admin/detail/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
