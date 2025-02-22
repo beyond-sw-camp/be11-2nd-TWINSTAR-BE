@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -18,13 +20,11 @@ import lombok.NoArgsConstructor;
 public class UserListDto {
     private Long id;
     private String email;
-    private String password;
     private String nickName;
-    private String profileImg;
-    private String profileTxt;
     private Sex sex;
     private Visibility idVisibility;
     private UserStatus userStatus;
     private YN delYn;
     private AdminYn adminYn;
+    private LocalDateTime createdAt;
 }

@@ -1,6 +1,7 @@
 package com.TwinStar.TwinStar.report.domain;
 
 import com.TwinStar.TwinStar.blackList.dto.BlockRequest;
+import com.TwinStar.TwinStar.report.dtos.ReportProcessResponseDto;
 import com.TwinStar.TwinStar.report.dtos.ReportRequestDto;
 import com.TwinStar.TwinStar.report.dtos.ReportResponseDto;
 import com.TwinStar.TwinStar.user.domain.User;
@@ -26,7 +27,6 @@ import java.time.LocalDateTime;
 @Getter
 @Transactional
 @SQLDelete(sql = "UPDATE report SET is_deleted = true WHERE id = ?") //특정ID를 소프트딜리트 함
-@Where(clause = "is_deleted = false") //기본적으로 삭제되지 않은 데이터만 조회
 @EntityListeners(AuditingEntityListener.class)
 public class Report {
     @Id
@@ -49,10 +49,11 @@ public class Report {
     private LocalDateTime reportedTime;
     @LastModifiedBy //엔티티가 수정될 때 자동으로 갱신. 레파지토리에서 save()해야만 자동갱신
     private LocalDateTime processedAt;//updatedTime에서 processedAt로 변수명 변경 , 자동으로 갱신
-    private String comment;
+    private String comment; //관리자 멘트
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ReportStatus reportStatus;
+    @Builder.Default
+    private ReportStatus reportStatus = ReportStatus.PENDING;
     @Column(nullable = false)
     @Builder.Default
     private Boolean isDeleted = false;
@@ -65,7 +66,5 @@ public class Report {
         this.processedAt = LocalDateTime.now(); // 처리된 시간 갱신
         this.isDeleted = true;
     }
-
-
 
 }

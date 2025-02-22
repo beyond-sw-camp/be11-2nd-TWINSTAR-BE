@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class ReportProcessRequestDto {
+
     @NotNull(message = "관리자 코멘트는 필수입니다.")
     private String comment; // 관리자 코멘트
 

@@ -3,6 +3,7 @@ package com.TwinStar.TwinStar.report.controller;
 import com.TwinStar.TwinStar.common.dto.CommonDto;
 import com.TwinStar.TwinStar.report.domain.Type;
 import com.TwinStar.TwinStar.report.dtos.ReportProcessRequestDto;
+import com.TwinStar.TwinStar.report.dtos.ReportProcessResponseDto;
 import com.TwinStar.TwinStar.report.dtos.ReportRequestDto;
 import com.TwinStar.TwinStar.report.dtos.ReportResponseDto;
 import com.TwinStar.TwinStar.report.service.ReportService;
@@ -36,7 +37,7 @@ public class ReportController {
     @GetMapping("/list")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getReports(Pageable pageable, ReportRequestDto dto) {
-        Page<ReportRequestDto> reports = reportService.findAllReports(pageable, dto);
+        Page<ReportResponseDto> reports = reportService.findAllReports(pageable, dto);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "신고 유저 조회 성공",reports),HttpStatus.OK);
     }
 
@@ -44,7 +45,7 @@ public class ReportController {
     @GetMapping("/detail/{reportId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getReportDetails(@PathVariable Long reportId) {
-        ReportResponseDto reportDetails = reportService.getReportDetails(reportId);
+        ReportProcessResponseDto reportDetails = reportService.getReportDetails(reportId);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "신고 유저 상세 조회 성공",reportDetails),HttpStatus.OK);
     }
 

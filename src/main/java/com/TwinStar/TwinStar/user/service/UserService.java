@@ -311,8 +311,14 @@ public class UserService {
             }
         };
         return userRepository.findAll(spec,pageable).map(user-> user.listFromEntity());
-
     }
+
+//    관리자 유저 상세조회
+    public UserDetailDto userDetailList(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("user is not found"));
+        return UserDetailDto.detailList(user);
+    }
+
 
 //    11. 관리자 권한 부여 메소드
     public void grantAdminRole(Long userid) {
