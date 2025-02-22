@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
     @Query("SELECT u FROM User u WHERE LOWER(u.email) = LOWER(:email)")
     Optional<User> findByEmail(@Param("email") String email);
 
@@ -38,8 +39,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByNickName(String nickName);
 
-    @Query("SELECT new com.example.dto.ChatUserListDto(u.id, u.nickname, u.profileImageUrl) FROM User u WHERE u.nickname = :nickname")
-    Page<ChatUserListDto> findByNickname(@Param("nickname") String nickname, Pageable pageable);
+//    닉네임으로 검색 조회
+    @Query("""
+    SELECT new com.TwinStar.TwinStar.user.dto.ChatUserListDto(u.id, u.nickName, u.profileImg) 
+    FROM User u 
+    WHERE LOWER(u.nickName) LIKE LOWER(CONCAT('%', :nickname, '%'))
+""")
+    Page<ChatUserListDto> searchUsersByNickname(@Param("nickname") String nickname, Pageable pageable);
 
     Page<User> findAll(Specification<User> spec, Pageable pageable);
 
