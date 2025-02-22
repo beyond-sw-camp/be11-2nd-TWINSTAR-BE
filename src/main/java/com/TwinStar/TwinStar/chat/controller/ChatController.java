@@ -1,4 +1,60 @@
 package com.TwinStar.TwinStar.chat.controller;
 
+import com.TwinStar.TwinStar.chat.domain.ChatRoom;
+import com.TwinStar.TwinStar.chat.dto.ChatMessageDto;
+import com.TwinStar.TwinStar.chat.dto.ChatRoomCreateReqDto;
+import com.TwinStar.TwinStar.chat.dto.ChatRoomResDto;
+import com.TwinStar.TwinStar.chat.service.ChatService;
+import com.TwinStar.TwinStar.common.dto.CommonDto;
+import com.TwinStar.TwinStar.user.domain.User;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/chat")
 public class ChatController {
+    private final ChatService chatService;
+
+    public ChatController(ChatService chatService) {
+        this.chatService = chatService;
+    }
+
+//    채팅방 개설
+    @PostMapping("room/create")
+    public ResponseEntity<?> RoomOpen(@RequestBody ChatRoomCreateReqDto chatRoomCreateReqDto){
+        Long chatRoomId = chatService.RoomOpen(chatRoomCreateReqDto);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "채팅방 개설 완료",chatRoomId),HttpStatus.OK);
+    }
+
+//    채팅방 리스트 보여주기
+    @GetMapping("room/list")
+    public ResponseEntity<?> getChatRoomList() {
+        List<ChatRoomResDto> chatRoomList = chatService.chatRoomList();
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "채팅방 리스트 불러오기 완료", chatRoomList), HttpStatus.OK);
+    }
+
+//    채팅 메세지 리스트 page로 보여주기
+    @GetMapping("room/detail/{roomId}")
+    public ResponseEntity<?> getChatMessageList(@PathVariable("roomId") Long roomId,
+                                                @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                @RequestParam(name = "size", defaultValue = "20") Integer size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<ChatMessageDto> chatMessageList = chatService.getChatMessages(roomId, pageRequest);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "채팅 불러오기 완료", chatMessageList),HttpStatus.OK);
+    }
+
+//    채팅 읽음 처리
+    @PostMapping("read/{roomId}")
+    public ResponseEntity<?> readChat(@PathVariable("roomId") Long roomId){
+        chatService.readChat(roomId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "채팅 읽기 완료" ,roomId),HttpStatus.OK);
+    }
+
+
 }

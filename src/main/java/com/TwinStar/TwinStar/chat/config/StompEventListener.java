@@ -26,6 +26,8 @@ public class StompEventListener {
     public void disconnectHandle(SessionDisconnectEvent event){
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(event.getMessage());
         sessions.remove(accessor.getSessionId());
+        System.out.println(event);
+        System.out.println(event.getMessage());
         System.out.println("disconnect sessiond ID" + accessor.getSessionId());
         System.out.println("total session : " + sessions.size());
     }

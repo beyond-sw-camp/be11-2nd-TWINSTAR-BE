@@ -39,22 +39,6 @@ public class StompHandler implements ChannelInterceptor {
                     .getBody();
             System.out.println("토큰 검증 완료");
         }
-        if(StompCommand.SUBSCRIBE == accessor.getCommand()){
-            System.out.println("subscribe 검증");
-            String bearerToken = accessor.getFirstNativeHeader("Authorization");
-            String token = bearerToken.substring(7);
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-            String email = claims.getSubject();
-            String roomId = accessor.getDestination().split("/")[2];
-            if(!chatService.isRoomPaticipant(email, Long.parseLong(roomId))){
-                throw new AuthenticationServiceException("해당 room에 권한이 없습니다.");
-            }
-        }
-
         return message;
     }
 

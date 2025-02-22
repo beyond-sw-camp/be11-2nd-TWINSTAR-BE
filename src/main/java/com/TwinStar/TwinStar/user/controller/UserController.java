@@ -44,7 +44,7 @@ public class UserController {
 //        id,email, password 검증
         User user = userService.login(dto);
 //        토큰 생성 및 return
-        String token = jwtTokenProvider.createToken(user.getId(),user.getEmail(),user.getAdminYn().toString());
+        String token = jwtTokenProvider.createToken(user.getId(),user.getEmail(), user.getNickName(),user.getAdminYn().toString());
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getId(),user.getEmail(),user.getAdminYn().toString());
 //        redis에 rt저장
         redisTemplate.opsForValue().set(user.getEmail(),refreshToken,200, TimeUnit.DAYS);//200일 ttl
