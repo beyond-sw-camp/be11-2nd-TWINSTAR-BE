@@ -34,10 +34,11 @@ public class JwtTokenProvider {
         ENCRYPT_RT_SECRET_KEY = new SecretKeySpec(java.util.Base64.getDecoder().decode(secretKeyRt), SignatureAlgorithm.HS512.getJcaName());
     }
 
-    public String createToken(Long id, String email, String role) {
+    public String createToken(Long id, String email, String nickName, String role) {
         Claims claims = Jwts.claims().setSubject(String.valueOf(id));
         claims.put("role", role);
         claims.put("email", email);
+        claims.put("nickName", nickName);
         Date now = new Date();
 
         return Jwts.builder()
@@ -94,7 +95,8 @@ public class JwtTokenProvider {
         Long userId = Long.parseLong(claims.getSubject());
         String email = claims.get("email", String.class);
         String role = claims.get("role", String.class);
+        String nickName = claims.get("nickName", String.class);
 
-        return createToken(userId, email, role);
+        return createToken(userId, email, nickName, role);
     }
 }

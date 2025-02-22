@@ -35,6 +35,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.userStatus = :status AND (u.banCloseTime IS NULL OR u.banCloseTime > CURRENT_TIMESTAMP)")
     List<User> findBannedUsers(@Param("status") UserStatus status);
 
+    Optional<User> findByNickName(String nickName);
 
     Page<User> findAll(Specification<User> spec, Pageable pageable);
 
