@@ -24,15 +24,10 @@ public class ReportRequestDto {
     @NotNull(message = "관련 ID는 필수입니다.")
     private Long typeId; // 신고 관련 ID (예: 게시글 ID, 댓글 ID)
 
+    private ReportStatus reportStatus;
+
     private String content; // 신고 사유
 
-    public static ReportRequestDto fromEntity(Report report) {
-        return ReportRequestDto.builder()
-                .reportedId(report.getId())
-                .reportType(report.getReportType())
-                .typeId(report.getTypeId())
-                .content(report.getContent())
-                .build();
-    }
+
 
 }

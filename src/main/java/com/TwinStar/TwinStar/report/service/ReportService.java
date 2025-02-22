@@ -4,6 +4,7 @@ import com.TwinStar.TwinStar.report.domain.Report;
 import com.TwinStar.TwinStar.report.domain.ReportStatus;
 import com.TwinStar.TwinStar.report.domain.Type;
 import com.TwinStar.TwinStar.report.dtos.ReportProcessRequestDto;
+import com.TwinStar.TwinStar.report.dtos.ReportProcessResponseDto;
 import com.TwinStar.TwinStar.report.dtos.ReportRequestDto;
 import com.TwinStar.TwinStar.report.dtos.ReportResponseDto;
 import com.TwinStar.TwinStar.report.repository.ReportRepository;
@@ -68,7 +69,7 @@ public class ReportService {
     }
 
 //   신고 목록 조회
-    public Page<ReportRequestDto> findAllReports(Pageable pageable,ReportRequestDto dto) {
+    public Page<ReportResponseDto> findAllReports(Pageable pageable,ReportRequestDto dto) {
         Specification<Report> spec = new Specification<Report>() {
             @Override
             public Predicate toPredicate(Root<Report> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
@@ -78,6 +79,11 @@ public class ReportService {
                 // 신고 유형 필터링 (예: SPAM, ABUSE 등)
                 if (dto.getReportType() != null){
                     predicates.add(criteriaBuilder.equal(root.get("reportType"),dto.getReportType()));
+                }
+
+                // 신고 상태 필터링 추가
+                if (dto.getReportStatus() != null) {
+                    predicates.add(criteriaBuilder.equal(root.get("reportStatus"), dto.getReportStatus()));
                 }
 
                 // 예: 신고 대상 유저 ID로 검색
@@ -96,14 +102,14 @@ public class ReportService {
         };
             // 페이징과 검색을 함께 적용하여 조회
             Page<Report> reportPage = reportRepository.findAll(spec, pageable);
-        return reportPage.map(ReportRequestDto::fromEntity);
+        return reportPage.map(ReportResponseDto::fromEntity);
     }
 
     // 특정 신고 상세 조회
-    public ReportResponseDto getReportDetails(Long reportId) {
+    public ReportProcessResponseDto getReportDetails(Long reportId) {
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 신고입니다."));
-        return new ReportResponseDto(report);
+        return ReportProcessResponseDto.reportProcessResponseDto(report);
     }
 
     //  특정 신고 유형 목록 조회
