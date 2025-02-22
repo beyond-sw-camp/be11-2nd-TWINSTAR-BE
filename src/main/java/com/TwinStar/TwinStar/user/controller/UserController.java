@@ -146,6 +146,7 @@ public class UserController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully",null),HttpStatus.OK);
     }
 
+
 //  9. 관리자용 유저목록 조회
     @GetMapping("/admin/user/list")
     @PreAuthorize("hasRole('ADMIN')")
