@@ -29,6 +29,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
@@ -291,8 +292,32 @@ public class UserService {
         userRepository.save(user);
     }
 
+//  10. 채팅용 유저리스트
+    public Page<ChatUserListDto> chatUserList(Pageable pageable) {
+        return userRepository.findAll(pageable)
+                .map(user -> new ChatUserListDto(user)); // User → ChatUserListDto 변환
+    }
 
-//  10. 관리자용 유저 리스트
+//  11.  채팅유저 검색
+    public Page<ChatUserListDto> searchChatUsers(String nickName, Pageable pageable) {
+        Specification<User> spec = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            System.out.println("검색 요청 - nickname: " + nickName); // 디버깅 로그
+
+            if (StringUtils.hasText(nickName)) {
+                predicates.add(criteriaBuilder.like(root.get("nickname"), "%" + nickName + "%"));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+
+        Page<User> result = userRepository.findAll(spec, pageable);
+        System.out.println("검색 결과 개수: " + result.getTotalElements());
+        return result.map(ChatUserListDto::new);
+    }
+
+//  12. 관리자용 유저 리스트
     public Page<UserListDto> userList(Pageable pageable, UserSearchDto dto){
         Specification<User> spec = new Specification<User>() {
             @Override
@@ -313,14 +338,14 @@ public class UserService {
         return userRepository.findAll(spec,pageable).map(user-> user.listFromEntity());
     }
 
-//    관리자 유저 상세조회
+//  13.  관리자 유저 상세조회
     public UserDetailDto userDetailList(Long userId){
         User user = userRepository.findById(userId).orElseThrow(()-> new EntityNotFoundException("user is not found"));
         return UserDetailDto.detailList(user);
     }
 
 
-//    11. 관리자 권한 부여 메소드
+//  14. 관리자 권한 부여 메소드
     public void grantAdminRole(Long userid) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long myId = Long.valueOf(authentication.getName());
@@ -342,7 +367,7 @@ public class UserService {
 
         receiveUser.changeAdmin(AdminYn.ADMIN);
     }
-//    12. 관리자 권한 회수 메소드
+//   15. 관리자 권한 회수 메소드
     public void revokeAdminRole(Long userid) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long myId = Long.valueOf(authentication.getName());
@@ -363,7 +388,7 @@ public class UserService {
         receiveUser.changeAdmin(AdminYn.USER);
     }
 
-//  13. 계정 정지
+//  16. 계정 정지
     public void banUser(Integer days) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User adminId = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()->new EntityNotFoundException("없는 관리자입니다."));
@@ -374,7 +399,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-//  14.계정 정지 해제
+//  17.계정 정지 해제
     public void unbanUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User adminId = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()->new EntityNotFoundException("없는 관리자입니다."));
