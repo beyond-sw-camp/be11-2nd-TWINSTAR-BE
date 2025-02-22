@@ -44,9 +44,5 @@ public class StompController {
 
         messagingTemplate.convertAndSend("/topic/" + roomId, chatMessageDto);
 
-        // Redis를 통한 메시지 발행
-        ObjectMapper objectMapper = new ObjectMapper();
-        String chatMessageJson = objectMapper.writeValueAsString(chatMessageDto);
-        pubSubService.publish("chat", chatMessageJson);
     }
 }

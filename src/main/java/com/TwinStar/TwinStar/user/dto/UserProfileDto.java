@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +29,6 @@ public class UserProfileDto {
     private Long followerCount;//나를 팔로우하는 사람의 수
     private Long followingCount;//내가 팔로우하는 사람의 수
     private Visibility idVisibility;
-    private UserStatus userStatus;
     private List<PostResponseDto> posts;// 게시물 리스트
 
     public static UserProfileDto profileSearch(User user,Long followerCount,Long followingCount){
@@ -40,12 +40,20 @@ public class UserProfileDto {
                 .followerCount(followerCount)
                 .followingCount(followingCount)
                 .idVisibility(user.getIdVisibility())
-                .userStatus(user.getUserStatus())
                 .posts(user.getPosts().stream()
                         .filter(post -> !post.getPostDel().equals("Y")) // 삭제된 게시물 제외
-                        .map(PostResponseDto::from) //
+                        .map(PostResponseDto::fromEntity) //
                         .collect(Collectors.toList()))
                 .build();
     }
 
+    public static UserProfileDto fromEntity(User user,Long followerCount,Long followingCount){
+        return UserProfileDto.builder()
+                .nickName(user.getNickName())
+                .profileTxt(user.getProfileTxt())
+                .followerCount(followerCount)
+                .followingCount(followingCount)
+                .idVisibility(user.getIdVisibility())
+                .build();
+    }
 }

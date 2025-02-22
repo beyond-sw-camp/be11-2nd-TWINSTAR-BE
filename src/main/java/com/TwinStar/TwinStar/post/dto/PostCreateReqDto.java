@@ -8,9 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,20 +20,11 @@ import java.util.List;
 @Builder
 public class PostCreateReqDto {
     private String contents;
-    private List<String > files; // 이미지 및 동영상 파일 URL 리스트
+    private List<MultipartFile> files; // 파일을 MultipartFile 리스트로 받음
     private Visibility postVisibility;
     private List<String> hashTags;
 
-    public void validate() {
-        if (files == null || files.isEmpty()) {
-            throw new IllegalArgumentException("최소 1개의 파일을 업로드해야 합니다.");
-        }
-        if (files.size() > 10) {
-            throw new IllegalArgumentException("최대 10개의 파일만 업로드 가능합니다.");
-        }
-    }
-
-    public Post toEntity(User user, List<PostHashTag> postHashTags) {
+    public Post toEntity(User user, Set<PostHashTag> postHashTags) {
         return Post.builder()
                 .content(this.contents)
                 .user(user)

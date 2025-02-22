@@ -10,11 +10,19 @@ import com.TwinStar.TwinStar.report.repository.ReportRepository;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,6 +65,38 @@ public class ReportService {
                 .build();
 
         reportRepository.save(report);
+    }
+
+//   신고 목록 조회
+    public Page<ReportRequestDto> findAllReports(Pageable pageable,ReportRequestDto dto) {
+        Specification<Report> spec = new Specification<Report>() {
+            @Override
+            public Predicate toPredicate(Root<Report> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+//                root : 엔티티의 속성을 접근하기 위한 객체, criteriabuilder : 쿼리를 생성하기 위한 객체
+                List<Predicate> predicates = new ArrayList<>();
+
+                // 신고 유형 필터링 (예: SPAM, ABUSE 등)
+                if (dto.getReportType() != null){
+                    predicates.add(criteriaBuilder.equal(root.get("reportType"),dto.getReportType()));
+                }
+
+                // 예: 신고 대상 유저 ID로 검색
+                if (dto.getReportedId() != null) {
+                    predicates.add(criteriaBuilder.equal(root.get("reportedId").get("id"), dto.getReportedId()));
+                }
+
+                // AND 조건 결합
+                Predicate[] predicateArr = new Predicate[predicates.size()];
+                for (int i =0; i<predicates.size();i++){
+                    predicateArr[i] = predicates.get(i);
+                }
+                Predicate predicate = criteriaBuilder.and(predicateArr);
+                return predicate;
+            }
+        };
+            // 페이징과 검색을 함께 적용하여 조회
+            Page<Report> reportPage = reportRepository.findAll(spec, pageable);
+        return reportPage.map(ReportRequestDto::fromEntity);
     }
 
     // 특정 신고 상세 조회

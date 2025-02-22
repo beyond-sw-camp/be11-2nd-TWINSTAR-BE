@@ -7,16 +7,24 @@ import com.TwinStar.TwinStar.common.exception.MissingRequestParameterException;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.dto.*;
 import com.TwinStar.TwinStar.user.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +39,14 @@ public class UserController {
     private final RedisTemplate<String,Object> redisTemplate;
     @Value("${jwt.secretKeyRt}")
     private String secretKeyRt;
+    private final ObjectMapper objectMapper;
 
 
-    public UserController(UserService userService, JwtTokenProvider jwtTokenProvider,@Qualifier("rtdb") RedisTemplate<String, Object> redisTemplate) {
+    public UserController(UserService userService, JwtTokenProvider jwtTokenProvider, @Qualifier("rtdb") RedisTemplate<String, Object> redisTemplate, ObjectMapper objectMapper) {
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
         this.redisTemplate = redisTemplate;
+        this.objectMapper = objectMapper;
     }
 //  1.로그인
     @PostMapping("/doLogin")
@@ -114,6 +124,7 @@ public class UserController {
 
     }
 
+
 //  7.  내 프로필 정보 조회
     @GetMapping("/myProfile")
     public ResponseEntity<?> myProfile(){
@@ -121,18 +132,25 @@ public class UserController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK);
     }
 
-//  8.사용자 프로필 수정
-    @PatchMapping("/profile/update")
-    public ResponseEntity<?> updateProfile(@RequestBody UserProfileUpdateDto updateDto) {
-        userService.updateUserProfile(updateDto);
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully.","null"),HttpStatus.OK);
+//  8.사용자 프로필 이미지 수정
+    @PostMapping("/profile/img")
+    public ResponseEntity<?> updateImgProfile(@RequestParam("file") MultipartFile file) throws IOException {
+        String imageUrl = userService.updateProfileImage(file);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully.",imageUrl),HttpStatus.OK);
+    }
+
+//  8.2 사용자 프로필 텍스트 수정
+    @PutMapping("/profile/text")
+    public ResponseEntity<?> updateTextProfile(@RequestBody ProfileTextUpdateDto dto){
+        userService.updateProfileText(dto);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully",null),HttpStatus.OK);
     }
 
 //  9. 관리자용 유저목록 조회
     @GetMapping("/admin/user/list")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> list(){
-        List<UserListDto> userListDto = userService.userList();
+    public ResponseEntity<?> list(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, UserSearchDto dto){
+        Page<UserListDto> userListDto = userService.userList(pageable, dto);
         return new ResponseEntity<>(userListDto,HttpStatus.OK);
     }
 

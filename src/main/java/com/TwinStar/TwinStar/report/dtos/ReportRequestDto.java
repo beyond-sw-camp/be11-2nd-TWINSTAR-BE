@@ -1,5 +1,6 @@
 package com.TwinStar.TwinStar.report.dtos;
 
+import com.TwinStar.TwinStar.report.domain.Report;
 import com.TwinStar.TwinStar.report.domain.ReportStatus;
 import com.TwinStar.TwinStar.report.domain.Type;
 import jakarta.validation.constraints.NotNull;
@@ -24,5 +25,14 @@ public class ReportRequestDto {
     private Long typeId; // 신고 관련 ID (예: 게시글 ID, 댓글 ID)
 
     private String content; // 신고 사유
+
+    public static ReportRequestDto fromEntity(Report report) {
+        return ReportRequestDto.builder()
+                .reportedId(report.getId())
+                .reportType(report.getReportType())
+                .typeId(report.getTypeId())
+                .content(report.getContent())
+                .build();
+    }
 
 }

@@ -1,15 +1,12 @@
 package com.TwinStar.TwinStar.blackList.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Builder
-public class BlockRequest {
-    private Long userId;
-    private Long blockedUserId;
+public class BlackListSearchDto {
+    private String blockedUserNickName;
 }
