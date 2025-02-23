@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,5 +28,17 @@ public class ChatParticipant extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean isActive = true;
+
+    public void leaveChatRoom() {
+        this.isActive = false;
+    }
+
+    public void rejoinChatRoom() {
+        this.isActive = true;
+    }
 
 }
