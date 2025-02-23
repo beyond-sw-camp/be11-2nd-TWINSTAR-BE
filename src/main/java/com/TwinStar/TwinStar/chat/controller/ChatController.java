@@ -56,11 +56,20 @@ public class ChatController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "채팅 읽기 완료" ,roomId),HttpStatus.OK);
     }
 
+//    채팅방 나가기
     @PostMapping("/room/leave/{roomId}")
     public ResponseEntity<?> leaveChatRoom(@PathVariable("roomId") Long roomId) {
         chatService.leaveChatRoom(roomId);
         return ResponseEntity.ok(new CommonDto(HttpStatus.OK.value(), "채팅방 나가기 완료", roomId));
     }
+
+//    채팅방 초대하기
+    @PostMapping("/room/invite/{roomId}")
+    public ResponseEntity<?> inviteUsersToChatRoom(@PathVariable("roomId") Long roomId, @RequestBody List<Long> userIds) {
+        chatService.inviteUsersToChatRoom(roomId, userIds);
+        return ResponseEntity.ok(new CommonDto(HttpStatus.OK.value(), "유저 초대 완료", roomId));
+    }
+
 
 
 }

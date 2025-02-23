@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -40,12 +41,9 @@ public class ChatService {
         this.userRepository = userRepository;
     }
 
-//    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//    User sender = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()-> new EntityNotFoundException("user is not found."));
-
     //    채팅 방 개설
     public Long RoomOpen(ChatRoomCreateReqDto dto){
-
+        dto.getIdList().add(Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName()));
 //        채팅방 생성
         String isGroupChat = dto.getIdList().size()>2 ? "Y" : "N";
         ChatRoom chatRoom = ChatRoom.builder()
@@ -150,6 +148,7 @@ public class ChatService {
         }
     }
 
+//    채팅방 들어가면 전체 메세지 읽기
     public void readChat(Long roomId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()-> new EntityNotFoundException("유저가 없어요."));
@@ -162,6 +161,7 @@ public class ChatService {
         }
     }
 
+//    채팅방 나가기
     public void leaveChatRoom(Long roomId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findById(Long.valueOf(authentication.getName()))
@@ -172,4 +172,32 @@ public class ChatService {
 
         chatParticipant.leaveChatRoom();
     }
+
+//    채팅 초대하기
+    public void inviteUsersToChatRoom(Long roomId, List<Long> userIds) {
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new EntityNotFoundException("채팅방이 존재하지 않습니다."));
+
+        List<User> users = userRepository.findAllById(userIds);
+        if (users.isEmpty()) {
+            throw new EntityNotFoundException("유효한 사용자가 없습니다.");
+        }
+
+        for (User user : users) {
+            Optional<ChatParticipant> existingParticipant = chatParticipantRepository.findByChatRoomIdAndUserId(roomId, user.getId());
+
+            if (existingParticipant.isPresent()) {
+                ChatParticipant participant = existingParticipant.get();
+                if (!participant.getIsActive()) { continue; } // 참여 중이면 그냥 넘기기
+                participant.rejoinChatRoom();  //  나갔던 유저면 다시 참여하게끔
+            } else {
+                ChatParticipant newParticipant = ChatParticipant.builder()
+                        .chatRoom(chatRoom)
+                        .user(user)
+                        .isActive(true)
+                        .build();
+                chatParticipantRepository.save(newParticipant);
+            }
+        }
+    }
+
 }
