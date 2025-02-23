@@ -14,8 +14,11 @@ import java.util.Optional;
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
+//    채팅방에 참여되어 있는 것을 updated 타임 기준으로 정렬
     @Query("SELECT new com.TwinStar.TwinStar.chat.dto.ChatRoomResDto( " +
-            "c.id, c.name, COUNT(r.id), c.isGroupChat, cp.isActive, c.updatedTime) " +
+            "c.id, c.name, COUNT(r.id), c.isGroupChat, cp.isActive, " +
+            "CASE WHEN c.isGroupChat = 'Y' THEN (SELECT COUNT(cp2) FROM ChatParticipant cp2 WHERE cp2.chatRoom = c) ELSE 0 END, " +
+            "c.updatedTime) " +
             "FROM ChatRoom c " +
             "JOIN ChatParticipant cp ON cp.chatRoom = c " +
             "LEFT JOIN ReadStatus r ON r.chatRoom = c AND r.user = :user AND r.isRead = false " +
@@ -24,6 +27,8 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
             "ORDER BY c.updatedTime DESC")
     Optional<List<ChatRoomResDto>> findActiveChatRooms(@Param("user") User user);
 
+
+    //    1:1방인지 확인
     @Query("SELECT c FROM ChatRoom c " +
             "JOIN ChatParticipant cp1 ON cp1.chatRoom = c AND cp1.user.id = :userId1 " +
             "JOIN ChatParticipant cp2 ON cp2.chatRoom = c AND cp2.user.id = :userId2 " +
