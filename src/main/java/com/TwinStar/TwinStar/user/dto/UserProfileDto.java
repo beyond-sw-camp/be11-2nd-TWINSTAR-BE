@@ -31,11 +31,11 @@ public class UserProfileDto {
     private Visibility idVisibility;
     private List<PostResponseDto> posts;// 게시물 리스트
 
-    public static UserProfileDto profileSearch(User user,Long followerCount,Long followingCount){
+    public static UserProfileDto profileSearch(User user,Long followerCount,Long followingCount,String profileImg){
         return UserProfileDto.builder()
                 .id(user.getId())
                 .nickName(user.getNickName())
-                .profileImg(user.getProfileImg())
+                .profileImg(profileImg)
                 .profileTxt(user.getProfileTxt())
                 .followerCount(followerCount)
                 .followingCount(followingCount)

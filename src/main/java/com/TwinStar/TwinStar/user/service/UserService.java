@@ -43,11 +43,11 @@ import java.util.Optional;
 @Service
 @Transactional
 public class UserService {
+    private static final String DEFAULT_PROFILE_IMG = "https://your-bucket.s3.amazonaws.com/default-profile.png";
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final FollowRepository followRepository;
     private final S3Service s3Service;
-    private final String DEFAULT_PROFILE_IMAGE = "https://example.com/default_profile.jpg"; //기본 이미지 url
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, FollowRepository followRepository, S3Service s3Service) {
         this.userRepository = userRepository;
@@ -125,7 +125,10 @@ public class UserService {
             throw new EntityNotFoundException("해당 계정은 탈퇴한 사용자입니다.");
         }
 
-        return UserProfileDto.profileSearch(receiveUser,followerCount,followingCount); //프로필dto로 전환해서 리턴
+        // 기본 프로필 이미지 적용
+        String profileImgUrl = (receiveUser.getProfileImg() != null) ? receiveUser.getProfileImg() : DEFAULT_PROFILE_IMG;
+
+        return UserProfileDto.profileSearch(receiveUser,followerCount,followingCount,profileImgUrl); //프로필dto로 전환해서 리턴
     }
 
 //    4.  내 프로필조회
@@ -143,7 +146,10 @@ public class UserService {
         Long followingCount = followRepository.countByUserIdAndFollowYn(user,YN.Y);
         Long followerCount = followRepository.countByReceiveUserIdAndFollowYn(user,YN.Y);
 
-        return UserProfileDto.profileSearch(user,followerCount,followingCount); //프로필dto로 전환해서 리턴
+        // 기본 프로필 이미지 적용
+        String profileImgUrl = (user.getProfileImg() != null) ? user.getProfileImg() : DEFAULT_PROFILE_IMG;
+
+        return UserProfileDto.profileSearch(user,followerCount,followingCount,profileImgUrl); //프로필dto로 전환해서 리턴
     }
 
 //    5. 프로필 텍스트 업데이트
