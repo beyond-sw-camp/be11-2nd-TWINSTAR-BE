@@ -13,12 +13,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@JsonIgnoreProperties(ignoreUnknown = true)
+
 public class ChatMessageDto {
     private Long messageId;
     private Long roomId;
     private String senderNickName;
     private String message;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime sendTime;
     private Long notReadCount;
 }
