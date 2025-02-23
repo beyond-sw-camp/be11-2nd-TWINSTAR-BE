@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/chat")
@@ -71,15 +72,19 @@ public class ChatController {
         return ResponseEntity.ok(new CommonDto(HttpStatus.OK.value(), "유저 초대 완료", roomId));
     }
 
+//    현재 채팅방 유저 리스트 확인
     @GetMapping("/room/users/{roomId}")
     public ResponseEntity<?> checkParticipatingUsers(@PathVariable("roomId") Long roomId) {
         List<ChatUserListDto> checkParticipatingUserList = chatService.checkParticipatingUsers(roomId);
         return ResponseEntity.ok(new CommonDto(HttpStatus.OK.value(), "유저 리스트 확인", checkParticipatingUserList));
     }
 
-//    @PostMapping()
-//    public ResponseEntity<?> changeRoomName(){
-//
-//    }
+//    방 제목 변경
+    @PostMapping("room/name/{roomId}")
+    public ResponseEntity<?> changeRoomName(@PathVariable("roomId") Long roomId, @RequestBody Map<String, String> request){
+        String name = request.get("name");
+        chatService.changeRoomName(roomId, name);
+        return ResponseEntity.ok(new CommonDto(HttpStatus.OK.value(), "방 제목 변경완료", roomId));
+    }
 
 }

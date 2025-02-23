@@ -214,8 +214,16 @@ public class ChatService {
         }
     }
 
+//    유저 리스트 보여주는 거
     public List<ChatUserListDto> checkParticipatingUsers(Long roomId) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new EntityNotFoundException("채팅방이 존재하지 않습니다."));
         return chatParticipantRepository.findActiveUsersByChatRoom(chatRoom);
+    }
+
+//    채팅방 제목 벼ㄴ경하기
+    public void changeRoomName(Long roomId, String name) {
+        ChatRoom chatRoom =chatRoomRepository.findById(roomId).orElseThrow(()-> new EntityNotFoundException("채팅방이 존재하지 않습니다."));
+        if(chatRoom.getIsGroupChat().equals("N")) { return; }
+        chatRoom.roomNameChange(name);
     }
 }
