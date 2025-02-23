@@ -7,6 +7,7 @@ import com.TwinStar.TwinStar.chat.dto.ChatRoomResDto;
 import com.TwinStar.TwinStar.chat.service.ChatService;
 import com.TwinStar.TwinStar.common.dto.CommonDto;
 import com.TwinStar.TwinStar.user.domain.User;
+import com.TwinStar.TwinStar.user.dto.ChatUserListDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -70,6 +71,10 @@ public class ChatController {
         return ResponseEntity.ok(new CommonDto(HttpStatus.OK.value(), "유저 초대 완료", roomId));
     }
 
-
+    @GetMapping("/room/users/{roomId}")
+    public ResponseEntity<?> checkParticipatingUsers(@PathVariable("roomId") Long roomId) {
+        List<ChatUserListDto> checkParticipatingUserList = chatService.checkParticipatingUsers(roomId);
+        return ResponseEntity.ok(new CommonDto(HttpStatus.OK.value(), "유저 리스트 확인", checkParticipatingUserList));
+    }
 
 }

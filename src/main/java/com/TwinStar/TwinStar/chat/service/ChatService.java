@@ -12,6 +12,7 @@ import com.TwinStar.TwinStar.chat.repository.ChatParticipantRepository;
 import com.TwinStar.TwinStar.chat.repository.ChatRoomRepository;
 import com.TwinStar.TwinStar.chat.repository.ReadStatusRepository;
 import com.TwinStar.TwinStar.user.domain.User;
+import com.TwinStar.TwinStar.user.dto.ChatUserListDto;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
@@ -200,4 +201,8 @@ public class ChatService {
         }
     }
 
+    public List<ChatUserListDto> checkParticipatingUsers(Long roomId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new EntityNotFoundException("채팅방이 존재하지 않습니다."));
+        return chatParticipantRepository.findActiveUsersByChatRoom(chatRoom);
+    }
 }
