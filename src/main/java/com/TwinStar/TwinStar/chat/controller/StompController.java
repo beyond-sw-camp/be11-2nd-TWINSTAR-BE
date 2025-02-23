@@ -26,14 +26,14 @@ public class StompController {
     private final ChatService chatService;
     private final RedisPubSubService pubSubService;
     private final UserRepository userRepository;
-    private final SimpMessagingTemplate messagingTemplate;
+    private final ObjectMapper objectMapper;
 
-    public StompController(SimpMessageSendingOperations messageTemplate, ChatService chatService, RedisPubSubService pubSubService, UserRepository userRepository, SimpMessagingTemplate messagingTemplate) {
+    public StompController(SimpMessageSendingOperations messageTemplate, ChatService chatService, RedisPubSubService pubSubService, UserRepository userRepository, SimpMessagingTemplate messagingTemplate, ObjectMapper objectMapper) {
         this.messageTemplate = messageTemplate;
         this.chatService = chatService;
         this.pubSubService = pubSubService;
         this.userRepository = userRepository;
-        this.messagingTemplate = messagingTemplate;
+        this.objectMapper = objectMapper;
     }
 
     @MessageMapping("/{roomId}")
@@ -42,7 +42,10 @@ public class StompController {
         chatMessageDto.setSendTime(LocalDateTime.now());
         chatService.messageSave(chatMessageDto,roomId);
 
-        messagingTemplate.convertAndSend("/topic/" + roomId, chatMessageDto);
+//        messagingTemplate.convertAndSend("/topic/" + roomId, chatMessageDto);
+
+        String message = objectMapper.writeValueAsString(chatMessageDto);
+        pubSubService.publish("chat", message);
 
     }
 }

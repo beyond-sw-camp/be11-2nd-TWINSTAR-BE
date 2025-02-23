@@ -7,6 +7,7 @@ import com.TwinStar.TwinStar.chat.dto.ChatRoomResDto;
 import com.TwinStar.TwinStar.chat.service.ChatService;
 import com.TwinStar.TwinStar.common.dto.CommonDto;
 import com.TwinStar.TwinStar.user.domain.User;
+import com.TwinStar.TwinStar.user.dto.ChatUserListDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/chat")
@@ -56,5 +58,33 @@ public class ChatController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "채팅 읽기 완료" ,roomId),HttpStatus.OK);
     }
 
+//    채팅방 나가기
+    @PostMapping("/room/leave/{roomId}")
+    public ResponseEntity<?> leaveChatRoom(@PathVariable("roomId") Long roomId) {
+        chatService.leaveChatRoom(roomId);
+        return ResponseEntity.ok(new CommonDto(HttpStatus.OK.value(), "채팅방 나가기 완료", roomId));
+    }
+
+//    채팅방 초대하기
+    @PostMapping("/room/invite/{roomId}")
+    public ResponseEntity<?> inviteUsersToChatRoom(@PathVariable("roomId") Long roomId, @RequestBody List<Long> userIds) {
+        chatService.inviteUsersToChatRoom(roomId, userIds);
+        return ResponseEntity.ok(new CommonDto(HttpStatus.OK.value(), "유저 "+userIds.toString() + roomId.toString()+"번방 초대 완료", roomId));
+    }
+
+//    현재 채팅방 유저 리스트 확인
+    @GetMapping("/room/users/{roomId}")
+    public ResponseEntity<?> checkParticipatingUsers(@PathVariable("roomId") Long roomId) {
+        List<ChatUserListDto> checkParticipatingUserList = chatService.checkParticipatingUsers(roomId);
+        return ResponseEntity.ok(new CommonDto(HttpStatus.OK.value(), "유저 리스트 확인", checkParticipatingUserList));
+    }
+
+//    방 제목 변경
+    @PostMapping("room/name/{roomId}")
+    public ResponseEntity<?> changeRoomName(@PathVariable("roomId") Long roomId, @RequestBody Map<String, String> request){
+        String name = request.get("name");
+        chatService.changeRoomName(roomId, name);
+        return ResponseEntity.ok(new CommonDto(HttpStatus.OK.value(), "방 제목 변경완료", roomId));
+    }
 
 }

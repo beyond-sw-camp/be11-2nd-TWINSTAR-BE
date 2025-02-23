@@ -148,7 +148,7 @@ public class UserController {
 
 //    일반유저용 유저목록 조회
     @GetMapping("/list")
-    public ResponseEntity<?> ChatUserList(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable, UserSearchDto dto){
+    public ResponseEntity<?> ChatUserList(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
         Page<ChatUserListDto> chatUserListDtos = userService.chatUserList(pageable);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"user is found",chatUserListDtos),HttpStatus.OK);
     }
