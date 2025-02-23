@@ -317,6 +317,25 @@ public class UserService {
         return result.map(ChatUserListDto::new);
     }
 
+    //  11-1.  관리자용 유저목록 검색
+    public Page<UserListDto> searchListUsers(String nickName, Pageable pageable) {
+        Specification<User> spec = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (StringUtils.hasText(nickName)) {
+                predicates.add(criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("nickName")), // nickname -> nickName으로 수정
+                        "%" + nickName.toLowerCase() + "%"
+                ));
+            }
+
+            return predicates.isEmpty() ? null : criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return userRepository.findAll(spec, pageable).map(user ->
+                user.listFromEntity());
+    }
+
 //  12. 관리자용 유저 리스트
     public Page<UserListDto> userList(Pageable pageable, UserSearchDto dto){
         Specification<User> spec = new Specification<User>() {
