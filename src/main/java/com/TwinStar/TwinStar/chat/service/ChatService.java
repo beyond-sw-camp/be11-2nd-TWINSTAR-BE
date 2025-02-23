@@ -45,6 +45,18 @@ public class ChatService {
     //    채팅 방 개설
     public Long RoomOpen(ChatRoomCreateReqDto dto){
         dto.getIdList().add(Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName()));
+
+        if (dto.getIdList().size() == 2) {
+            Long userId1 = dto.getIdList().get(0);
+            Long userId2 = dto.getIdList().get(1);
+
+            // 기존 1:1 채팅방이 있는지 확인
+            Optional<ChatRoom> existingRoom = chatRoomRepository.findPrivateChatRoom(userId1, userId2);
+            if (existingRoom.isPresent()) {
+                return existingRoom.get().getId();  // 기존 채팅방으로 ㄱㄱ
+            }
+        }
+
 //        채팅방 생성
         String isGroupChat = dto.getIdList().size()>2 ? "Y" : "N";
         ChatRoom chatRoom = ChatRoom.builder()
@@ -59,6 +71,7 @@ public class ChatService {
             ChatParticipant chatParticipant = ChatParticipant.builder()
                     .chatRoom(chatRoom)
                     .user(user)
+                    .isActive(true)
                     .build();
             chatParticipantRepository.save(chatParticipant);
         }

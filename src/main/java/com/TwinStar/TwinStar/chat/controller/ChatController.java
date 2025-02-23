@@ -77,4 +77,9 @@ public class ChatController {
         return ResponseEntity.ok(new CommonDto(HttpStatus.OK.value(), "유저 리스트 확인", checkParticipatingUserList));
     }
 
+//    @PostMapping()
+//    public ResponseEntity<?> changeRoomName(){
+//
+//    }
+
 }

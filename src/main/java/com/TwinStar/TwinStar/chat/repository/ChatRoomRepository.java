@@ -23,4 +23,10 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
             "GROUP BY c.id, c.name, c.isGroupChat, cp.isActive, c.updatedTime " +
             "ORDER BY c.updatedTime DESC")
     Optional<List<ChatRoomResDto>> findChatRoomsWithUnreadCount(@Param("user") User user);
+
+    @Query("SELECT c FROM ChatRoom c " +
+            "JOIN ChatParticipant cp1 ON cp1.chatRoom = c AND cp1.user.id = :userId1 " +
+            "JOIN ChatParticipant cp2 ON cp2.chatRoom = c AND cp2.user.id = :userId2 " +
+            "WHERE c.isGroupChat = 'N'")
+    Optional<ChatRoom> findPrivateChatRoom(@Param("userId1") Long userId1, @Param("userId2") Long userId2);
 }
