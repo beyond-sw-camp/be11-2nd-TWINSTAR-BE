@@ -56,5 +56,11 @@ public class ChatController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "채팅 읽기 완료" ,roomId),HttpStatus.OK);
     }
 
+    @PostMapping("/room/leave/{roomId}")
+    public ResponseEntity<?> leaveChatRoom(@PathVariable("roomId") Long roomId) {
+        chatService.leaveChatRoom(roomId);
+        return ResponseEntity.ok(new CommonDto(HttpStatus.OK.value(), "채팅방 나가기 완료", roomId));
+    }
+
 
 }

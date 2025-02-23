@@ -161,4 +161,15 @@ public class ChatService {
             readStatus.updateIsRead(true);
         }
     }
+
+    public void leaveChatRoom(Long roomId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findById(Long.valueOf(authentication.getName()))
+                .orElseThrow(() -> new EntityNotFoundException("유저가 없습니다."));
+
+        ChatParticipant chatParticipant = chatParticipantRepository.findByChatRoomIdAndUserId(roomId, user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("채팅방 참여자가 아닙니다."));
+
+        chatParticipant.leaveChatRoom();
+    }
 }
