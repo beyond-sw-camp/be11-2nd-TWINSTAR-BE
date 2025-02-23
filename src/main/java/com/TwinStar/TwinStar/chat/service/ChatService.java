@@ -121,8 +121,12 @@ public class ChatService {
 
     @Transactional(readOnly = true)
     public Page<ChatMessageDto> getChatMessages(Long roomId, Pageable pageable){
-//        채팅방에 최신순으로 메세지 불러오기 / 20개씩은 컨트롤러에서 하는중
-        Page<ChatMessage> chatMessagePage = chatMessageRepository.findByChatRoomIdOrderByCreatedTimeDesc(roomId, pageable);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()-> new EntityNotFoundException("user is not found."));
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new EntityNotFoundException("채팅방이 존재하지 않습니다."));
+
+//        채팅방에 최신순으로 메세지 불러오기
+        Page<ChatMessage> chatMessagePage = chatMessageRepository.findMessagesAfterLastUpdate(chatRoom, user, pageable);
 
 //        메세지를 dto로 조립ㅂ하기
         Page<ChatMessageDto> ChatMessageDtoList = chatMessagePage.map(chatMessage -> ChatMessageDto.builder()
