@@ -69,7 +69,7 @@ public class ChatController {
     @PostMapping("/room/invite/{roomId}")
     public ResponseEntity<?> inviteUsersToChatRoom(@PathVariable("roomId") Long roomId, @RequestBody List<Long> userIds) {
         chatService.inviteUsersToChatRoom(roomId, userIds);
-        return ResponseEntity.ok(new CommonDto(HttpStatus.OK.value(), "유저 초대 완료", roomId));
+        return ResponseEntity.ok(new CommonDto(HttpStatus.OK.value(), "유저 "+userIds.toString() + roomId.toString()+"번방 초대 완료", roomId));
     }
 
 //    현재 채팅방 유저 리스트 확인

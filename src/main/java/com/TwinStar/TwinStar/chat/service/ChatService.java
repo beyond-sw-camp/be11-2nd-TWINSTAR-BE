@@ -87,7 +87,7 @@ public class ChatService {
         User user = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()-> new EntityNotFoundException("user is not found."));
 
 //        현재 유저의 참여중인 방 확인 (방 업데이트 내림차순 -> 최신순이라고 보면됨)
-        List<ChatRoomResDto> participationRoomList = chatRoomRepository.findChatRoomsWithUnreadCount(user).orElseThrow(()-> new EntityNotFoundException("참여 중인 채팅방이 없습니다."));
+        List<ChatRoomResDto> participationRoomList = chatRoomRepository.findActiveChatRooms(user).orElseThrow(()-> new EntityNotFoundException("참여 중인 채팅방이 없습니다."));
 
 //        만약 1:1채팅방이면 상대방 닉네임으로 방제목 전달
 //        그 뭐야 방별로 그룹채팅인지 확인하고 아니면 참여자 리스트 만들어서 나 제외하고 상대 유저 닉네임으로 방제목, 이미지
@@ -143,12 +143,15 @@ public class ChatService {
     // 메ㅅㅔ지 저장
     public void messageSave(ChatMessageDto chatMessageDto, Long roomId) {
         User sender = userRepository.findByNickName(chatMessageDto.getSenderNickName()).orElseThrow(()-> new EntityNotFoundException("없는 유저입니다."));
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new EntityNotFoundException("채팅방이 존재하지 않습니다."));
         ChatMessage chatMessage = ChatMessage.builder()
-                .chatRoom(chatRoomRepository.findById(roomId).orElseThrow(() -> new EntityNotFoundException("채팅방이 존재하지 않습니다.")))
+                .chatRoom(chatRoom)
                 .user(sender)
                 .content(chatMessageDto.getMessage())
                 .build();
         chatMessageRepository.save(chatMessage);
+
+        chatRoom.updateTime();
 
         //    메세지 전송할 때 읽음 여부를 참여자들 false로 하기
         List<ChatParticipant> participants = chatParticipantRepository.findAllByChatRoomId(chatMessage.getChatRoom().getId());
@@ -205,7 +208,7 @@ public class ChatService {
 
             if (existingParticipant.isPresent()) {
                 ChatParticipant participant = existingParticipant.get();
-                if (!participant.getIsActive()) { continue; } // 참여 중이면 그냥 넘기기
+                if (participant.getIsActive()) { continue; } // 참여 중이면 그냥 넘기기
                 participant.rejoinChatRoom();  //  나갔던 유저면 다시 참여하게끔
             } else {
                 ChatParticipant newParticipant = ChatParticipant.builder()

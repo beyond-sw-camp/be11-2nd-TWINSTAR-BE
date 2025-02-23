@@ -15,14 +15,14 @@ import java.util.Optional;
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
     @Query("SELECT new com.TwinStar.TwinStar.chat.dto.ChatRoomResDto( " +
-            "c.id, c.name, COUNT(r.id), c.isGroupChat, cp.isActive) " +
+            "c.id, c.name, COUNT(r.id), c.isGroupChat, cp.isActive, c.updatedTime) " +
             "FROM ChatRoom c " +
             "JOIN ChatParticipant cp ON cp.chatRoom = c " +
             "LEFT JOIN ReadStatus r ON r.chatRoom = c AND r.user = :user AND r.isRead = false " +
-            "WHERE cp.user = :user " +
+            "WHERE cp.user = :user AND cp.isActive = true " +
             "GROUP BY c.id, c.name, c.isGroupChat, cp.isActive, c.updatedTime " +
             "ORDER BY c.updatedTime DESC")
-    Optional<List<ChatRoomResDto>> findChatRoomsWithUnreadCount(@Param("user") User user);
+    Optional<List<ChatRoomResDto>> findActiveChatRooms(@Param("user") User user);
 
     @Query("SELECT c FROM ChatRoom c " +
             "JOIN ChatParticipant cp1 ON cp1.chatRoom = c AND cp1.user.id = :userId1 " +
