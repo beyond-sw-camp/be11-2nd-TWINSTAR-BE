@@ -53,6 +53,11 @@ public class ChatService {
             // 기존 1:1 채팅방이 있는지 확인
             Optional<ChatRoom> existingRoom = chatRoomRepository.findPrivateChatRoom(userId1, userId2);
             if (existingRoom.isPresent()) {
+//                있다면 나간 사람 있을 수도 있으니 유저다시 활성화
+                List<ChatParticipant> participants = chatParticipantRepository.findAllByChatRoomId(existingRoom.orElse(null).getId());
+                for (ChatParticipant participant : participants) {
+                    if (!participant.getIsActive()) { participant.rejoinChatRoom(); }
+                }
                 return existingRoom.get().getId();  // 기존 채팅방으로 ㄱㄱ
             }
         }
