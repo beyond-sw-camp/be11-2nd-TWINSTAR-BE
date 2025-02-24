@@ -67,4 +67,9 @@ public class HashTagService {
     public Post findPostById(Long postId){
         return postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다."));
     }
+
+//  특정 게시물의 모든 해시태그 삭제
+    public void removeAllHashtagsFromPost(Post post){
+        hashTagRepository.deleteByPostId(post);
+    }
 }
