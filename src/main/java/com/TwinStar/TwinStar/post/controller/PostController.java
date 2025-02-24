@@ -38,7 +38,7 @@ public class PostController {
     }
 
     @PatchMapping("/update/{postId}")
-    public ResponseEntity<?> patchUpdate(@PathVariable Long postId, @ModelAttribute PostUpdateReqDto dto) {
+    public ResponseEntity<?> patchUpdate(@PathVariable Long postId, @RequestBody PostUpdateReqDto dto) {
         postService.Update(postId, dto); // postId가 있으면 기존 게시물 수정
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "게시물 수정 완료", postId), HttpStatus.OK);
     }

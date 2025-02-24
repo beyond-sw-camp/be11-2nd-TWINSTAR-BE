@@ -111,6 +111,7 @@ public class PostService {
         if (!loginUser.equals(postWriteUser)){ return ; }
         post.updateContent(dto.getContent());
 
+        hashTagService.removeAllHashtagsFromPost(post);
         for (String tag: dto.getHashTag()){
             HashTag hashTag = hashTagService.findOrCreateHashTag(tag);
             PostHashTag postHashTag = PostHashTag.builder()
