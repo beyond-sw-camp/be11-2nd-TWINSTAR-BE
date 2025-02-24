@@ -1,20 +1,19 @@
-package com.TwinStar.TwinStar.post.domain;
+package com.TwinStar.TwinStar.comment.domain;
 
+import com.TwinStar.TwinStar.post.domain.Post;
+import com.TwinStar.TwinStar.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
-public class PostFile {
-
+public class CommentLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,10 +22,7 @@ public class PostFile {
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    private String fileUrl;
-
-    @Builder.Default
-    private String isActive = "Y";
-
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
