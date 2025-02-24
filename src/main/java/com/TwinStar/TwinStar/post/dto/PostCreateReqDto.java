@@ -26,6 +26,7 @@ public class PostCreateReqDto {
         return Post.builder()
                 .content(this.content)
                 .visibility(this.visibility)
+                .user(user)
                 .score(0L)
                 .build();
     }
