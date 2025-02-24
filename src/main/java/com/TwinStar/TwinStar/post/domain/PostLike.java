@@ -1,14 +1,16 @@
-package com.TwinStar.TwinStar.postLike;
+package com.TwinStar.TwinStar.post.domain;
 
-import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.user.domain.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
 @Builder
 public class PostLike {
 
@@ -24,7 +26,5 @@ public class PostLike {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public static PostLike create(Post post, User user) {
-        return PostLike.builder().post(post).user(user).build();
-    }
+
 }

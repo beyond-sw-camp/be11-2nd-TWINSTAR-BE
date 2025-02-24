@@ -1,17 +1,11 @@
 package com.TwinStar.TwinStar.user.dto;
 
 import com.TwinStar.TwinStar.common.domain.Visibility;
-import com.TwinStar.TwinStar.post.domain.Post;
-import com.TwinStar.TwinStar.post.dto.PostResponseDto;
-import com.TwinStar.TwinStar.post.dto.ProfilePostResDto;
-import com.TwinStar.TwinStar.post_file.PostFile;
 import com.TwinStar.TwinStar.user.domain.User;
-import com.TwinStar.TwinStar.user.domain.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
