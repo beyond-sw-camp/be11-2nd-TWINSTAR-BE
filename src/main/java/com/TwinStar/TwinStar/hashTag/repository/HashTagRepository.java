@@ -12,6 +12,5 @@ public interface HashTagRepository extends JpaRepository<HashTag, Long> {
 //    해시태그 조회
     Optional<HashTag> findByHashTagName(String hasTagName);
     
-//    특정 포스트의 모든 해시태그 삭제
-    void deleteByPost(Post post);
+
 }

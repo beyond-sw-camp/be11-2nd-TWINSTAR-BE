@@ -19,4 +19,7 @@ public interface PostHashTagRepository extends JpaRepository<PostHashTag,Long> {
 //    특정 게시물에 연결된 해시태그 리스트 반환
     List<PostHashTag> findByPost(Post post);
 
+    //    특정 포스트의 모든 해시태그 삭제
+    void deleteByPost(Post post);
+
 }
