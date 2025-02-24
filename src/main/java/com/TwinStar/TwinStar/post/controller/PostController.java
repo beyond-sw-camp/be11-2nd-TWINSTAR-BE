@@ -1,7 +1,8 @@
 package com.TwinStar.TwinStar.post.controller;
 
 import com.TwinStar.TwinStar.post.service.PostService;
-import jakarta.persistence.Column;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,5 +15,13 @@ public class PostController {
     public PostController(PostService postService) {
         this.postService = postService;
     }
+
+//    @PostMapping("/cerate")
+//    public ResponseEntity<?> create(){
+//
+//    }
+
+
+
 
 }

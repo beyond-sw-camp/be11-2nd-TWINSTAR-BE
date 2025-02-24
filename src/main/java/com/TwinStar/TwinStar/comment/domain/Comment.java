@@ -1,8 +1,7 @@
-package com.TwinStar.TwinStar.post.domain;
+package com.TwinStar.TwinStar.comment.domain;
 
-import com.TwinStar.TwinStar.chat.domain.ReadStatus;
 import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
-import com.TwinStar.TwinStar.common.domain.Visibility;
+import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,10 +17,14 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Builder
-public class Post extends BaseTimeEntity {
+public class Comment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -30,17 +33,21 @@ public class Post extends BaseTimeEntity {
     @Column(nullable = false, length = 500)
     private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @OneToMany(mappedBy = "parent" , cascade = CascadeType.ALL)
     @Builder.Default
-    private String postDel = "N";
+    private List<Comment> child = new ArrayList<>();
 
-    private Visibility visibility;
 
-    private Long score;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pinned_id")
+    private Long pinnedComment;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<PostLike> PostLike = new ArrayList<>();;
+    @Builder.Default
+    private String commentDel = "N";
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<PostFile> postFile = new ArrayList<>();;
 
 }
