@@ -1,8 +1,12 @@
 package com.TwinStar.TwinStar.post.controller;
 
+import com.TwinStar.TwinStar.common.dto.CommonDto;
+import com.TwinStar.TwinStar.post.dto.PostCreateReqDto;
 import com.TwinStar.TwinStar.post.service.PostService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,10 +20,11 @@ public class PostController {
         this.postService = postService;
     }
 
-//    @PostMapping("/cerate")
-//    public ResponseEntity<?> create(){
-//
-//    }
+    @PostMapping("/cerate")
+    public ResponseEntity<?> create(@RequestBody PostCreateReqDto dto){
+        Long postId = postService.save(dto);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "게시물 작성 완료",postId),HttpStatus.OK);
+    }
 
 
 

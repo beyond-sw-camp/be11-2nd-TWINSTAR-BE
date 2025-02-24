@@ -3,6 +3,7 @@ package com.TwinStar.TwinStar.post.domain;
 import com.TwinStar.TwinStar.chat.domain.ReadStatus;
 import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
 import com.TwinStar.TwinStar.common.domain.Visibility;
+import com.TwinStar.TwinStar.hashTag.domain.PostHashTag;
 import com.TwinStar.TwinStar.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -38,9 +39,13 @@ public class Post extends BaseTimeEntity {
     private Long score;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<PostLike> PostLike = new ArrayList<>();;
+    private List<PostLike> PostLike = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<PostFile> postFile = new ArrayList<>();;
+    private List<PostFile> postFile = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<PostHashTag> hashTag = new ArrayList<>();
+
 
 }

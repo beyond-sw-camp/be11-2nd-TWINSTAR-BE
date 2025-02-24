@@ -21,8 +21,4 @@ public class HashTag extends BaseTimeEntity {
     @Column(nullable = false,unique = true)
     private String hashTagName;
 
-    public HashTag(String hashTagName){
-        this.hashTagName = hashTagName;
-    }
-
 }

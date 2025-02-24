@@ -28,5 +28,8 @@ public class PostFile {
     @Builder.Default
     private String isActive = "Y";
 
-
+    public PostFile(Post post, String fileUrl) {
+        this.post = post;
+        this.fileUrl = fileUrl;
+    }
 }
