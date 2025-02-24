@@ -35,4 +35,15 @@ public class HashTagController {
         List<Post> searchHashTag = hashTagService.findPostsByHashTag(hashTagEntity);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "해시태그 검색을 찾았습니다.",searchHashTag),HttpStatus.OK);
     }
+
+//    특정 게시물의 해시태그 조회
+    public ResponseEntity<?> getHashTagsByPost(@PathVariable Long postId){
+        Post post = hashTagService.findPostById(postId);
+        if (post == null) {
+            return new ResponseEntity<>(new CommonDto(HttpStatus.NOT_FOUND.value(), "게시물을 찾을 수 없습니다.", null), HttpStatus.NOT_FOUND);
+        }
+        List<String> hashTags = hashTagService.getHashTagsByPost(post);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "게시물의 해시태그 목록입니다.",hashTags),HttpStatus.OK);
+    }
+
 }
