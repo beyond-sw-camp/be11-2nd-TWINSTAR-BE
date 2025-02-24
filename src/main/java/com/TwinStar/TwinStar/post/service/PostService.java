@@ -7,6 +7,7 @@ import com.TwinStar.TwinStar.hashTag.service.HashTagService;
 import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.post.domain.PostFile;
 import com.TwinStar.TwinStar.post.dto.PostCreateReqDto;
+import com.TwinStar.TwinStar.post.dto.PostUpdateResDto;
 import com.TwinStar.TwinStar.post.repository.PostFileRepository;
 import com.TwinStar.TwinStar.post.repository.PostRepository;
 import com.TwinStar.TwinStar.user.domain.User;
@@ -88,5 +89,51 @@ public class PostService {
         } catch (IOException e) {
             throw new RuntimeException("파일 업로드 실패", e);
         }
+    }
+
+    public void delete(Long postId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loginUser = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()->new EntityNotFoundException("user not found"));
+        Post post = postRepository.findById(postId).orElseThrow(()-> new EntityNotFoundException("post is not found."));
+        User postWriteUser = post.getUser();
+
+        if (!loginUser.equals(postWriteUser)){ return ; }
+        postRepository.delete(post);
+    }
+
+    public void Update(Long postId, PostCreateReqDto dto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loginUser = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()->new EntityNotFoundException("user not found"));
+        Post post = postRepository.findById(postId).orElseThrow(()-> new EntityNotFoundException("post is not found."));
+        User postWriteUser = post.getUser();
+
+        if (!loginUser.equals(postWriteUser)){ return ; }
+        post.updateContent(dto.getContent());
+
+        for (MultipartFile file : dto.getImageFile()){
+            String fileUrl = uploadImage(file);
+            postFileRepository.save(new PostFile(post,fileUrl));
+        }
+
+        for (String tag: dto.getHashTag()){
+            HashTag hashTag = hashTagService.findOrCreateHashTag(tag);
+            PostHashTag postHashTag = PostHashTag.builder()
+                    .post(post)
+                    .hashTag(hashTag)
+                    .build();
+            postHashTagRepository.save(postHashTag);
+        }
+
+    }
+
+    public PostUpdateResDto getUpdateDataRes(Long postId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loginUser = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()->new EntityNotFoundException("user not found"));
+        Post post = postRepository.findById(postId).orElseThrow(()-> new EntityNotFoundException("post is not found."));
+        User postWriteUser = post.getUser();
+        if (!loginUser.equals(postWriteUser)){ return new PostUpdateResDto(); }
+        List<String>postUrlList = post.getFileUrls();
+        return post.formEntity(postUrlList);
+
     }
 }
