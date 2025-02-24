@@ -48,14 +48,14 @@ public class User extends BaseTimeEntity {
     private Sex sex;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Visibility idVisibility;
+    private Visibility idVisibility = Visibility.ALL;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private AdminYn adminYn = AdminYn.USER;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserStatus userStatus;
+    private UserStatus userStatus = UserStatus.ACTIVE;
     private LocalDateTime banCloseTime; // 정지 해제 날짜
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)//자동저장/ 삭제는 메소드 사용
     @Builder.Default //회원가입하면 게시물이 0개

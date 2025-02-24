@@ -43,7 +43,7 @@ import java.util.Optional;
 @Service
 @Transactional
 public class UserService {
-    private static final String DEFAULT_PROFILE_IMG = "https://your-bucket.s3.amazonaws.com/default-profile.png";
+    private static final String DEFAULT_PROFILE_IMG = "https://i.pinimg.com/474x/3b/73/a1/3b73a13983f88f8b84e130bb3fb29e17.jpg";
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final FollowRepository followRepository;
@@ -88,6 +88,18 @@ public class UserService {
         }
         User user = userRepository.save(dto.toEntity(passwordEncoder.encode(dto.getPassword())));
         return user.getId();
+    }
+
+//    회원가입에서 비동기 중복이메일 검증
+    public Optional<User> findByEmail(String email) {
+        // 이메일을 통해 User 엔티티를 조회하고, Optional로 반환
+        return userRepository.findByEmail(email);
+    }
+
+//    회원가입에서 비동기 중복닉네임 검증
+    public boolean existsByNickName(String nickname) {
+        // 닉네임 중복 여부 확인
+        return userRepository.existsByNickName(nickname);
     }
 
 //  3. 상대 프로필조회
