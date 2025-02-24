@@ -7,6 +7,7 @@ import com.TwinStar.TwinStar.hashTag.service.HashTagService;
 import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.post.domain.PostFile;
 import com.TwinStar.TwinStar.post.dto.PostCreateReqDto;
+import com.TwinStar.TwinStar.post.dto.PostUpdateReqDto;
 import com.TwinStar.TwinStar.post.dto.PostUpdateResDto;
 import com.TwinStar.TwinStar.post.repository.PostFileRepository;
 import com.TwinStar.TwinStar.post.repository.PostRepository;
@@ -101,7 +102,7 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public void Update(Long postId, PostCreateReqDto dto) {
+    public void Update(Long postId, PostUpdateReqDto dto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User loginUser = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()->new EntityNotFoundException("user not found"));
         Post post = postRepository.findById(postId).orElseThrow(()-> new EntityNotFoundException("post is not found."));
@@ -109,11 +110,6 @@ public class PostService {
 
         if (!loginUser.equals(postWriteUser)){ return ; }
         post.updateContent(dto.getContent());
-
-        for (MultipartFile file : dto.getImageFile()){
-            String fileUrl = uploadImage(file);
-            postFileRepository.save(new PostFile(post,fileUrl));
-        }
 
         for (String tag: dto.getHashTag()){
             HashTag hashTag = hashTagService.findOrCreateHashTag(tag);
@@ -132,8 +128,9 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(()-> new EntityNotFoundException("post is not found."));
         User postWriteUser = post.getUser();
         if (!loginUser.equals(postWriteUser)){ return new PostUpdateResDto(); }
-        List<String>postUrlList = post.getFileUrls();
-        return post.formEntity(postUrlList);
+        List<String> postUrlList = post.getFileUrls();
+        List<String> postHashTagList = hashTagService.getHashTagsByPost(post);
+        return post.formEntity(postHashTagList, postUrlList);
 
     }
 }

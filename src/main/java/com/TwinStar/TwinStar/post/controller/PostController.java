@@ -2,6 +2,7 @@ package com.TwinStar.TwinStar.post.controller;
 
 import com.TwinStar.TwinStar.common.dto.CommonDto;
 import com.TwinStar.TwinStar.post.dto.PostCreateReqDto;
+import com.TwinStar.TwinStar.post.dto.PostUpdateReqDto;
 import com.TwinStar.TwinStar.post.dto.PostUpdateResDto;
 import com.TwinStar.TwinStar.post.service.PostService;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,7 @@ public class PostController {
     }
 
     @PatchMapping("/update/{postId}")
-    public ResponseEntity<?> patchUpdate(@PathVariable Long postId, @ModelAttribute PostCreateReqDto dto) {
+    public ResponseEntity<?> patchUpdate(@PathVariable Long postId, @ModelAttribute PostUpdateReqDto dto) {
         postService.Update(postId, dto); // postId가 있으면 기존 게시물 수정
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "게시물 수정 완료", postId), HttpStatus.OK);
     }

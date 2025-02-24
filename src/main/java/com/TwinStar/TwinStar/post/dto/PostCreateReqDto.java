@@ -30,5 +30,4 @@ public class PostCreateReqDto {
                 .score(0L)
                 .build();
     }
-
 }

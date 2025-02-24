@@ -17,6 +17,5 @@ public class PostUpdateReqDto {
     private Long postId;
     private String content;
     private List<String> hashTag;
-    private List<String> ImageUrl;
     private Visibility visibility;
 }
