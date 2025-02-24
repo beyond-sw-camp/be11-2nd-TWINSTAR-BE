@@ -1,6 +1,7 @@
 package com.TwinStar.TwinStar.post.domain;
 
 import com.TwinStar.TwinStar.chat.domain.ReadStatus;
+import com.TwinStar.TwinStar.comment.domain.Comment;
 import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
 import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.hashTag.domain.PostHashTag;
@@ -47,5 +48,7 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<PostHashTag> hashTag = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> comment = new ArrayList<>();
 
 }

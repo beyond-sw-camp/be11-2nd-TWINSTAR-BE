@@ -41,10 +41,11 @@ public class Comment extends BaseTimeEntity {
     @Builder.Default
     private List<Comment> child = new ArrayList<>();
 
+    @OneToMany(mappedBy = "comment" , cascade = CascadeType.ALL)
+    private List<CommentLike> commentLike = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pinned_id")
-    private Long pinnedComment;
+    @Builder.Default
+    private String pinnedComment = "N";;
 
     @Builder.Default
     private String commentDel = "N";

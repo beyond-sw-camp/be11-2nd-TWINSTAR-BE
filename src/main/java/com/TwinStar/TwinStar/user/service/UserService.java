@@ -1,12 +1,18 @@
 package com.TwinStar.TwinStar.user.service;
 
 
+import com.TwinStar.TwinStar.comment.repository.CommentLikeRepository;
+import com.TwinStar.TwinStar.comment.repository.CommentRepository;
 import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.common.exception.PrivateAccountException;
 import com.TwinStar.TwinStar.common.exception.SuspendedAccountException;
 import com.TwinStar.TwinStar.common.service.S3Service;
 import com.TwinStar.TwinStar.follow.repository.FollowRepository;
+import com.TwinStar.TwinStar.post.domain.Post;
+import com.TwinStar.TwinStar.post.dto.ProfilePostResDto;
+import com.TwinStar.TwinStar.post.repository.PostLikeRepository;
+import com.TwinStar.TwinStar.post.repository.PostRepository;
 import com.TwinStar.TwinStar.user.domain.AdminYn;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.domain.UserStatus;
@@ -47,12 +53,18 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final FollowRepository followRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
     private final S3Service s3Service;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, FollowRepository followRepository, S3Service s3Service) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, FollowRepository followRepository, PostLikeRepository postLikeRepository, CommentRepository commentRepository, PostRepository postRepository, S3Service s3Service) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.followRepository = followRepository;
+        this.postLikeRepository = postLikeRepository;
+        this.commentRepository = commentRepository;
+        this.postRepository = postRepository;
         this.s3Service = s3Service;
     }
 
@@ -105,93 +117,105 @@ public class UserService {
 //  3. 상대 프로필조회
     public UserProfileDto searchProfile(Long receiveUserId) throws NoSuchElementException, RuntimeException{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()->new EntityNotFoundException("user not found"));
+        User me = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()->new EntityNotFoundException("user not found"));
         User receiveUser = userRepository.findById(receiveUserId).orElseThrow(()->new EntityNotFoundException("user not found"));
         Long followingCount = followRepository.countByReceiveUserIdAndFollowYn(receiveUser,YN.Y);
-        Long followerCount = followRepository.countByUserIdAndFollowYn(user,YN.Y);//countByFollowing의 매개변수를 Long타입으로 바꿔야함
-
-//        User receiveUserPost = userRepository.findByIdWithPosts(receiveUserId)//프로필dto 매개변수를 위해 사용
+        Long followerCount = followRepository.countByUserIdAndFollowYn(me,YN.Y);//countByFollowing의 매개변수를 Long타입으로 바꿔야함
+        if (me.equals(receiveUser)){
+            //        User receiveUserPost = userRepository.findByIdWithPosts(receiveUserId)//프로필dto 매개변수를 위해 사용
 //                .orElseThrow(() -> new RuntimeException("User not found"));
 
 //            정지된 계정일 경우 에러 처리
-        if (receiveUser.getUserStatus() == UserStatus.BAN){
-            throw new SuspendedAccountException("해당 계정은 정지되었습니다.");
-        }
+            if (receiveUser.getUserStatus() == UserStatus.BAN){
+                throw new SuspendedAccountException("해당 계정은 정지되었습니다.");
+            }
 
 //        비공개 계정일 경우, 현재 로그인한 사용자가 친구가 아닐 경우
-        boolean isFollow = followRepository.existsByUserIdAndReceiveUserId(user,receiveUser);//팔로우 레포에서 매개변수 변경해야함
-        if (receiveUser.getIdVisibility() == Visibility.FOLLOW && !isFollow){
-            throw new PrivateAccountException("이 계정은 비공개 상태입니다.");
-        }
-        if(receiveUser.getIdVisibility() == Visibility.ONLYME){
-            throw new PrivateAccountException("이 계정은 비공개 상태입니다.");
-        }
-
-//        자신을 조회할 수 없음
-        if (user.getId().equals(receiveUser.getId())) {
-            throw new IllegalArgumentException("자신의 프로필을 조회할 수 없습니다.");
-        }
+            boolean isFollow = followRepository.existsByUserIdAndReceiveUserId(me,receiveUser);//팔로우 레포에서 매개변수 변경해야함
+            if (receiveUser.getIdVisibility() == Visibility.FOLLOW && !isFollow){
+                throw new PrivateAccountException("이 계정은 비공개 상태입니다.");
+            }
+            if(receiveUser.getIdVisibility() == Visibility.ONLYME){
+                throw new PrivateAccountException("이 계정은 비공개 상태입니다.");
+            }
 
 //        탈퇴한 계정
-        if (receiveUser.getDelYn() == YN.Y) {
-            throw new EntityNotFoundException("해당 계정은 탈퇴한 사용자입니다.");
+            if (receiveUser.getDelYn() == YN.Y) {
+                throw new EntityNotFoundException("해당 계정은 탈퇴한 사용자입니다.");
+            }
+
         }
 
         // 기본 프로필 이미지 적용
         String profileImgUrl = (receiveUser.getProfileImg() != null) ? receiveUser.getProfileImg() : DEFAULT_PROFILE_IMG;
 
-        return UserProfileDto.profileSearch(receiveUser,followerCount,followingCount,profileImgUrl); //프로필dto로 전환해서 리턴
-    }
-
-//    4.  내 프로필조회
-    public UserProfileDto searchProfile() throws NoSuchElementException, RuntimeException{
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-//        인증 검증
-        if(authentication == null || authentication.getName() == null){
-            throw new AuthenticationCredentialsNotFoundException("인증 정보가 존재하지 않습니다");
+        List<ProfilePostResDto> profilePostResDtoList = new ArrayList<>();
+        List<Post> posts = postRepository.findByUserId(receiveUserId);
+        for (Post post : posts){
+            Long postLikeCount = postLikeRepository.countByPost(post);
+            Long commentCount = commentRepository.countByPost(post);
+            profilePostResDtoList.add(ProfilePostResDto.fromEntity(post.getId(), post.getPostFile().get(0).getFileUrl(), postLikeCount,commentCount));
         }
 
-        Long id = Long.valueOf((authentication.getName()));
-        User user = userRepository.findByIdWithPosts(id)//프로필dto 매개변수를 위해 사용
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-        Long followingCount = followRepository.countByUserIdAndFollowYn(user,YN.Y);
-        Long followerCount = followRepository.countByReceiveUserIdAndFollowYn(user,YN.Y);
-
-        // 기본 프로필 이미지 적용
-        String profileImgUrl = (user.getProfileImg() != null) ? user.getProfileImg() : DEFAULT_PROFILE_IMG;
-
-        return UserProfileDto.profileSearch(user,followerCount,followingCount,profileImgUrl); //프로필dto로 전환해서 리턴
+        return UserProfileDto.profileSearch(receiveUser,followerCount,followingCount,profileImgUrl,profilePostResDtoList); //프로필dto로 전환해서 리턴
     }
 
-//    5. 프로필 텍스트 업데이트
-    public UserProfileDto updateUserProfile(UserProfileDto dto, MultipartFile profileImg) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null || authentication.getName() == null){
-            throw new AuthenticationCredentialsNotFoundException("인증 정보가 존재하지 않습니다");
-        }
-        Long userId = Long.valueOf(authentication.getName());
-        // 1. 사용자 조회
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+////    4.  내 프로필조회
+//    public UserProfileDto searchProfile() throws NoSuchElementException, RuntimeException{
+////        인증 검증
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if(authentication == null || authentication.getName() == null){
+//            throw new AuthenticationCredentialsNotFoundException("인증 정보가 존재하지 않습니다");
+//        }
+//
+//        Long id = Long.valueOf((authentication.getName()));
+//        User user = userRepository.findByIdWithPosts(id)//프로필dto 매개변수를 위해 사용
+//                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+//        Long followingCount = followRepository.countByUserIdAndFollowYn(user,YN.Y);
+//        Long followerCount = followRepository.countByReceiveUserIdAndFollowYn(user,YN.Y);
+//
+//        // 기본 프로필 이미지 적용
+//        String profileImgUrl = (user.getProfileImg() != null) ? user.getProfileImg() : DEFAULT_PROFILE_IMG;
+//
+//        List<ProfilePostResDto> profilePostResDtoList = new ArrayList<>();
+//        List<Post> posts = postRepository.findByUserId(id);
+//        for (Post post : posts){
+//            Long postLikeCount = postLikeRepository.countByPost(post);
+//            Long commentCount = commentRepository.countByPost(post);
+//            profilePostResDtoList.add(ProfilePostResDto.fromEntity(post.getId(), post.getPostFile().get(0).getFileUrl(), postLikeCount,commentCount));
+//        }
+//
+//        return UserProfileDto.profileSearch(user,followerCount,followingCount,profileImgUrl,profilePostResDtoList); //프로필dto로 전환해서 리턴
+//    }
 
-        // 2. 닉네임 중복 체크 (옵션)
-        if (!user.getNickName().equals(dto.getNickName()) &&
-                userRepository.existsByNickName(dto.getNickName())) {
-            throw new RuntimeException("This nickname is already taken.");
-        }
-
-        //  새 프로필 이미지 업로드 후 url저장
-        String existingFileName = user.getProfileImg() != null ? extractFileName(user.getProfileImg()) : null;
-        String newProfileImgUrl = s3Service.uploadFile(profileImg, profileImg.getOriginalFilename());
-        user.updateProfileImage(newProfileImgUrl);
-        userRepository.save(user);
-
-        Long followingCount = followRepository.countByUserIdAndFollowYn(user,YN.Y);
-        Long followerCount = followRepository.countByReceiveUserIdAndFollowYn(user,YN.Y);
-
-        return UserProfileDto.fromEntity(user,followerCount,followingCount);
-    }
+////    5. 프로필 텍스트 업데이트
+//    public UserProfileDto updateUserProfile(UserProfileDto dto, MultipartFile profileImg) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if(authentication == null || authentication.getName() == null){
+//            throw new AuthenticationCredentialsNotFoundException("인증 정보가 존재하지 않습니다");
+//        }
+//        Long userId = Long.valueOf(authentication.getName());
+//        // 1. 사용자 조회
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new RuntimeException("User not found"));
+//
+//        // 2. 닉네임 중복 체크 (옵션)
+//        if (!user.getNickName().equals(dto.getNickName()) &&
+//                userRepository.existsByNickName(dto.getNickName())) {
+//            throw new RuntimeException("This nickname is already taken.");
+//        }
+//
+//        //  새 프로필 이미지 업로드 후 url저장
+//        String existingFileName = user.getProfileImg() != null ? extractFileName(user.getProfileImg()) : null;
+//        String newProfileImgUrl = s3Service.uploadFile(profileImg, profileImg.getOriginalFilename());
+//        user.updateProfileImage(newProfileImgUrl);
+//        userRepository.save(user);
+//
+//        Long followingCount = followRepository.countByUserIdAndFollowYn(user,YN.Y);
+//        Long followerCount = followRepository.countByReceiveUserIdAndFollowYn(user,YN.Y);
+//
+//        return UserProfileDto.fromEntity(user,followerCount,followingCount);
+//    }
 
 //    프로필 이미지 업로드
     public String updateProfileImage(MultipartFile file) throws IOException{

@@ -20,7 +20,7 @@ public class PostController {
         this.postService = postService;
     }
 
-    @PostMapping("/cerate")
+    @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody PostCreateReqDto dto){
         Long postId = postService.save(dto);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "게시물 작성 완료",postId),HttpStatus.OK);

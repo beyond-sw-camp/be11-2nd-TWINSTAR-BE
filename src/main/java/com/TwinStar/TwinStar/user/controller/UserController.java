@@ -4,6 +4,7 @@ package com.TwinStar.TwinStar.user.controller;
 import com.TwinStar.TwinStar.common.auth.JwtTokenProvider;
 import com.TwinStar.TwinStar.common.dto.CommonDto;
 import com.TwinStar.TwinStar.common.exception.MissingRequestParameterException;
+import com.TwinStar.TwinStar.post.dto.ProfilePostResDto;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.dto.*;
 import com.TwinStar.TwinStar.user.service.UserService;
@@ -138,20 +139,12 @@ public class UserController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "user Visibility updeated to" + newStatus,newStatus),HttpStatus.OK);
     }
 
-//  6. 상대방 프로필 들어가면 정보를 얻는다.
+//  6. 프로필 들어가면 정보를 얻는다.
     @GetMapping("/detail/{receiveUserId}")
     public ResponseEntity<?> userDetail(@PathVariable Long receiveUserId){
         UserProfileDto dto = userService.searchProfile(receiveUserId);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK);
 
-    }
-
-
-//  7.  내 프로필 정보 조회
-    @GetMapping("/myProfile")
-    public ResponseEntity<?> myProfile(){
-        UserProfileDto dto = userService.searchProfile();
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "memberDetailLest is found",dto),HttpStatus.OK);
     }
 
 //  8.사용자 프로필 이미지 수정
