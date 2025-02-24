@@ -70,6 +70,6 @@ public class HashTagService {
 
 //  특정 게시물의 모든 해시태그 삭제
     public void removeAllHashtagsFromPost(Post post){
-        hashTagRepository.deleteByPostId(post);
+        postHashTagRepository.deleteByPost(post);
     }
 }
