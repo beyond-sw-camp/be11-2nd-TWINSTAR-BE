@@ -1,107 +1,46 @@
 package com.TwinStar.TwinStar.post.domain;
 
-import com.TwinStar.TwinStar.comment.domain.Comment;
+import com.TwinStar.TwinStar.chat.domain.ReadStatus;
 import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
 import com.TwinStar.TwinStar.common.domain.Visibility;
-import com.TwinStar.TwinStar.hashTag.domain.PostHashTag;
-import com.TwinStar.TwinStar.post.dto.PostUpdateReqDto;
-import com.TwinStar.TwinStar.post_file.PostFile;
-import com.TwinStar.TwinStar.post_file.PostFileService;
 import com.TwinStar.TwinStar.user.domain.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
-@Entity
-@EqualsAndHashCode(callSuper = false)
 public class Post extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
     private User user;
 
-    @Column(length = 3000)
+    @Column(nullable = false, length = 500)
     private String content;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     @Builder.Default
-    private Visibility postVisibility = Visibility.ALL;
+    private String postDel = "Y";
 
-    @Column(nullable = false, length = 1)
-    @Builder.Default
-    private String postDel = "N"; // "Y" 또는 "N" 값으로 변경
+    private Visibility visibility;
 
-    @Column(nullable = false, length = 1)
-    @Builder.Default
-    private String hotIssueYn = "Y"; // "Y" 또는 "N"
+    private Long score;
 
-    @Column(nullable = false)
-    @Builder.Default
-    private String postStatus = "ACTIVE"; // 기본값 설정
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<PostLike> PostLike = new ArrayList<>();;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private Set<PostHashTag> postHashtags = new HashSet<>();
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<PostFile> postFiles = new ArrayList<>();
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
-    @Builder.Default
-    private List<Comment> comments = new ArrayList<>();
-
-    @Column(nullable = false)
-    @Builder.Default
-    private int score = 0;
-
-    // 단일 PostHashTag 추가
-    public void addPostHashTag(PostHashTag postHashTag) {
-        this.postHashtags.add(postHashTag);
-        postHashTag.updatePost(this);  // updatePost() 사용
-    }
-
-    //   여러개의 posthashtag 추가
-    public void addPostHashTags(List<PostHashTag> postHashTags){
-        postHashTags.forEach(this::addPostHashTag);//this::addPostHashTag에서 this는 postHashTags에 있는 해시태그이고 addPostHashTag는 위에 메소드이다.
-    }
-
-    // update 메서드 추가
-    public void updatePost(String content, Visibility postVisibility) {
-        this.content = content;
-        this.postVisibility = postVisibility;
-    }
-
-    // 게시글 삭제 처리 메서드 추가
-    public void updatePostDel(String postDel) {
-        this.postDel = postDel;
-    }
-
-    // 공개 범위 변경 메서드 추가
-    public void updatePostVisibility(Visibility visibility) {
-        this.postVisibility = visibility;
-    }
-
-    // ✅ PostHashTag 리스트 반환
-    public Set<PostHashTag> getPostHashTags() {
-        return this.postHashtags;
-    }
-
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<PostFile> postFile = new ArrayList<>();;
 
 }
