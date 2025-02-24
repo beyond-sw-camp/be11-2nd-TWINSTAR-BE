@@ -5,6 +5,7 @@ import com.TwinStar.TwinStar.comment.domain.Comment;
 import com.TwinStar.TwinStar.common.domain.BaseTimeEntity;
 import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.hashTag.domain.PostHashTag;
+import com.TwinStar.TwinStar.post.dto.PostUpdateResDto;
 import com.TwinStar.TwinStar.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @AllArgsConstructor
@@ -51,4 +53,22 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comment = new ArrayList<>();
 
+    public void updateContent(String content){
+        this.content = content;
+    }
+
+    public PostUpdateResDto formEntity(List<String> hashTag, List<String> imageFile){
+        return PostUpdateResDto.builder()
+                .content(this.content)
+                .visibility(this.visibility)
+                .hashTag(hashTag)
+                .imageFile(imageFile)
+                .build();
+    }
+
+    public List<String> getFileUrls() {
+        return postFile.stream()
+                .map(PostFile::getFileUrl)
+                .collect(Collectors.toList());
+    }
 }
