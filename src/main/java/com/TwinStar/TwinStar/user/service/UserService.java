@@ -43,11 +43,11 @@ import java.util.Optional;
 @Service
 @Transactional
 public class UserService {
+    private static final String DEFAULT_PROFILE_IMG = "https://i.pinimg.com/474x/3b/73/a1/3b73a13983f88f8b84e130bb3fb29e17.jpg";
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final FollowRepository followRepository;
     private final S3Service s3Service;
-    private final String DEFAULT_PROFILE_IMAGE = "https://example.com/default_profile.jpg"; //기본 이미지 url
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, FollowRepository followRepository, S3Service s3Service) {
         this.userRepository = userRepository;
@@ -90,6 +90,18 @@ public class UserService {
         return user.getId();
     }
 
+//    회원가입에서 비동기 중복이메일 검증
+    public Optional<User> findByEmail(String email) {
+        // 이메일을 통해 User 엔티티를 조회하고, Optional로 반환
+        return userRepository.findByEmail(email);
+    }
+
+//    회원가입에서 비동기 중복닉네임 검증
+    public boolean existsByNickName(String nickname) {
+        // 닉네임 중복 여부 확인
+        return userRepository.existsByNickName(nickname);
+    }
+
 //  3. 상대 프로필조회
     public UserProfileDto searchProfile(Long receiveUserId) throws NoSuchElementException, RuntimeException{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -125,7 +137,10 @@ public class UserService {
             throw new EntityNotFoundException("해당 계정은 탈퇴한 사용자입니다.");
         }
 
-        return UserProfileDto.profileSearch(receiveUser,followerCount,followingCount); //프로필dto로 전환해서 리턴
+        // 기본 프로필 이미지 적용
+        String profileImgUrl = (receiveUser.getProfileImg() != null) ? receiveUser.getProfileImg() : DEFAULT_PROFILE_IMG;
+
+        return UserProfileDto.profileSearch(receiveUser,followerCount,followingCount,profileImgUrl); //프로필dto로 전환해서 리턴
     }
 
 //    4.  내 프로필조회
@@ -143,7 +158,10 @@ public class UserService {
         Long followingCount = followRepository.countByUserIdAndFollowYn(user,YN.Y);
         Long followerCount = followRepository.countByReceiveUserIdAndFollowYn(user,YN.Y);
 
-        return UserProfileDto.profileSearch(user,followerCount,followingCount); //프로필dto로 전환해서 리턴
+        // 기본 프로필 이미지 적용
+        String profileImgUrl = (user.getProfileImg() != null) ? user.getProfileImg() : DEFAULT_PROFILE_IMG;
+
+        return UserProfileDto.profileSearch(user,followerCount,followingCount,profileImgUrl); //프로필dto로 전환해서 리턴
     }
 
 //    5. 프로필 텍스트 업데이트

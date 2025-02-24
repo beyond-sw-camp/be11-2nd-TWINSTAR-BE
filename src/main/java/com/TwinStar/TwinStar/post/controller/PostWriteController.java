@@ -7,6 +7,7 @@ import com.TwinStar.TwinStar.post.dto.PostUpdateReqDto;
 import com.TwinStar.TwinStar.post.service.PostWriteService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class PostWriteController {
         this.jwtUtil = jwtUtil;
     }
 
-    @PostMapping("create")
+    @PostMapping(value = "create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> postCreate(
             @RequestPart("contents") String contents,
             @RequestPart(value = "files", required = false) List<MultipartFile> files,

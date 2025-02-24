@@ -73,6 +73,28 @@ public class UserController {
         Long memberId = userService.create(dto);
         return new ResponseEntity<>(memberId, HttpStatus.CREATED);
     }
+
+    // 이메일 중복 체크
+    @GetMapping("/check-email/{email}")
+    public ResponseEntity<?> checkEmailDuplicate(@PathVariable String email) {
+        boolean isDuplicate = userService.findByEmail(email).isPresent();
+        Map<String, Boolean> response = new HashMap<>(); //프론트에서 json으로 값을 주기 위해 Map사용 {"duplicate": true} 또는 {"duplicate": false} 형식
+        response.put("duplicate", isDuplicate);
+        return ResponseEntity.ok(response);
+    }
+
+    // 닉네임 중복 체크
+    @GetMapping("/check-nickname/{nickname}")
+    public ResponseEntity<?> checkNicknameDuplicate(@PathVariable String nickname) {
+        boolean isDuplicate = userService.existsByNickName(nickname);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("duplicate", isDuplicate);
+        return ResponseEntity.ok(response);
+    }
+
+
+
+
     //  리프레시 토큰을 이용한 액세스 토큰 재발급
     // --to do
 //    API 요청을 보낼 때, 액세스 토큰이 만료되었는지 확인
