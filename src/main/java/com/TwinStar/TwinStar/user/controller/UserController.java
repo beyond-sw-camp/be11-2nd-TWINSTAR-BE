@@ -155,7 +155,7 @@ public class UserController {
     }
 
 //  8.2 사용자 프로필 텍스트 수정
-    @PutMapping("/profile/text")
+    @PostMapping("/profile/text")
     public ResponseEntity<?> updateTextProfile(@RequestBody ProfileTextUpdateDto dto){
         userService.updateProfileText(dto);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "Profile updated successfully",null),HttpStatus.OK);

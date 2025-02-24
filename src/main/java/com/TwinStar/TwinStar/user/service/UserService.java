@@ -10,6 +10,7 @@ import com.TwinStar.TwinStar.common.exception.SuspendedAccountException;
 import com.TwinStar.TwinStar.common.service.S3Service;
 import com.TwinStar.TwinStar.follow.repository.FollowRepository;
 import com.TwinStar.TwinStar.post.domain.Post;
+import com.TwinStar.TwinStar.post.domain.PostFile;
 import com.TwinStar.TwinStar.post.dto.ProfilePostResDto;
 import com.TwinStar.TwinStar.post.repository.PostLikeRepository;
 import com.TwinStar.TwinStar.post.repository.PostRepository;
@@ -114,50 +115,127 @@ public class UserService {
         return userRepository.existsByNickName(nickname);
     }
 
-//  3. 상대 프로필조회
-    public UserProfileDto searchProfile(Long receiveUserId) throws NoSuchElementException, RuntimeException{
+////  3. 상대 프로필조회
+//    public UserProfileDto searchProfile(Long receiveUserId) throws NoSuchElementException, RuntimeException{
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        User userId = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()->new EntityNotFoundException("user not found"));
+//        User receiveUser = userRepository.findById(receiveUserId).orElseThrow(()->new EntityNotFoundException("user not found"));
+//        Long followingCount = followRepository.countByReceiveUserIdAndFollowYn(receiveUser,YN.Y);
+//        Long followerCount = followRepository.countByUserIdAndFollowYn(userId,YN.Y);//countByFollowing의 매개변수를 Long타입으로 바꿔야함
+//        if (userId.equals(receiveUser)){
+//            //        User receiveUserPost = userRepository.findByIdWithPosts(receiveUserId)//프로필dto 매개변수를 위해 사용
+////                .orElseThrow(() -> new RuntimeException("User not found"));
+//
+////            정지된 계정일 경우 에러 처리
+//            if (receiveUser.getUserStatus() == UserStatus.BAN){
+//                throw new SuspendedAccountException("해당 계정은 정지되었습니다.");
+//            }
+//
+////        비공개 계정일 경우, 현재 로그인한 사용자가 친구가 아닐 경우
+//            boolean isFollow = followRepository.existsByUserIdAndReceiveUserId(userId,receiveUser);//팔로우 레포에서 매개변수 변경해야함
+//            if (receiveUser.getIdVisibility() == Visibility.FOLLOW && !isFollow){
+//                throw new PrivateAccountException("이 계정은 비공개 상태입니다.");
+//            }
+//            if(receiveUser.getIdVisibility() == Visibility.ONLYME){
+//                throw new PrivateAccountException("이 계정은 비공개 상태입니다.");
+//            }
+//
+////        탈퇴한 계정
+//            if (receiveUser.getDelYn() == YN.Y) {
+//                throw new EntityNotFoundException("해당 계정은 탈퇴한 사용자입니다.");
+//            }
+//
+//        }
+//
+//        // 기본 프로필 이미지 적용
+//        String profileImgUrl = (receiveUser.getProfileImg() != null) ? receiveUser.getProfileImg() : DEFAULT_PROFILE_IMG;
+//
+//        List<ProfilePostResDto> profilePostResDtoList = new ArrayList<>();
+//        List<Post> posts = postRepository.findByUserId(receiveUserId);
+//        for (Post post : posts){
+//            Long postLikeCount = postLikeRepository.countByPost(post);
+//            Long commentCount = commentRepository.countByPost(post);
+//
+//            // Optional을 활용하여 첫 번째 파일 가져오기
+//            String fileUrl = post.getPostFile().stream()
+//                    .findFirst()
+//                    .map(PostFile::getFileUrl)
+//                    .orElse(null);
+//
+//            profilePostResDtoList.add(ProfilePostResDto.fromEntity(post.getId(), fileUrl, postLikeCount,commentCount));
+//        }
+//
+//        return UserProfileDto.profileSearch(receiveUser,followerCount,followingCount,profileImgUrl,profilePostResDtoList); //프로필dto로 전환해서 리턴
+//    }
+
+    public UserProfileDto searchProfile(Long receiveUserId) throws NoSuchElementException, RuntimeException {
+        // 현재 로그인한 사용자
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User me = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()->new EntityNotFoundException("user not found"));
-        User receiveUser = userRepository.findById(receiveUserId).orElseThrow(()->new EntityNotFoundException("user not found"));
-        Long followingCount = followRepository.countByReceiveUserIdAndFollowYn(receiveUser,YN.Y);
-        Long followerCount = followRepository.countByUserIdAndFollowYn(me,YN.Y);//countByFollowing의 매개변수를 Long타입으로 바꿔야함
-        if (me.equals(receiveUser)){
-            //        User receiveUserPost = userRepository.findByIdWithPosts(receiveUserId)//프로필dto 매개변수를 위해 사용
-//                .orElseThrow(() -> new RuntimeException("User not found"));
+        User currentUser = userRepository.findById(Long.valueOf(authentication.getName()))
+                .orElseThrow(() -> new EntityNotFoundException("user not found"));
 
-//            정지된 계정일 경우 에러 처리
-            if (receiveUser.getUserStatus() == UserStatus.BAN){
-                throw new SuspendedAccountException("해당 계정은 정지되었습니다.");
-            }
+        // 조회하려는 사용자
+        User targetUser = userRepository.findById(receiveUserId)
+                .orElseThrow(() -> new EntityNotFoundException("user not found"));
 
-//        비공개 계정일 경우, 현재 로그인한 사용자가 친구가 아닐 경우
-            boolean isFollow = followRepository.existsByUserIdAndReceiveUserId(me,receiveUser);//팔로우 레포에서 매개변수 변경해야함
-            if (receiveUser.getIdVisibility() == Visibility.FOLLOW && !isFollow){
-                throw new PrivateAccountException("이 계정은 비공개 상태입니다.");
-            }
-            if(receiveUser.getIdVisibility() == Visibility.ONLYME){
-                throw new PrivateAccountException("이 계정은 비공개 상태입니다.");
-            }
-
-//        탈퇴한 계정
-            if (receiveUser.getDelYn() == YN.Y) {
-                throw new EntityNotFoundException("해당 계정은 탈퇴한 사용자입니다.");
-            }
-
+        // 탈퇴한 계정 체크
+        if (targetUser.getDelYn() == YN.Y) {
+            throw new EntityNotFoundException("해당 계정은 탈퇴한 사용자입니다.");
         }
 
-        // 기본 프로필 이미지 적용
-        String profileImgUrl = (receiveUser.getProfileImg() != null) ? receiveUser.getProfileImg() : DEFAULT_PROFILE_IMG;
+        // 정지된 계정 체크
+        if (targetUser.getUserStatus() == UserStatus.BAN) {
+            throw new SuspendedAccountException("해당 계정은 정지되었습니다.");
+        }
 
+        // 팔로워/팔로잉 수 계산
+        Long followingCount = followRepository.countByReceiveUserIdAndFollowYn(targetUser, YN.Y);
+        Long followerCount = followRepository.countByUserIdAndFollowYn(targetUser, YN.Y); // 수정된 부분
+
+        // 자신의 프로필이 아닐 경우 비공개 설정 체크
+        if (!currentUser.equals(targetUser)) {
+            boolean isFollow = followRepository.existsByUserIdAndReceiveUserId(currentUser, targetUser);
+
+            if (targetUser.getIdVisibility() == Visibility.ONLYME) {
+                throw new PrivateAccountException("이 계정은 비공개 상태입니다.");
+            }
+
+            if (targetUser.getIdVisibility() == Visibility.FOLLOW && !isFollow) {
+                throw new PrivateAccountException("이 계정은 비공개 상태입니다.");
+            }
+        }
+
+        // 프로필 이미지 URL 설정
+        String profileImgUrl = (targetUser.getProfileImg() != null) ? targetUser.getProfileImg() : DEFAULT_PROFILE_IMG;
+
+        // 게시물 목록 조회
         List<ProfilePostResDto> profilePostResDtoList = new ArrayList<>();
         List<Post> posts = postRepository.findByUserId(receiveUserId);
-        for (Post post : posts){
+
+        for (Post post : posts) {
             Long postLikeCount = postLikeRepository.countByPost(post);
             Long commentCount = commentRepository.countByPost(post);
-            profilePostResDtoList.add(ProfilePostResDto.fromEntity(post.getId(), post.getPostFile().get(0).getFileUrl(), postLikeCount,commentCount));
+
+            String fileUrl = post.getPostFile().stream()
+                    .findFirst()
+                    .map(PostFile::getFileUrl)
+                    .orElse(null);
+
+            profilePostResDtoList.add(ProfilePostResDto.fromEntity(
+                    post.getId(),
+                    fileUrl,
+                    postLikeCount,
+                    commentCount
+            ));
         }
 
-        return UserProfileDto.profileSearch(receiveUser,followerCount,followingCount,profileImgUrl,profilePostResDtoList); //프로필dto로 전환해서 리턴
+        return UserProfileDto.profileSearch(
+                targetUser,
+                followerCount,
+                followingCount,
+                profileImgUrl,
+                profilePostResDtoList
+        );
     }
 
 ////    4.  내 프로필조회

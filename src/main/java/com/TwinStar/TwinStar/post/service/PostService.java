@@ -52,7 +52,7 @@ public class PostService {
     }
 
     public String uploadImage(MultipartFile file) {
-        String fileName = UUID.randomUUID()+"_"+file.getOriginalFilename();
+        String fileName = "https://twinstar.s3.ap-northeast-2.amazonaws.com/" + UUID.randomUUID()+"_"+file.getOriginalFilename();
             try {
                 s3Client.putObject(
                         PutObjectRequest.builder()
