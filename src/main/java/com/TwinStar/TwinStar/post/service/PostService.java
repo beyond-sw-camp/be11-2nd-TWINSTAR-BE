@@ -19,6 +19,8 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +34,8 @@ public class PostService {
     private final S3Client s3Client;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+    @Value("${cloud.aws.region.static}")
+    private String region;
 
     public PostService(PostRepository postRepository, UserRepository userRepository, PostFileRepository postFileRepository, S3Client s3Client) {
         this.postRepository = postRepository;
@@ -52,20 +56,21 @@ public class PostService {
     }
 
     public String uploadImage(MultipartFile file) {
-        String fileName = "https://twinstar.s3.ap-northeast-2.amazonaws.com/" + UUID.randomUUID()+"_"+file.getOriginalFilename();
-            try {
-                s3Client.putObject(
-                        PutObjectRequest.builder()
-                                .bucket(bucket)
-                                .key(fileName)
-                                .contentType(file.getContentType())
-                                .build(),
-                        RequestBody.fromInputStream(file.getInputStream(), file.getSize())
-                );
-                return fileName;
-            }catch (IOException e){
-                throw new RuntimeException("파일 업로드 실패");
-            }
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
+        try {
+            s3Client.putObject(
+                    PutObjectRequest.builder()
+                            .bucket(bucket)
+                            .key(fileName)
+                            .contentType(file.getContentType())
+                            .build(),
+                    RequestBody.fromInputStream(file.getInputStream(), file.getSize())
+            );
+
+            return "https://" + bucket + ".s3." + region + ".amazonaws.com/" + fileName;
+        } catch (IOException e) {
+            throw new RuntimeException("파일 업로드 실패", e);
+        }
     }
 }
