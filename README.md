@@ -1,4 +1,4 @@
-![](logo.png)
+<center>![](logo.png)
 
 
 
