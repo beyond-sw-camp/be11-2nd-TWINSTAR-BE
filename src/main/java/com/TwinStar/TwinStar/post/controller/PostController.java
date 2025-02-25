@@ -2,27 +2,27 @@ package com.TwinStar.TwinStar.post.controller;
 
 import com.TwinStar.TwinStar.common.dto.CommonDto;
 import com.TwinStar.TwinStar.post.dto.PostCreateReqDto;
+import com.TwinStar.TwinStar.post.dto.PostLikeResDto;
 import com.TwinStar.TwinStar.post.dto.PostUpdateReqDto;
 import com.TwinStar.TwinStar.post.dto.PostUpdateResDto;
-import com.TwinStar.TwinStar.post.service.LikeService;
+import com.TwinStar.TwinStar.post.service.PostLikeService;
 import com.TwinStar.TwinStar.post.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Objects;
 
 @RequestMapping("/post")
 @RestController
 public class PostController {
 
     private final PostService postService;
-    private final LikeService likeService;
+    private final PostLikeService postLikeService;
 
-    public PostController(PostService postService, LikeService likeService) {
+    public PostController(PostService postService, PostLikeService postLikeService) {
         this.postService = postService;
-        this.likeService = likeService;
+        this.postLikeService = postLikeService;
     }
 
     @PostMapping("/create")
@@ -52,8 +52,8 @@ public class PostController {
 
     @PostMapping("/like/{postId}")
     public ResponseEntity<?> postLike(@PathVariable Long postId){
-        Map<String, Object> likeInfo = likeService.toggleLike(postId);
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"기능 성공",likeInfo),HttpStatus.OK);
+        PostLikeResDto likeInfo = postLikeService.togglePostLike(postId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"개사뮬 좋아요 완료",likeInfo),HttpStatus.OK);
     }
 
 
