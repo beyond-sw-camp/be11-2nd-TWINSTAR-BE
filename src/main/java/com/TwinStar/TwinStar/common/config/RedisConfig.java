@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
@@ -89,7 +90,7 @@ public class RedisConfig {
     public RedisTemplate<String,Object> postLikeRedisTemplate(@Qualifier("rtdb") RedisConnectionFactory redisConnectionFactory){
         RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         return redisTemplate;
     }
@@ -98,7 +99,7 @@ public class RedisConfig {
     public RedisTemplate<String,Object> commentLikeRedisTemplate(@Qualifier("rtdb") RedisConnectionFactory redisConnectionFactory){
         RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         return redisTemplate;
     }

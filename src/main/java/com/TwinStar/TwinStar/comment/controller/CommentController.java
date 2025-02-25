@@ -1,6 +1,7 @@
 package com.TwinStar.TwinStar.comment.controller;
 
 import com.TwinStar.TwinStar.comment.dto.CommentCreateReqDto;
+import com.TwinStar.TwinStar.comment.dto.CommentLikeResDto;
 import com.TwinStar.TwinStar.comment.dto.CommentUpdateReqDto;
 import com.TwinStar.TwinStar.comment.dto.ReplyCommentCreateReqDto;
 import com.TwinStar.TwinStar.comment.service.CommentLikeService;
@@ -48,9 +49,14 @@ public class CommentController {
     }
 
     @PostMapping("/like/{commentId}")
-    public ResponseEntity<?> commentLike(@PathVariable Long commentId){
-        Map<String, Object> commentLikeInfo = commentLikeService.commentLikeToggle(commentId);
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"댓글 좋아요 기능 성공",commentLikeInfo)
-                ,HttpStatus.OK);
+    public ResponseEntity<?> commentLike(@PathVariable Long commentId) {
+        CommentLikeResDto commentLikeInfo = commentLikeService.commentLikeToggle(commentId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "댓글 좋아요 기능 성공", commentLikeInfo), HttpStatus.OK);
+    }
+
+    @PostMapping("/pinned/{commentId}")
+    public ResponseEntity<?> commentPinnede(@PathVariable Long commentId){
+        commentService.pinned(commentId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"댓글 고정 완료",commentId),HttpStatus.OK);
     }
 }

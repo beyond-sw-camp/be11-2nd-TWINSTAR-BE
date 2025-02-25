@@ -10,4 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AlarmRepository extends JpaRepository<Alarm,Long> {
     Page<Alarm> findByUserOrderByCreatedTimeDesc(User user, Pageable pageable);
+
+//    중복된 url 및 내용 확인
+    boolean existsByUrlAndContent(String url, String content);
 }
