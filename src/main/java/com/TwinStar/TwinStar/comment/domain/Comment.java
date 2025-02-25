@@ -50,5 +50,4 @@ public class Comment extends BaseTimeEntity {
     @Builder.Default
     private String commentDel = "N";
 
-
 }
