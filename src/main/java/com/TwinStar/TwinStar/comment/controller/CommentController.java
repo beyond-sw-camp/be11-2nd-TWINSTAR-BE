@@ -3,19 +3,24 @@ package com.TwinStar.TwinStar.comment.controller;
 import com.TwinStar.TwinStar.comment.dto.CommentCreateReqDto;
 import com.TwinStar.TwinStar.comment.dto.CommentUpdateReqDto;
 import com.TwinStar.TwinStar.comment.dto.ReplyCommentCreateReqDto;
+import com.TwinStar.TwinStar.comment.service.CommentLikeService;
 import com.TwinStar.TwinStar.comment.service.CommentService;
 import com.TwinStar.TwinStar.common.dto.CommonDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RequestMapping("/comment")
 @RestController
 public class CommentController {
     private final CommentService commentService;
+    private final CommentLikeService commentLikeService;
 
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentService commentService, CommentLikeService commentLikeService) {
         this.commentService = commentService;
+        this.commentLikeService = commentLikeService;
     }
 
     @PostMapping("/create")
@@ -40,5 +45,12 @@ public class CommentController {
     public ResponseEntity<?> createComment(@RequestBody ReplyCommentCreateReqDto dto){
         Long postId = commentService.replyCreate(dto);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "댓글 작성 완료",postId),HttpStatus.OK);
+    }
+
+    @PostMapping("/like/{commentId}")
+    public ResponseEntity<?> commentLike(@PathVariable Long commentId){
+        Map<String, Object> commentLikeInfo = commentLikeService.commentLikeToggle(commentId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"댓글 좋아요 기능 성공",commentLikeInfo)
+                ,HttpStatus.OK);
     }
 }
