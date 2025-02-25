@@ -1,85 +1,82 @@
 package com.TwinStar.TwinStar.comment.service;
 
-import com.TwinStar.TwinStar.comment.dto.CommentUserListDto;
-import com.TwinStar.TwinStar.common.config.RabbitMQConfig;
+import com.TwinStar.TwinStar.comment.domain.Comment;
+import com.TwinStar.TwinStar.comment.domain.CommentLike;
+import com.TwinStar.TwinStar.comment.dto.CommentLikeResDto;
+import com.TwinStar.TwinStar.comment.repository.CommentLikeRepository;
+import com.TwinStar.TwinStar.comment.repository.CommentRepository;
 import com.TwinStar.TwinStar.user.domain.User;
-import com.TwinStar.TwinStar.user.dto.ChatUserListDto;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.stream.Collectors;
+
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
+import static com.TwinStar.TwinStar.common.config.RabbitMQConfig.BACKUP_QUEUE_COMMENT_AL;
+import static com.TwinStar.TwinStar.common.config.RabbitMQConfig.BACKUP_QUEUE_COMMENT_ML;
 
 @Service
 public class CommentLikeService {
-    private final RedisTemplate<String, Object> commentLikeRedisTemple;
+
+    private final CommentLikeRepository commentLikeRepository;
+    private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final RabbitTemplate rabbitTemplate;
 
-    public CommentLikeService(RedisTemplate<String, Object> commentLikeRedisTemple, UserRepository userRepository, RabbitTemplate rabbitTemplate) {
-        this.commentLikeRedisTemple = commentLikeRedisTemple;
+    @Qualifier("commentLikeRedisTemple")
+    private final RedisTemplate<String, Object> commentLikeRedisTemplate;
+
+    public CommentLikeService(CommentLikeRepository commentLikeRepository, CommentRepository commentRepository, UserRepository userRepository, RabbitTemplate rabbitTemplate, @Qualifier("commentLikeRedisTemple")RedisTemplate<String, Object> commentLikeRedisTemplate) {
+        this.commentLikeRepository = commentLikeRepository;
+        this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.rabbitTemplate = rabbitTemplate;
+        this.commentLikeRedisTemplate = commentLikeRedisTemplate;
     }
 
-    public Map<String,Object> commentLikeToggle(Long commentId){
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        String key = "comment:like:" + userId;
+    @Transactional
+    public CommentLikeResDto commentLikeToggle(Long commentId) {
+        String redisKey = "comment:like:" + commentId;
 
-        boolean hasLiked = commentLikeRedisTemple.opsForSet().isMember(key, userId);
+        // 댓글과 유저 정보 조회
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()-> new EntityNotFoundException("user is not found."));
 
-        if (hasLiked){
-            commentLikeRedisTemple.opsForSet().remove(key,userId);
-            rabbitTemplate.convertAndSend(RabbitMQConfig.BACKUP_QUEUE_COMMENT_ML,createLikeMessage(commentId,userId,"decrease"));
-        }
-        else {
-            commentLikeRedisTemple.opsForSet().add(key,userId);
-            rabbitTemplate.convertAndSend(RabbitMQConfig.BACKUP_QUEUE_COMMENT_AL,createLikeMessage(commentId,userId,"increase"));
-        }
+        Optional<CommentLike> commentLikeOpt = commentLikeRepository.findByCommentAndUser(comment, user);
+        boolean isLike;
 
-        return getCommentLikeStatus(commentId,Long.valueOf(userId));
-    }
-
-    public Map<String,Object> getCommentLikeStatus(Long commentId, Long userId){
-        String key = "comment:like:" + commentId;
-
-//        좋아요한 유저ID 목록 가져오기
-        Set<Object> likeUserIds = commentLikeRedisTemple.opsForSet().members(key);
-        List<Long> userIds = likeUserIds.stream()
-                .map(id -> Long.parseLong(id.toString())).collect(Collectors.toList()); //set을 list로 형변환
-
-//        좋아요한 유저 목록 가져오기
-        List<User> users = userRepository.findAllById(userIds);
-
-//       유저목록에서 좋아요 유저 목록에 맞는 dto로 변환
-        List<CommentUserListDto> commentLikeUsers = new ArrayList<>();
-        for (User user : users){
-            commentLikeUsers.add(new CommentUserListDto(user));
+        if (commentLikeOpt.isPresent()) {
+            commentLikeRepository.delete(commentLikeOpt.get());
+            isLike = false;
+            rabbitTemplate.convertAndSend(BACKUP_QUEUE_COMMENT_ML, commentId);
+        } else {
+            CommentLike newLike = CommentLike.builder()
+                    .comment(comment)
+                    .user(user)
+                    .build();
+            commentLikeRepository.save(newLike);
+            isLike = true;
+            rabbitTemplate.convertAndSend(BACKUP_QUEUE_COMMENT_AL, commentId);
         }
 
-//        좋아요 개수
-        Long commentLikeCount = commentLikeRedisTemple.opsForSet().size(key);
+        Long likeCount = commentLikeRepository.countByComment(comment);
 
-//        반환데이터
-        Map<String, Object> likeStatus = new HashMap<>();
-        likeStatus.put("likedUsers",commentLikeUsers);
-        likeStatus.put("likeCount",commentLikeCount);
+        // Redis 업데이트 (데이터 정합성 유지)
+        commentLikeRedisTemplate.opsForValue().set(redisKey, String.valueOf(likeCount), 10, TimeUnit.MINUTES);
 
-        return likeStatus;
-    }
 
-    /**
-     * 좋아요 이벤트 메시지를 생성하는 메서드
-     */
-    private Map<String, String> createLikeMessage(Long commentId, String userId, String action) {
-        Map<String, String> message = new HashMap<>();
-        message.put("postId", commentId.toString());
-        message.put("userId", userId);
-        message.put("action", action); // "increase" 또는 "decrease"
-        return message;
+        return new CommentLikeResDto(likeCount, isLike);
     }
 }
