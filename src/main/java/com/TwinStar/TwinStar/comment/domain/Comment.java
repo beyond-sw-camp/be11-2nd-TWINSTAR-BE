@@ -50,5 +50,16 @@ public class Comment extends BaseTimeEntity {
     @Builder.Default
     private String commentDel = "N";
 
+    public void updateContent(String content) {
+        this.content = content;
+    }
 
+    public void delete() {
+        this.content = "삭제된 댓글입니다.";
+        this.commentDel="Y";
+    }
+
+    public void addChild(Comment comment) {
+        this.child.add(comment);
+    }
 }

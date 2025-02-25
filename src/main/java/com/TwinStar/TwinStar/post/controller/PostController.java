@@ -28,7 +28,7 @@ public class PostController {
     @PostMapping("delete/{postId}")
     public ResponseEntity<?> delete(@PathVariable Long postId){
         postService.delete(postId);
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "게시물 삭제 완료",postId),HttpStatus.OK);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "게시물 삭제 완료", postId), HttpStatus.OK);
     }
 
     @GetMapping("/update/{postId}")
