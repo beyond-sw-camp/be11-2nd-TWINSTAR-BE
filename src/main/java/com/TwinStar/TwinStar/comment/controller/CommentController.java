@@ -2,6 +2,7 @@ package com.TwinStar.TwinStar.comment.controller;
 
 import com.TwinStar.TwinStar.comment.dto.CommentCreateReqDto;
 import com.TwinStar.TwinStar.comment.dto.CommentUpdateReqDto;
+import com.TwinStar.TwinStar.comment.dto.ReplyCommentCreateReqDto;
 import com.TwinStar.TwinStar.comment.service.CommentService;
 import com.TwinStar.TwinStar.common.dto.CommonDto;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,12 @@ public class CommentController {
     @PatchMapping("/update")
     public ResponseEntity<?> updateComment(@RequestBody CommentUpdateReqDto dto){
         Long postId = commentService.update(dto);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "댓글 수정 완료",postId),HttpStatus.OK);
+    }
+
+    @PostMapping("/reply")
+    public ResponseEntity<?> createComment(@RequestBody ReplyCommentCreateReqDto dto){
+        Long postId = commentService.replyCreate(dto);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "댓글 작성 완료",postId),HttpStatus.OK);
     }
 }

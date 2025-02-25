@@ -58,4 +58,8 @@ public class Comment extends BaseTimeEntity {
         this.content = "삭제된 댓글입니다.";
         this.commentDel="Y";
     }
+
+    public void addChild(Comment comment) {
+        this.child.add(comment);
+    }
 }

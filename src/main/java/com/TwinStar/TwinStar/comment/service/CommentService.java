@@ -3,6 +3,7 @@ package com.TwinStar.TwinStar.comment.service;
 import com.TwinStar.TwinStar.comment.domain.Comment;
 import com.TwinStar.TwinStar.comment.dto.CommentCreateReqDto;
 import com.TwinStar.TwinStar.comment.dto.CommentUpdateReqDto;
+import com.TwinStar.TwinStar.comment.dto.ReplyCommentCreateReqDto;
 import com.TwinStar.TwinStar.comment.repository.CommentRepository;
 import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.post.repository.PostRepository;
@@ -64,5 +65,23 @@ public class CommentService {
         commentRepository.save(comment);
 
         return comment.getPost().getId();
+    }
+
+    public Long replyCreate(ReplyCommentCreateReqDto dto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()->new EntityNotFoundException("user not found"));
+        Comment parent = commentRepository.findById(dto.getParentId()).orElseThrow(()-> new EntityNotFoundException("comment is not found."));
+        Post post = commentRepository.findPostByParentId(parent.getId());
+
+        Comment comment = Comment.builder()
+                .user(user)
+                .post(post)
+                .parent(parent)
+                .content(dto.getContent())
+                .build();
+        commentRepository.save(comment);
+
+        parent.addChild(comment);
+        return post.getId();
     }
 }
