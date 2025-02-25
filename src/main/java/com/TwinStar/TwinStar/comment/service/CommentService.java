@@ -1,5 +1,7 @@
 package com.TwinStar.TwinStar.comment.service;
 
+import com.TwinStar.TwinStar.alarm.controller.AlarmController;
+import com.TwinStar.TwinStar.alarm.service.AlarmService;
 import com.TwinStar.TwinStar.comment.domain.Comment;
 import com.TwinStar.TwinStar.comment.dto.CommentCreateReqDto;
 import com.TwinStar.TwinStar.comment.dto.CommentUpdateReqDto;
@@ -24,11 +26,13 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final AlarmService alarmService;
 
-    public CommentService(CommentRepository commentRepository, UserRepository userRepository, PostRepository postRepository) {
+    public CommentService(CommentRepository commentRepository, UserRepository userRepository, PostRepository postRepository, AlarmService alarmService) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.postRepository = postRepository;
+        this.alarmService = alarmService;
     }
 
     public Long create(CommentCreateReqDto dto) {
@@ -41,6 +45,13 @@ public class CommentService {
                 .content(dto.getContent())
                 .build();
         commentRepository.save(comment);
+
+//        게시물 작성자에게 알림 보내기
+        User receiver = post.getUser();
+        String content = user.getNickName()+"님이 회원님의 게시물에 댓글을 작성했습니다.";
+        String url = "http://localhost:3000/post/detail/"+post.getId();
+        alarmService.createAlarm(receiver, content, url);
+
         return dto.getPostId();
     }
 
