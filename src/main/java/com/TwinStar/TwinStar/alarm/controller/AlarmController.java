@@ -1,13 +1,18 @@
 package com.TwinStar.TwinStar.alarm.controller;
 
 
+import com.TwinStar.TwinStar.alarm.dto.AlarmCommonResDto;
+import com.TwinStar.TwinStar.alarm.dto.AlarmResDto;
 import com.TwinStar.TwinStar.alarm.service.AlarmService;
+import com.TwinStar.TwinStar.chat.dto.ChatMessageDto;
+import com.TwinStar.TwinStar.common.dto.CommonDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
@@ -25,43 +30,26 @@ public class AlarmController {
         this.alarmService = alarmService;
     }
 
+    @GetMapping("/list")
+    public ResponseEntity<?> alarmList(@RequestParam(name = "page", defaultValue = "0") Integer page,
+                                       @RequestParam(name = "size", defaultValue = "20") Integer size){
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<AlarmResDto> AlarmResDtoPage = alarmService.getAlarms(pageRequest);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "알림 리스트 불러오기 완료", AlarmResDtoPage),HttpStatus.OK);
+    }
+
     @GetMapping("/subscribe")
     public SseEmitter subscribe() {
-        SseEmitter emitter = new SseEmitter(30 * 60 * 1000L); // 30분
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userId = authentication.getName();
-        emitters.put(userId, emitter);
-
-        try {
-            // 초기 연결 확인을 위한 더미 이벤트 전송
-            emitter.send(SseEmitter.event().name("connect").data("연결 성공"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return emitter;
+        Long userId = Long.valueOf(authentication.getName());
+        return alarmService.subscribe(userId);
     }
 
     @GetMapping("/unsubscribe")
     public void unSubscribe() {
-//       연결객체 생성
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userId = authentication.getName();
-        emitters.remove(userId);
-        System.out.println(emitters);
+        Long userId = Long.valueOf(authentication.getName());
+        alarmService.unsubscribe(userId);
     }
 
-    public void sendNotification(Long userId, String message) {
-        SseEmitter emitter = emitters.get(String.valueOf(userId));
-        System.out.println(emitter);
-        System.out.println("this1");
-        if (emitter != null) {
-            try {
-                System.out.println("this2");
-                emitter.send(SseEmitter.event().name("alarm").data(message));
-            } catch (IOException e) {
-                System.out.println("this 3");
-                emitters.remove(userId); // 전송 중 오류 발생하면 제거
-            }
-        }
-    }
 }

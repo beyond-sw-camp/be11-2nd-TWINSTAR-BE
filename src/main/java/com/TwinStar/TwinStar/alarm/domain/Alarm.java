@@ -23,6 +23,10 @@ public class Alarm extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender_id", nullable = false)
+    private User sender;
+
     @Column(nullable = false, length = 500)
     private String url;
 
