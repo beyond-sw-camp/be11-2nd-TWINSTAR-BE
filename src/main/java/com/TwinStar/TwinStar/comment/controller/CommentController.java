@@ -1,6 +1,7 @@
 package com.TwinStar.TwinStar.comment.controller;
 
 import com.TwinStar.TwinStar.comment.dto.CommentCreateReqDto;
+import com.TwinStar.TwinStar.comment.dto.CommentUpdateReqDto;
 import com.TwinStar.TwinStar.comment.service.CommentService;
 import com.TwinStar.TwinStar.common.dto.CommonDto;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,18 @@ public class CommentController {
     @PostMapping("/create")
     public ResponseEntity<?> createComment(@RequestBody CommentCreateReqDto dto){
         Long postId = commentService.create(dto);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "댓글 작성 완료",postId),HttpStatus.OK);
+    }
+
+    @PostMapping("/delete/{commentId}")
+    public ResponseEntity<?> createComment(@PathVariable Long commentId){
+        Long postId = commentService.delete(commentId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "댓글 삭제 완료",postId),HttpStatus.OK);
+    }
+
+    @PatchMapping("/update")
+    public ResponseEntity<?> updateComment(@RequestBody CommentUpdateReqDto dto){
+        Long postId = commentService.update(dto);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "댓글 작성 완료",postId),HttpStatus.OK);
     }
 }

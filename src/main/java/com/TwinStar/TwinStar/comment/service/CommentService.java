@@ -2,6 +2,7 @@ package com.TwinStar.TwinStar.comment.service;
 
 import com.TwinStar.TwinStar.comment.domain.Comment;
 import com.TwinStar.TwinStar.comment.dto.CommentCreateReqDto;
+import com.TwinStar.TwinStar.comment.dto.CommentUpdateReqDto;
 import com.TwinStar.TwinStar.comment.repository.CommentRepository;
 import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.post.repository.PostRepository;
@@ -39,4 +40,29 @@ public class CommentService {
         return dto.getPostId();
     }
 
+    public Long update(CommentUpdateReqDto dto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loginUser = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()->new EntityNotFoundException("user not found"));
+        Comment comment = commentRepository.findById(dto.getCommentId()).orElseThrow(()-> new EntityNotFoundException("comment is not found."));
+        User commentWriteUser = comment.getUser();
+
+        if (!loginUser.equals(commentWriteUser)){ return 0L; }
+        comment.updateContent(dto.getContent());
+        commentRepository.save(comment);
+
+        return comment.getPost().getId();
+    }
+
+    public Long delete(Long commentId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loginUser = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()->new EntityNotFoundException("user not found"));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()-> new EntityNotFoundException("comment is not found."));
+        User commentWriteUser = comment.getUser();
+
+        if (!loginUser.equals(commentWriteUser)){ return 0L; }
+        comment.delete();
+        commentRepository.save(comment);
+
+        return comment.getPost().getId();
+    }
 }
