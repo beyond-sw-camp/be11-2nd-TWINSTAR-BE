@@ -14,7 +14,9 @@ import com.TwinStar.TwinStar.post.repository.PostRepository;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -27,8 +29,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Transactional
@@ -39,13 +40,15 @@ public class PostService {
     private final PostFileRepository postFileRepository;
     private final HashTagService hashTagService;
     private final PostHashTagRepository postHashTagRepository;
+
     private final S3Client s3Client;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     @Value("${cloud.aws.region.static}")
     private String region;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository, PostFileRepository postFileRepository, HashTagService hashTagService, PostHashTagRepository postHashTagRepository, S3Client s3Client) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, PostFileRepository postFileRepository
+            , HashTagService hashTagService, PostHashTagRepository postHashTagRepository, S3Client s3Client) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.postFileRepository = postFileRepository;
@@ -134,4 +137,6 @@ public class PostService {
         return post.formEntity(postHashTagList, postUrlList);
 
     }
+
+
 }

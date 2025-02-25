@@ -4,19 +4,25 @@ import com.TwinStar.TwinStar.common.dto.CommonDto;
 import com.TwinStar.TwinStar.post.dto.PostCreateReqDto;
 import com.TwinStar.TwinStar.post.dto.PostUpdateReqDto;
 import com.TwinStar.TwinStar.post.dto.PostUpdateResDto;
+import com.TwinStar.TwinStar.post.service.LikeService;
 import com.TwinStar.TwinStar.post.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+import java.util.Objects;
 
 @RequestMapping("/post")
 @RestController
 public class PostController {
 
     private final PostService postService;
+    private final LikeService likeService;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService, LikeService likeService) {
         this.postService = postService;
+        this.likeService = likeService;
     }
 
     @PostMapping("/create")
@@ -44,6 +50,11 @@ public class PostController {
     }
 
 
+    @PostMapping("/like/{postId}")
+    public ResponseEntity<?> postLike(@PathVariable Long postId){
+        Map<String, Object> likeInfo = likeService.toggleLike(postId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"기능 성공",likeInfo),HttpStatus.OK);
+    }
 
 
 }
