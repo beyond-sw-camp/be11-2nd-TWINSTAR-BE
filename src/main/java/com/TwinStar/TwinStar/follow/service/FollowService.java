@@ -1,6 +1,7 @@
 package com.TwinStar.TwinStar.follow.service;
 
 
+import com.TwinStar.TwinStar.alarm.service.AlarmService;
 import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.follow.domain.Follow;
 import com.TwinStar.TwinStar.follow.dto.FollowDto;
@@ -19,10 +20,12 @@ import java.util.stream.Collectors;
 public class FollowService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
+    private final AlarmService alarmService;
 
-    public FollowService(FollowRepository followRepository, UserRepository userRepository) {
+    public FollowService(FollowRepository followRepository, UserRepository userRepository, AlarmService alarmService) {
         this.followRepository = followRepository;
         this.userRepository = userRepository;
+        this.alarmService = alarmService;
     }
 
     //    토글 팔로우/언팔로우 요청
@@ -36,6 +39,10 @@ public class FollowService {
         // 팔로우 상태 확인
         Optional<Follow> existingFollow = followRepository.findByUserIdAndReceiveUserId(followRequest,receiveFollowRequest);
 
+        String content= followRequest.getNickName()+"님이 회원님에게 팔로우 요청을 보냈습니다.";
+        String url = "http://localhost:3000/user/detail/"+followRequest.getId();
+        alarmService.createAlarm(followRequest,content,url);
+
         if (existingFollow.isPresent()) {
             Follow follow = existingFollow.get();
             follow.toggleFollow();  // followYn 값 변경 (Y <-> N)
@@ -47,6 +54,7 @@ public class FollowService {
             followRepository.save(follow);
             return true; // 팔로우했으므로 true 반환
         }
+
     }
 
     // 팔로워 수 조회
