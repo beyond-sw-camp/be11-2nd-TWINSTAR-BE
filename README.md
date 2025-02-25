@@ -3,6 +3,10 @@
   <img src="logo.png" alt="Twinstar Logo" width="800px" />
 </div>
 
+<div align="center">
+  <img src="twinstar.gif" alt="Twinstar Animation" width="800px" />
+</div>
+
   <div style="text-align: center;">
   <strong>Team TwinStar</strong>
 
