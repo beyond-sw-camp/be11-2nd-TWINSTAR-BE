@@ -94,5 +94,12 @@ public class RedisConfig {
         return redisTemplate;
     }
 
-
+    @Bean(name = "commentLikeRedisTemple")
+    public RedisTemplate<String,Object> commentLikeRedisTemplate(@Qualifier("rtdb") RedisConnectionFactory redisConnectionFactory){
+        RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        return redisTemplate;
+    }
 }

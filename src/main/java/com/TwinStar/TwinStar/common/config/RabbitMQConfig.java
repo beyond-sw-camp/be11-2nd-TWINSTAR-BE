@@ -29,6 +29,8 @@ public class RabbitMQConfig {
 
     public static final String BACKUP_QUEUE_AL="backupAddLike";
     public static final String BACKUP_QUEUE_ML="backupMinusLike";
+    public static final String BACKUP_QUEUE_COMMENT_AL="backupAddCommentLike";
+    public static final String BACKUP_QUEUE_COMMENT_ML="backupMinCommentLike";
 
     @Bean
     public Queue AddlikeQueue(){
@@ -37,6 +39,15 @@ public class RabbitMQConfig {
     @Bean
     public Queue MinuslikeQueue(){
         return new Queue(BACKUP_QUEUE_ML,true);
+    }
+
+    @Bean
+    public Queue AddCommentLikeQueue(){
+        return new Queue(BACKUP_QUEUE_COMMENT_AL,true);
+    }
+    @Bean
+    public Queue MinCommentLikeQueue(){
+        return new Queue(BACKUP_QUEUE_COMMENT_ML,true);
     }
 
     @Bean
