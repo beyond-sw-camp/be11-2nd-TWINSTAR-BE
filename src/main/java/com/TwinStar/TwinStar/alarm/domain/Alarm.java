@@ -40,6 +40,4 @@ public class Alarm extends BaseTimeEntity {
     public void updateIsRead(boolean isRead){
         this.isRead = isRead;
     }
-
-
 }

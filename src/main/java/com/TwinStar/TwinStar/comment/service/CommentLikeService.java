@@ -1,5 +1,6 @@
 package com.TwinStar.TwinStar.comment.service;
 
+import com.TwinStar.TwinStar.alarm.repository.AlarmRepository;
 import com.TwinStar.TwinStar.alarm.service.AlarmService;
 import com.TwinStar.TwinStar.comment.domain.Comment;
 import com.TwinStar.TwinStar.comment.domain.CommentLike;
@@ -34,16 +35,18 @@ public class CommentLikeService {
     private final UserRepository userRepository;
     private final RabbitTemplate rabbitTemplate;
     private final AlarmService alarmService;
+    private final AlarmRepository alarmRepository;
 
     @Qualifier("commentLikeRedisTemple")
     private final RedisTemplate<String, Object> commentLikeRedisTemplate;
 
-    public CommentLikeService(CommentLikeRepository commentLikeRepository, CommentRepository commentRepository, UserRepository userRepository, RabbitTemplate rabbitTemplate, AlarmService alarmService, @Qualifier("commentLikeRedisTemple")RedisTemplate<String, Object> commentLikeRedisTemplate) {
+    public CommentLikeService(CommentLikeRepository commentLikeRepository, CommentRepository commentRepository, UserRepository userRepository, RabbitTemplate rabbitTemplate, AlarmService alarmService, AlarmRepository alarmRepository, @Qualifier("commentLikeRedisTemple")RedisTemplate<String, Object> commentLikeRedisTemplate) {
         this.commentLikeRepository = commentLikeRepository;
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.rabbitTemplate = rabbitTemplate;
         this.alarmService = alarmService;
+        this.alarmRepository = alarmRepository;
         this.commentLikeRedisTemplate = commentLikeRedisTemplate;
     }
 
@@ -91,7 +94,9 @@ public class CommentLikeService {
         User receiver = comment.getUser();
         String content = receiver.getNickName() + "님이 회원님의 댓글을 좋아합니다.";
         String url = "http://localhost:3000/post/detail/" + comment.getPost().getId();
-        alarmService.createAlarm(receiver, content, url);
+        if(!alarmRepository.existsByUrlAndContent(url,content)){
+            alarmService.createAlarm(receiver, content, url);
+        }
 
         return new CommentLikeResDto(likeCount, isLike);
     }

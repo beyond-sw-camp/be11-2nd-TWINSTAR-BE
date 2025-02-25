@@ -1,6 +1,7 @@
 package com.TwinStar.TwinStar.follow.service;
 
 
+import com.TwinStar.TwinStar.alarm.repository.AlarmRepository;
 import com.TwinStar.TwinStar.alarm.service.AlarmService;
 import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.follow.domain.Follow;
@@ -21,11 +22,13 @@ public class FollowService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
     private final AlarmService alarmService;
+    private final AlarmRepository alarmRepository;
 
-    public FollowService(FollowRepository followRepository, UserRepository userRepository, AlarmService alarmService) {
+    public FollowService(FollowRepository followRepository, UserRepository userRepository, AlarmService alarmService, AlarmRepository alarmRepository) {
         this.followRepository = followRepository;
         this.userRepository = userRepository;
         this.alarmService = alarmService;
+        this.alarmRepository = alarmRepository;
     }
 
     //    토글 팔로우/언팔로우 요청
@@ -39,9 +42,12 @@ public class FollowService {
         // 팔로우 상태 확인
         Optional<Follow> existingFollow = followRepository.findByUserIdAndReceiveUserId(followRequest,receiveFollowRequest);
 
-        String content= followRequest.getNickName()+"님이 회원님에게 팔로우 요청을 보냈습니다.";
+        String content= followRequest.getNickName()+"님이 회원님을 팔로우합니다.";
         String url = "http://localhost:3000/user/detail/"+followRequest.getId();
-        alarmService.createAlarm(followRequest,content,url);
+        if(!alarmRepository.existsByUrlAndContent(url,content)){
+            alarmService.createAlarm(receiveFollowRequest,content,url);
+        }
+
 
         if (existingFollow.isPresent()) {
             Follow follow = existingFollow.get();
