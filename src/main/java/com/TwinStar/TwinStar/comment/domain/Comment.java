@@ -62,4 +62,8 @@ public class Comment extends BaseTimeEntity {
     public void addChild(Comment comment) {
         this.child.add(comment);
     }
+
+    public void pinned(){
+        this.pinnedComment = "Y";
+    }
 }

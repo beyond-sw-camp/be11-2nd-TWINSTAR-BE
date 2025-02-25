@@ -53,4 +53,10 @@ public class CommentController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"댓글 좋아요 기능 성공",commentLikeInfo)
                 ,HttpStatus.OK);
     }
+
+    @PostMapping("/pinned/{commentId}")
+    public ResponseEntity<?> commentPinnede(@PathVariable Long commentId){
+        commentService.pinned(commentId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"댓글 고정 완료",commentId),HttpStatus.OK);
+    }
 }

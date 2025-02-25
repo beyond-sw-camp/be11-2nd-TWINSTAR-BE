@@ -100,4 +100,17 @@ public class CommentService {
     }
 
 
+    public void pinned(Long commentId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(()->new EntityNotFoundException("user is not found"));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new EntityNotFoundException("comment is not found"));
+        User postWriter = comment.getPost().getUser();
+        if(!postWriter.equals(user)){ return; }
+
+//        대댓글이 아니라면
+        if(comment.getParent() == null){
+            comment.pinned();
+        }
+
+    }
 }
