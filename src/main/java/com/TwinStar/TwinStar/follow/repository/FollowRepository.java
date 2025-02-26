@@ -28,4 +28,19 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     //         내가 팔로우한 목록
     List<Follow> findByReceiveUserIdAndFollowYn(User receiveUserId, YN followYn);
+
+    // 내가 팔로우한 유저 ID 조회
+    @Query("SELECT f.receiveUserId.id FROM Follow f WHERE f.userId.id = :userId AND f.followYn = 'Y'")
+    List<Long> findFollowingUserIds(@Param("userId") Long userId);
+
+    // 나와 맞팔로우 관계인 유저 ID 조회
+    @Query("""
+        SELECT f.receiveUserId.id FROM Follow f 
+        WHERE f.userId.id = :userId AND f.followYn = 'Y'
+        AND f.receiveUserId.id IN (
+            SELECT f2.userId.id FROM Follow f2 
+            WHERE f2.receiveUserId.id = :userId AND f2.followYn = 'Y'
+        )
+    """)
+    List<Long> findMutualFollowUserIds(@Param("userId") Long userId);
 }
