@@ -26,8 +26,9 @@ public class PostDetailResDto {
     private String isUpdate;
     private List<String> hashTag;
     private String isLike;
+    private String isFollow;
 
-    public static PostDetailResDto fromEntity(Post post, Long postLikeCount, List<CommentListResDto> commentList, List<String> hashTags, String isLike) {
+    public static PostDetailResDto fromEntity(Post post, Long postLikeCount, List<CommentListResDto> commentList, List<String> hashTags, String isLike, String isFollow) {
         return PostDetailResDto.builder()
                 .userId(post.getUser().getId())
                 .nickName(post.getUser().getNickName())
@@ -41,6 +42,7 @@ public class PostDetailResDto {
                 .isUpdate(determineUpdateStatus(post))
                 .hashTag(hashTags)
                 .isLike(isLike)
+                .isFollow(isFollow)
                 .build();
     }
 

@@ -4,6 +4,7 @@ import com.TwinStar.TwinStar.comment.domain.Comment;
 import com.TwinStar.TwinStar.comment.repository.CommentLikeRepository;
 import com.TwinStar.TwinStar.comment.repository.CommentRepository;
 import com.TwinStar.TwinStar.common.domain.Visibility;
+import com.TwinStar.TwinStar.common.domain.YN;
 import com.TwinStar.TwinStar.follow.repository.FollowRepository;
 import com.TwinStar.TwinStar.hashTag.domain.HashTag;
 import com.TwinStar.TwinStar.hashTag.domain.PostHashTag;
@@ -170,11 +171,12 @@ public class PostService {
         if (accessibleUserIds.isEmpty()) {
             return postRepository.findVisiblePostsForUser(Visibility.ALL, List.of(-1L), pageable)
                     .map(post -> {
+                        String isFollow = followRepository.existsByUserIdAndReceiveUserIdAndFollowYn(loginUser,post.getUser(), YN.Y)||loginUser.equals(post.getUser()) ? "Y" : "N";
                         List<String> hashTags = post.getHashTag().stream()
                                 .map(postHashTag -> postHashTag.getHashTag().getHashTagName())
                                 .collect(Collectors.toList());
 
-                        return PostListResDto.fromEntity(post, 0L, 0L, hashTags, "N");
+                        return PostListResDto.fromEntity(post, 0L, 0L, hashTags, "N",isFollow);
                     });
         }
 
@@ -182,6 +184,7 @@ public class PostService {
                 .map(post -> {
                     Long likeCount = postRepository.countPostLikes(post.getId());
                     Long commentCount = postRepository.countPostComments(post.getId());
+                    String isFollow = followRepository.existsByUserIdAndReceiveUserIdAndFollowYn(loginUser,post.getUser(), YN.Y)||loginUser.equals(post.getUser()) ? "Y" : "N";
 
                     List<String> hashTags = post.getHashTag().stream()
                             .map(postHashTag -> postHashTag.getHashTag().getHashTagName())
@@ -190,7 +193,7 @@ public class PostService {
                     boolean isLiked = postLikeRepository.existsByPostIdAndUserId(post.getId(), loginUser.getId());
                     String isLike = isLiked ? "Y" : "N";
 
-                    return PostListResDto.fromEntity(post, likeCount, commentCount, hashTags, isLike);
+                    return PostListResDto.fromEntity(post, likeCount, commentCount, hashTags, isLike,isFollow);
                 });
     }
 
@@ -226,7 +229,9 @@ public class PostService {
         boolean isLiked = postLikeRepository.existsByPostIdAndUserId(postId, user.getId());
         String isLike = isLiked ? "Y" : "N";
 
+        String isFollow = followRepository.existsByUserIdAndReceiveUserIdAndFollowYn(user,post.getUser(), YN.Y)||user.equals(post.getUser()) ? "Y" : "N";
+
         // DTO 변환 후 반환
-        return PostDetailResDto.fromEntity(post, postLikeCount, commentList, hashTags, isLike);
+        return PostDetailResDto.fromEntity(post, postLikeCount, commentList, hashTags, isLike, isFollow);
     }
 }
