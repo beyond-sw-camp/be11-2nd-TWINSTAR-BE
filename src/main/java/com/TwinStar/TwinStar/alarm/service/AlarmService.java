@@ -62,7 +62,7 @@ public class AlarmService {
     }
 
     public SseEmitter subscribe(Long userId) {
-        SseEmitter emitter = new SseEmitter(30 * 60 * 1000L); // 30분
+        SseEmitter emitter = new SseEmitter(60 * 1000L); // 30분
         emitters.put(String.valueOf(userId), emitter);
 
         try {
