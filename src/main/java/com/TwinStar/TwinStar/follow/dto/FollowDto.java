@@ -2,6 +2,7 @@ package com.TwinStar.TwinStar.follow.dto;
 
 import com.TwinStar.TwinStar.user.domain.User;
 import lombok.Getter;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.util.Objects;
 
@@ -10,11 +11,13 @@ public class FollowDto {
     private Long id;
     private String nickName;
     private String profileImg;
+    private String isFollow;
 
-    public FollowDto(User user) {
+    public FollowDto(User user, String isFollow) {
         this.id = user.getId();
         this.nickName = user.getNickName();
         this.profileImg = user.getProfileImg();
+        this.isFollow = isFollow;
     }
 
 //    Set 또는 distinct()를 사용할 때, 중복된 FollowDto 객체를 제대로 제거하기 위해 equals()와 hashCode()를 함께 구현

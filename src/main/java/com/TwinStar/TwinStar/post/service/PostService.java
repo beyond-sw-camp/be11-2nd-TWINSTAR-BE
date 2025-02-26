@@ -77,7 +77,7 @@ public class PostService {
             String fileUrl = uploadImage(file);
             postFileRepository.save(new PostFile(post,fileUrl));
         }
-        for (String tag: dto.getHashTag()){
+        for (String tag: Optional.ofNullable(dto.getHashTag()).orElse(Collections.emptyList()) ){
             HashTag hashTag = hashTagService.findOrCreateHashTag(tag);
             PostHashTag postHashTag = PostHashTag.builder()
                     .post(post)

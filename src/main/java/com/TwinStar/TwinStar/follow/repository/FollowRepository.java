@@ -6,6 +6,8 @@ import com.TwinStar.TwinStar.follow.domain.Follow;
 import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.user.domain.User;
 import io.lettuce.core.dynamic.annotation.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -23,11 +25,16 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     // 팔로잉 수 조회 (내가 팔로우한 사람)
     Long countByUserIdAndFollowYn(User userId, YN followYn);
 
-    //     나를 팔로우한 목록
-    List<Follow> findByUserIdAndFollowYn(User userId, YN followYn);
+    // 나를 팔로우한 유저 목록 (페이징 적용)
+    Page<Follow> findByReceiveUserIdAndFollowYn(User receiveUserId, YN followYn, Pageable pageable);
 
-    //         내가 팔로우한 목록
-    List<Follow> findByReceiveUserIdAndFollowYn(User receiveUserId, YN followYn);
+    // 내가 팔로우한 유저 목록 (페이징 적용)
+    Page<Follow> findByUserIdAndFollowYn(User receiveUserId, YN followYn, Pageable pageable);
+//    //     나를 팔로우한 목록
+//    List<Follow> findByUserIdAndFollowYn(User userId, YN followYn);
+//
+//    //         내가 팔로우한 목록
+//    List<Follow> findByReceiveUserIdAndFollowYn(User receiveUserId, YN followYn);
 
     // 내가 팔로우한 유저 ID 조회
     @Query("SELECT f.receiveUserId.id FROM Follow f WHERE f.userId.id = :userId AND f.followYn = 'Y'")

@@ -8,8 +8,11 @@ import com.TwinStar.TwinStar.follow.domain.Follow;
 import com.TwinStar.TwinStar.follow.dto.FollowDto;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.follow.repository.FollowRepository;
+import com.TwinStar.TwinStar.user.dto.UserListResDto;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -85,23 +88,35 @@ public class FollowService {
     }
 
     // 나를 팔로우한 유저 목록
-    public List<FollowDto> getFollowerList(Long userId) {
-        User user = userRepository.findById(userId)
+    public Page<FollowDto> getFollowerList(Long userId, Pageable pageable) {
+        User loginUser = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
-        return followRepository.findByReceiveUserIdAndFollowYn(user, YN.Y)
-                .stream().map(follow -> new FollowDto(follow.getUserId()))
-                .collect(Collectors.toSet()) // 중복 제거 (Set 사용)
-                .stream().toList();
+
+        Page<User> followUserList = followRepository.findByReceiveUserIdAndFollowYn(loginUser,YN.Y,pageable)
+                .map(follow -> follow.getUserId());
+
+        // 각 유저와 로그인한 유저 간의 팔로우 여부 확인
+        return followUserList.map(user -> {
+            String isFollow = followRepository.existsByUserIdAndReceiveUserIdAndFollowYn(loginUser,user, YN.Y)||user.equals(loginUser) ? "Y" : "N";
+
+            return new FollowDto(user,isFollow);
+        });
     }
 
     // 내가 팔로우한 유저 목록
-    public List<FollowDto> getFollowingList(Long userId) {
-        User user = userRepository.findById(userId)
+    public Page<FollowDto> getFollowingList(Long userId,Pageable pageable) {
+        User loginUser = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
-        return followRepository.findByUserIdAndFollowYn(user, YN.Y)
-                .stream().map(follow -> new FollowDto(follow.getReceiveUserId()))// DTO로 변환하여 무한순환 방지
-                .collect(Collectors.toSet()) // 중복 제거 (Set 사용)
-                .stream().toList();
+
+        // 내가 팔로우한 유저 목록을 가져옴
+        Page<User> followingUsers = followRepository.findByUserIdAndFollowYn(loginUser, YN.Y, pageable)
+                .map(Follow::getReceiveUserId); // 내가 팔로우한 대상 유저 반환
+
+        // 각 유저와 로그인한 유저 간의 팔로우 여부 확인 후 DTO 변환
+        return followingUsers.map(user -> {
+            String isFollow = followRepository.existsByUserIdAndReceiveUserIdAndFollowYn(loginUser, user, YN.Y) || user.equals(loginUser) ? "Y" : "N";
+            return new FollowDto(user, isFollow);
+        });
     }
 
     public Boolean isFollow(Long userId) {
