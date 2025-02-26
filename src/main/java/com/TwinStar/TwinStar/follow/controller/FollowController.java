@@ -54,19 +54,15 @@ public class FollowController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), count+ "명",count),HttpStatus.OK);
     }
 
-//        팔로워 목록 조회
-    @GetMapping("/list/userId")
-    public ResponseEntity<?> getFollowerList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, Pageable pageable) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        Long userId = jwtUtil.getUserId(token);
+//    팔로잉 목록 조회
+    @GetMapping("/following/{userId}")
+    public ResponseEntity<?> getFollowerList(@PathVariable Long userId, Pageable pageable) {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "팔로워 목록 조회입니다",followService.getFollowerList(userId,pageable)),HttpStatus.OK);
     }
 
-//        팔로잉 목록 조회
-    @GetMapping("/list/receiveUserId")
-    public ResponseEntity<?> getFollowingList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, Pageable pageable) {
-        String token = authorizationHeader.replace("Bearer ", "");
-        Long userId = jwtUtil.getUserId(token);
+//        팔로워 목록 조회
+    @GetMapping("/follower/{userId}")
+    public ResponseEntity<?> getFollowingList(@PathVariable Long userId, Pageable pageable) {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "팔로잉 목록 조회입니다",followService.getFollowingList(userId,pageable)),HttpStatus.OK);
     }
 

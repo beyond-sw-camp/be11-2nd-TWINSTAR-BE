@@ -87,7 +87,7 @@ public class FollowService {
                 .orElse(0L);
     }
 
-    // 나를 팔로우한 유저 목록
+    // 나를 팔로우한 유저 목록(팔로잉)
     public Page<FollowDto> getFollowerList(Long userId, Pageable pageable) {
         User loginUser = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
