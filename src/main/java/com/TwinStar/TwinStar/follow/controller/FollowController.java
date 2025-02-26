@@ -68,4 +68,10 @@ public class FollowController {
         Long userId = jwtUtil.getUserId(token);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "팔로잉 목록 조회입니다",followService.getFollowingList(userId)),HttpStatus.OK);
     }
+
+    @GetMapping("check/{userId}")
+    public ResponseEntity<?> getIsFollow(@PathVariable Long userId){
+        Boolean isFollow = followService.isFollow(userId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "팔로우 확인",isFollow),HttpStatus.OK);
+    }
 }

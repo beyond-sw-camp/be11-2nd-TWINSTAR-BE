@@ -12,10 +12,10 @@ import java.util.Optional;
 
 @Repository
 public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> {
-    @Query("SELECT COUNT(cl) FROM CommentLike cl WHERE cl.comment.post.id = :postId")
-    Long countCommentLikesByPostId(@Param("postId") Long postId);
 
     Optional<CommentLike> findByCommentAndUser(Comment comment, User user);
 
     Long countByComment(Comment comment);
+
+    boolean existsByCommentIdAndUserId(Long commentId, Long userId);
 }
