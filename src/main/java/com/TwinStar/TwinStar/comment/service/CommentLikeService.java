@@ -7,12 +7,17 @@ import com.TwinStar.TwinStar.comment.domain.CommentLike;
 import com.TwinStar.TwinStar.comment.dto.CommentLikeResDto;
 import com.TwinStar.TwinStar.comment.repository.CommentLikeRepository;
 import com.TwinStar.TwinStar.comment.repository.CommentRepository;
+import com.TwinStar.TwinStar.common.domain.YN;
+import com.TwinStar.TwinStar.follow.repository.FollowRepository;
 import com.TwinStar.TwinStar.user.domain.User;
+import com.TwinStar.TwinStar.user.dto.UserListResDto;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import org.springframework.security.core.Authentication;
@@ -36,17 +41,19 @@ public class CommentLikeService {
     private final RabbitTemplate rabbitTemplate;
     private final AlarmService alarmService;
     private final AlarmRepository alarmRepository;
+    private final FollowRepository followRepository;
 
     @Qualifier("commentLikeRedisTemple")
     private final RedisTemplate<String, Object> commentLikeRedisTemplate;
 
-    public CommentLikeService(CommentLikeRepository commentLikeRepository, CommentRepository commentRepository, UserRepository userRepository, RabbitTemplate rabbitTemplate, AlarmService alarmService, AlarmRepository alarmRepository, @Qualifier("commentLikeRedisTemple")RedisTemplate<String, Object> commentLikeRedisTemplate) {
+    public CommentLikeService(CommentLikeRepository commentLikeRepository, CommentRepository commentRepository, UserRepository userRepository, RabbitTemplate rabbitTemplate, AlarmService alarmService, AlarmRepository alarmRepository, FollowRepository followRepository, @Qualifier("commentLikeRedisTemple")RedisTemplate<String, Object> commentLikeRedisTemplate) {
         this.commentLikeRepository = commentLikeRepository;
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.rabbitTemplate = rabbitTemplate;
         this.alarmService = alarmService;
         this.alarmRepository = alarmRepository;
+        this.followRepository = followRepository;
         this.commentLikeRedisTemplate = commentLikeRedisTemplate;
     }
 
@@ -99,6 +106,24 @@ public class CommentLikeService {
         }
 
         return new CommentLikeResDto(likeCount, isLike);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserListResDto> getLikeList(Long commentId, Pageable pageable) {
+        // 현재 로그인한 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loginUser = userRepository.findById(Long.valueOf(authentication.getName()))
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        // 해당 댓글을 좋아요 한 유저 목록 조회 (페이징)
+        Page<User> likedUsers = commentLikeRepository.findUsersWhoLikedComment(commentId, pageable);
+
+        // 각 유저와 로그인한 유저 간의 팔로우 여부 확인
+        return likedUsers.map(user -> {
+            String isFollow = followRepository.existsByUserIdAndReceiveUserIdAndFollowYn(loginUser,user, YN.Y)||user.equals(loginUser) ? "Y" : "N";
+
+            return new UserListResDto().toUserListResDto(user, isFollow);
+        });
     }
 
 }
