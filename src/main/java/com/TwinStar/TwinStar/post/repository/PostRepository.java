@@ -21,7 +21,8 @@ public interface PostRepository extends JpaRepository<Post,Long> {
         SELECT p FROM Post p 
         WHERE p.postDel = 'N' 
         AND (p.visibility = :allVisibility OR p.user.id IN (:userIds))
-    """)
+        ORDER BY p.createdTime DESC
+        """)
     Page<Post> findVisiblePostsForUser(@Param("allVisibility") Visibility allVisibility,
                                        @Param("userIds") List<Long> userIds,
                                        Pageable pageable);

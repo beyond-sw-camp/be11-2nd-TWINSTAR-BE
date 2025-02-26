@@ -27,7 +27,7 @@ public class PostListResDto {
     private List<String> hashTag;
     private String isLike;
 
-    public PostListResDto fromEntity(Post post, Long likeCount, Long commentCount) {
+    public static PostListResDto fromEntity(Post post, Long likeCount, Long commentCount, List<String> hashTags, String isLike) {
         return PostListResDto.builder()
                 .userId(post.getUser().getId())
                 .nickName(post.getUser().getNickName())
@@ -39,14 +39,13 @@ public class PostListResDto {
                 .commentCount(commentCount)
                 .createdTime(post.getCreatedTime())
                 .isUpdate(determineUpdateStatus(post))
+                .hashTag(hashTags)
+                .isLike(isLike)
                 .build();
     }
 
-    // 업데이트 여부 로직 (예제: content가 수정되었는지 확인)
-    private String determineUpdateStatus(Post post) {
-        if (post.getUpdatedTime() != null && !post.getUpdatedTime().equals(post.getCreatedTime())) {
-            return "Y"; // 수정됨
-        }
-        return "N"; // 수정되지 않음
+    // 수정 여부 판단 (createdTime과 updatedTime 비교)
+    private static String determineUpdateStatus(Post post) {
+        return (post.getUpdatedTime() != null && !post.getUpdatedTime().equals(post.getCreatedTime())) ? "Y" : "N";
     }
 }

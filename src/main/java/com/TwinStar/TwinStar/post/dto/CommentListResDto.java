@@ -23,7 +23,7 @@ public class CommentListResDto {
     private String isDelete;
     private String isLike;
 
-    public static CommentListResDto fromEntity(Comment comment, Long likeCount) {
+    public static CommentListResDto fromEntity(Comment comment, Long likeCount, String isLike) {
         return CommentListResDto.builder()
                 .id(comment.getId())
                 .parentId(comment.getParent() != null ? comment.getParent().getId() : null)
@@ -33,6 +33,7 @@ public class CommentListResDto {
                 .isPinned(comment.getPinnedComment())
                 .isUpdate(determineUpdateStatus(comment))
                 .isDelete(comment.getCommentDel())
+                .isLike(isLike)
                 .build();
     }
 
