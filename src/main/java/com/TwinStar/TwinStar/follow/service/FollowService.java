@@ -9,6 +9,9 @@ import com.TwinStar.TwinStar.follow.dto.FollowDto;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.follow.repository.FollowRepository;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -99,6 +102,13 @@ public class FollowService {
                 .stream().map(follow -> new FollowDto(follow.getReceiveUserId()))// DTO로 변환하여 무한순환 방지
                 .collect(Collectors.toSet()) // 중복 제거 (Set 사용)
                 .stream().toList();
+    }
+
+    public Boolean isFollow(Long userId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        User targetUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return followRepository.existsByUserIdAndReceiveUserIdAndFollowYn(user, targetUser, YN.Y);
     }
 }
 
