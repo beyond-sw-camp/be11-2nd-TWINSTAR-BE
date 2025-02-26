@@ -43,4 +43,7 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
         )
     """)
     List<Long> findMutualFollowUserIds(@Param("userId") Long userId);
+
+    Boolean existsByUserIdAndReceiveUserIdAndFollowYn(User user, User receiveUser, YN followYn);
+
 }
