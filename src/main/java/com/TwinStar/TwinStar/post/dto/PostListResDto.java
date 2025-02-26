@@ -17,6 +17,7 @@ public class PostListResDto {
     private Long userId;
     private String nickName;
     private String profileImage;
+    private Long postId;
     private List<String> imageList;
     private String content;
     private Long likeCount;
@@ -29,6 +30,7 @@ public class PostListResDto {
                 .userId(post.getUser().getId())
                 .nickName(post.getUser().getNickName())
                 .profileImage(post.getUser().getProfileImg())
+                .postId(post.getId())
                 .imageList(post.getFileUrls())
                 .content(post.getContent())
                 .likeCount(likeCount)

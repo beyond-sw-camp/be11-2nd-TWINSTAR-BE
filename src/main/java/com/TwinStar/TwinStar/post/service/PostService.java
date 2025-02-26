@@ -1,5 +1,7 @@
 package com.TwinStar.TwinStar.post.service;
 
+import com.TwinStar.TwinStar.comment.domain.Comment;
+import com.TwinStar.TwinStar.comment.repository.CommentRepository;
 import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.follow.repository.FollowRepository;
 import com.TwinStar.TwinStar.hashTag.domain.HashTag;
@@ -8,10 +10,7 @@ import com.TwinStar.TwinStar.hashTag.repository.PostHashTagRepository;
 import com.TwinStar.TwinStar.hashTag.service.HashTagService;
 import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.post.domain.PostFile;
-import com.TwinStar.TwinStar.post.dto.PostCreateReqDto;
-import com.TwinStar.TwinStar.post.dto.PostListResDto;
-import com.TwinStar.TwinStar.post.dto.PostUpdateReqDto;
-import com.TwinStar.TwinStar.post.dto.PostUpdateResDto;
+import com.TwinStar.TwinStar.post.dto.*;
 import com.TwinStar.TwinStar.post.repository.PostFileRepository;
 import com.TwinStar.TwinStar.post.repository.PostRepository;
 import com.TwinStar.TwinStar.user.domain.User;
@@ -49,6 +48,7 @@ public class PostService {
     private final HashTagService hashTagService;
     private final PostHashTagRepository postHashTagRepository;
     private final FollowRepository followRepository;
+    private final CommentRepository commentRepository;
 
     private final S3Client s3Client;
     @Value("${cloud.aws.s3.bucket}")
@@ -57,13 +57,14 @@ public class PostService {
     private String region;
 
     public PostService(PostRepository postRepository, UserRepository userRepository, PostFileRepository postFileRepository
-            , HashTagService hashTagService, PostHashTagRepository postHashTagRepository, FollowRepository followRepository, S3Client s3Client) {
+            , HashTagService hashTagService, PostHashTagRepository postHashTagRepository, FollowRepository followRepository, CommentRepository commentRepository, S3Client s3Client) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.postFileRepository = postFileRepository;
         this.hashTagService = hashTagService;
         this.postHashTagRepository = postHashTagRepository;
         this.followRepository = followRepository;
+        this.commentRepository = commentRepository;
         this.s3Client = s3Client;
     }
 
@@ -175,5 +176,24 @@ public class PostService {
                     Long commentCount = postRepository.countPostComments(post.getId());
                     return new PostListResDto().fromEntity(post, likeCount, commentCount);
                 });
+    }
+
+    @Transactional(readOnly = true)
+    public PostDetailResDto getDetail(Long postId) {
+        // 게시물 조회 (없으면 예외 발생)
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("게시물을 찾을 수 없습니다."));
+
+        // 게시물 좋아요 개수 조회
+        Long postLikeCount = postRepository.countPostLikes(postId);
+
+        // 댓글 목록 조회 (댓글이 없을 경우 빈 리스트 반환)
+        List<Comment> comments = commentRepository.findByPost(post);
+        List<CommentListResDto> commentList = comments.stream()
+                .map(comment -> CommentListResDto.fromEntity(comment, commentRepository.countCommentLikes(comment.getId())))
+                .collect(Collectors.toList());
+
+        // DTO 변환 후 반환
+        return PostDetailResDto.fromEntity(post, postLikeCount, commentList);
     }
 }

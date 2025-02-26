@@ -50,14 +50,20 @@ public class PostController {
     @PostMapping("/like/{postId}")
     public ResponseEntity<?> postLike(@PathVariable Long postId){
         PostLikeResDto likeInfo = postLikeService.togglePostLike(postId);
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"개사뮬 좋아요 완료",likeInfo),HttpStatus.OK);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"게시물 좋아요 완료",likeInfo),HttpStatus.OK);
     }
 
     @GetMapping("list")
     public ResponseEntity<?> getPostList(@RequestParam(name = "page", defaultValue = "0") Integer page,
                                                 @RequestParam(name = "size", defaultValue = "5") Integer size) {
         Page<PostListResDto> postListResDtoPage = postService.getList(page,size);
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"개사뮬 리스트 불러오기 완료",postListResDtoPage),HttpStatus.OK);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(),"게시물 리스트 불러오기 완료",postListResDtoPage),HttpStatus.OK);
+    }
+
+    @GetMapping("detail/{postId}")
+    public ResponseEntity<?> getPostDetail(@PathVariable Long postId) {
+        PostDetailResDto postDetailResDto = postService.getDetail(postId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "게시물 조회 완료", postDetailResDto), HttpStatus.OK);
     }
 
 
