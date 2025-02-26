@@ -1,5 +1,8 @@
 package com.TwinStar.TwinStar.post.service;
 
+import com.TwinStar.TwinStar.comment.domain.Comment;
+import com.TwinStar.TwinStar.comment.repository.CommentLikeRepository;
+import com.TwinStar.TwinStar.comment.repository.CommentRepository;
 import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.follow.repository.FollowRepository;
 import com.TwinStar.TwinStar.hashTag.domain.HashTag;
@@ -8,21 +11,16 @@ import com.TwinStar.TwinStar.hashTag.repository.PostHashTagRepository;
 import com.TwinStar.TwinStar.hashTag.service.HashTagService;
 import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.post.domain.PostFile;
-import com.TwinStar.TwinStar.post.dto.PostCreateReqDto;
-import com.TwinStar.TwinStar.post.dto.PostListResDto;
-import com.TwinStar.TwinStar.post.dto.PostUpdateReqDto;
-import com.TwinStar.TwinStar.post.dto.PostUpdateResDto;
+import com.TwinStar.TwinStar.post.dto.*;
 import com.TwinStar.TwinStar.post.repository.PostFileRepository;
+import com.TwinStar.TwinStar.post.repository.PostLikeRepository;
 import com.TwinStar.TwinStar.post.repository.PostRepository;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,6 +47,9 @@ public class PostService {
     private final HashTagService hashTagService;
     private final PostHashTagRepository postHashTagRepository;
     private final FollowRepository followRepository;
+    private final CommentRepository commentRepository;
+    private final CommentLikeRepository commentLikeRepository;
+    private final PostLikeRepository postLikeRepository;
 
     private final S3Client s3Client;
     @Value("${cloud.aws.s3.bucket}")
@@ -57,13 +58,16 @@ public class PostService {
     private String region;
 
     public PostService(PostRepository postRepository, UserRepository userRepository, PostFileRepository postFileRepository
-            , HashTagService hashTagService, PostHashTagRepository postHashTagRepository, FollowRepository followRepository, S3Client s3Client) {
+            , HashTagService hashTagService, PostHashTagRepository postHashTagRepository, FollowRepository followRepository, CommentRepository commentRepository, CommentLikeRepository commentLikeRepository, PostLikeRepository postLikeRepository, S3Client s3Client) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.postFileRepository = postFileRepository;
         this.hashTagService = hashTagService;
         this.postHashTagRepository = postHashTagRepository;
         this.followRepository = followRepository;
+        this.commentRepository = commentRepository;
+        this.commentLikeRepository = commentLikeRepository;
+        this.postLikeRepository = postLikeRepository;
         this.s3Client = s3Client;
     }
 
@@ -161,19 +165,68 @@ public class PostService {
         accessibleUserIds.addAll(mutualFollowUserIds);
         accessibleUserIds.add(loginUser.getId());
 
-        Pageable pageable = Pageable.ofSize(size).withPage(page);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdTime")); // 최신순 정렬
 
-        // 빈 리스트 방지: 전체 공개 게시물만 조회
         if (accessibleUserIds.isEmpty()) {
             return postRepository.findVisiblePostsForUser(Visibility.ALL, List.of(-1L), pageable)
-                    .map(post -> new PostListResDto().fromEntity(post, 0L, 0L));
+                    .map(post -> {
+                        List<String> hashTags = post.getHashTag().stream()
+                                .map(postHashTag -> postHashTag.getHashTag().getHashTagName())
+                                .collect(Collectors.toList());
+
+                        return PostListResDto.fromEntity(post, 0L, 0L, hashTags, "N");
+                    });
         }
 
         return postRepository.findVisiblePostsForUser(Visibility.ALL, accessibleUserIds, pageable)
                 .map(post -> {
                     Long likeCount = postRepository.countPostLikes(post.getId());
                     Long commentCount = postRepository.countPostComments(post.getId());
-                    return new PostListResDto().fromEntity(post, likeCount, commentCount);
+
+                    List<String> hashTags = post.getHashTag().stream()
+                            .map(postHashTag -> postHashTag.getHashTag().getHashTagName())
+                            .collect(Collectors.toList());
+
+                    boolean isLiked = postLikeRepository.existsByPostIdAndUserId(post.getId(), loginUser.getId());
+                    String isLike = isLiked ? "Y" : "N";
+
+                    return PostListResDto.fromEntity(post, likeCount, commentCount, hashTags, isLike);
                 });
+    }
+
+    @Transactional(readOnly = true)
+    public PostDetailResDto getDetail(Long postId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        // 게시물 조회 (없으면 예외 발생)
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("게시물을 찾을 수 없습니다."));
+
+        // 게시물 좋아요 개수 조회
+        Long postLikeCount = postRepository.countPostLikes(postId);
+
+        // 댓글 목록 조회
+        List<Comment> comments = commentRepository.findByPost(post);
+        List<CommentListResDto> commentList = comments.stream()
+                .map(comment -> {
+                    Long commentLikeCount = commentRepository.countCommentLikes(comment.getId());
+                    boolean isCommentLiked = commentLikeRepository.existsByCommentIdAndUserId(comment.getId(), user.getId());
+                    String isCommentLike = isCommentLiked ? "Y" : "N";
+                    return CommentListResDto.fromEntity(comment, commentLikeCount, isCommentLike);
+                })
+                .collect(Collectors.toList());
+
+        // 해시태그 목록 조회
+        List<String> hashTags = post.getHashTag().stream()
+                .map(postHashTag -> postHashTag.getHashTag().getHashTagName())
+                .collect(Collectors.toList());
+
+        // 사용자의 좋아요 여부 확인
+        boolean isLiked = postLikeRepository.existsByPostIdAndUserId(postId, user.getId());
+        String isLike = isLiked ? "Y" : "N";
+
+        // DTO 변환 후 반환
+        return PostDetailResDto.fromEntity(post, postLikeCount, commentList, hashTags, isLike);
     }
 }
