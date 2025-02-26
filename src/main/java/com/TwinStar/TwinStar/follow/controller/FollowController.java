@@ -5,6 +5,7 @@ import com.TwinStar.TwinStar.common.dto.CommonDto;
 import com.TwinStar.TwinStar.follow.dto.FollowDto;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.follow.service.FollowService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,18 +56,18 @@ public class FollowController {
 
 //        팔로워 목록 조회
     @GetMapping("/list/userId")
-    public ResponseEntity<?> getFollowerList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public ResponseEntity<?> getFollowerList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, Pageable pageable) {
         String token = authorizationHeader.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(token);
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "팔로워 목록 조회입니다",followService.getFollowerList(userId)),HttpStatus.OK);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "팔로워 목록 조회입니다",followService.getFollowerList(userId,pageable)),HttpStatus.OK);
     }
 
 //        팔로잉 목록 조회
     @GetMapping("/list/receiveUserId")
-    public ResponseEntity<?> getFollowingList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public ResponseEntity<?> getFollowingList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader, Pageable pageable) {
         String token = authorizationHeader.replace("Bearer ", "");
         Long userId = jwtUtil.getUserId(token);
-        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "팔로잉 목록 조회입니다",followService.getFollowingList(userId)),HttpStatus.OK);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "팔로잉 목록 조회입니다",followService.getFollowingList(userId,pageable)),HttpStatus.OK);
     }
 
     @GetMapping("check/{userId}")
