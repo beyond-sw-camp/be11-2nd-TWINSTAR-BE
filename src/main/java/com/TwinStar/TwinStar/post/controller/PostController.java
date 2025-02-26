@@ -4,12 +4,13 @@ import com.TwinStar.TwinStar.common.dto.CommonDto;
 import com.TwinStar.TwinStar.post.dto.*;
 import com.TwinStar.TwinStar.post.service.PostLikeService;
 import com.TwinStar.TwinStar.post.service.PostService;
+import com.TwinStar.TwinStar.user.dto.UserListResDto;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RequestMapping("/post")
 @RestController
@@ -63,6 +64,12 @@ public class PostController {
     @GetMapping("detail/{postId}")
     public ResponseEntity<?> getPostDetail(@PathVariable Long postId) {
         PostDetailResDto postDetailResDto = postService.getDetail(postId);
+        return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "게시물 조회 완료", postDetailResDto), HttpStatus.OK);
+    }
+
+    @GetMapping("/like/list/{postId}")
+    public ResponseEntity<?> getLikeList(@PathVariable Long postId, @PageableDefault(size = 10) Pageable pageable) {
+        Page<UserListResDto> postDetailResDto = postService.getLikeList(postId, pageable);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "게시물 조회 완료", postDetailResDto), HttpStatus.OK);
     }
 

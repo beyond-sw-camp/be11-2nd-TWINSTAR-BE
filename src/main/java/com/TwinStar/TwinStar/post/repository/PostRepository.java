@@ -2,6 +2,8 @@ package com.TwinStar.TwinStar.post.repository;
 
 import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.post.domain.Post;
+import com.TwinStar.TwinStar.post.domain.PostLike;
+import com.TwinStar.TwinStar.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

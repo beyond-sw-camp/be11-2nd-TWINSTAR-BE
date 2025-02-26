@@ -17,12 +17,11 @@ import com.TwinStar.TwinStar.post.repository.PostFileRepository;
 import com.TwinStar.TwinStar.post.repository.PostLikeRepository;
 import com.TwinStar.TwinStar.post.repository.PostRepository;
 import com.TwinStar.TwinStar.user.domain.User;
+import com.TwinStar.TwinStar.user.dto.UserListResDto;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -33,8 +32,6 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -233,5 +230,23 @@ public class PostService {
 
         // DTO 변환 후 반환
         return PostDetailResDto.fromEntity(post, postLikeCount, commentList, hashTags, isLike, isFollow);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<UserListResDto> getLikeList(Long postId, Pageable pageable) {
+        // 현재 로그인한 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loginUser = userRepository.findById(Long.valueOf(authentication.getName()))
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        // 해당 게시물을 좋아요 한 유저 목록 조회 (페이징)
+        Page<User> likedUsers = postLikeRepository.findUsersWhoLikedPost(postId, pageable);
+
+        // 각 유저와 로그인한 유저 간의 팔로우 여부 확인
+        return likedUsers.map(user -> {
+            String isFollow = followRepository.existsByUserIdAndReceiveUserIdAndFollowYn(loginUser,user, YN.Y)||user.equals(loginUser) ? "Y" : "N";
+
+            return new UserListResDto().toUserListResDto(user, isFollow);
+        });
     }
 }
