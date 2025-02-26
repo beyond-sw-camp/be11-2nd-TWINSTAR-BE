@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 public class AlarmResDto {
     private Long id;
     private Long senderId;
+    private String profileImage;
     private String content;
-    private Boolean idRead;
+    private String url;
     private LocalDateTime createdTime;
 }

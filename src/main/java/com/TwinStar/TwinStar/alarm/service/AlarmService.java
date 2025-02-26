@@ -87,8 +87,9 @@ public class AlarmService {
         return alarmPage.map(alarm -> AlarmResDto.builder()
                 .id(alarm.getId())
                 .senderId(alarm.getSender().getId())
+                .profileImage(alarm.getSender().getProfileImg())
                 .content(alarm.getContent())
-                .idRead(alarm.getIsRead())
+                .url(alarm.getUrl())
                 .createdTime(alarm.getCreatedTime())
                 .build());
     }
