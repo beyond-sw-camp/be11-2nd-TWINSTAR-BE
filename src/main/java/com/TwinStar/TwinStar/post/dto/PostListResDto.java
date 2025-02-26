@@ -24,6 +24,8 @@ public class PostListResDto {
     private Long commentCount;
     private LocalDateTime createdTime;
     private String isUpdate;
+    private List<String> hashTag;
+    private String isLike;
 
     public PostListResDto fromEntity(Post post, Long likeCount, Long commentCount) {
         return PostListResDto.builder()

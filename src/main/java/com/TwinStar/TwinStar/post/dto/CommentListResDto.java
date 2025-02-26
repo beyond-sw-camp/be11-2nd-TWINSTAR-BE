@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -19,6 +21,7 @@ public class CommentListResDto {
     private String isPinned;
     private String isUpdate;
     private String isDelete;
+    private String isLike;
 
     public static CommentListResDto fromEntity(Comment comment, Long likeCount) {
         return CommentListResDto.builder()

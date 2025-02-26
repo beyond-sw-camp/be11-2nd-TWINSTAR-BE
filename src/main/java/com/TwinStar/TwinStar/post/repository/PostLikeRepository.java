@@ -14,4 +14,5 @@ import java.util.Optional;
 public interface PostLikeRepository extends JpaRepository<PostLike,Long> {
     Long countByPost(Post post);
     Optional<PostLike> findByPostAndUser(Post post, User user);
+    boolean existsByPostIdAndUserId(Long postId, Long userId);
 }

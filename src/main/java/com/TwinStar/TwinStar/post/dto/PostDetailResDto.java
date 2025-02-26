@@ -24,8 +24,10 @@ public class PostDetailResDto {
     private List<CommentListResDto> commentList;
     private LocalDateTime createdTime;
     private String isUpdate;
+    private List<String> hashTag;
+    private String isLike;
 
-    public static PostDetailResDto fromEntity(Post post, Long postLikeCount, List<CommentListResDto> commentList) {
+    public static PostDetailResDto fromEntity(Post post, Long postLikeCount, List<CommentListResDto> commentList, List<String> hashTags, String isLike) {
         return PostDetailResDto.builder()
                 .userId(post.getUser().getId())
                 .nickName(post.getUser().getNickName())
@@ -37,6 +39,8 @@ public class PostDetailResDto {
                 .commentList(commentList)
                 .createdTime(post.getCreatedTime())
                 .isUpdate(determineUpdateStatus(post))
+                .hashTag(hashTags)
+                .isLike(isLike)
                 .build();
     }
 

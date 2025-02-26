@@ -12,6 +12,7 @@ import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.post.domain.PostFile;
 import com.TwinStar.TwinStar.post.dto.*;
 import com.TwinStar.TwinStar.post.repository.PostFileRepository;
+import com.TwinStar.TwinStar.post.repository.PostLikeRepository;
 import com.TwinStar.TwinStar.post.repository.PostRepository;
 import com.TwinStar.TwinStar.user.domain.User;
 import com.TwinStar.TwinStar.user.repository.UserRepository;
@@ -49,6 +50,7 @@ public class PostService {
     private final PostHashTagRepository postHashTagRepository;
     private final FollowRepository followRepository;
     private final CommentRepository commentRepository;
+    private final PostLikeRepository postLikeRepository;
 
     private final S3Client s3Client;
     @Value("${cloud.aws.s3.bucket}")
@@ -57,7 +59,7 @@ public class PostService {
     private String region;
 
     public PostService(PostRepository postRepository, UserRepository userRepository, PostFileRepository postFileRepository
-            , HashTagService hashTagService, PostHashTagRepository postHashTagRepository, FollowRepository followRepository, CommentRepository commentRepository, S3Client s3Client) {
+            , HashTagService hashTagService, PostHashTagRepository postHashTagRepository, FollowRepository followRepository, CommentRepository commentRepository, PostLikeRepository postLikeRepository, S3Client s3Client) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.postFileRepository = postFileRepository;
@@ -65,6 +67,7 @@ public class PostService {
         this.postHashTagRepository = postHashTagRepository;
         this.followRepository = followRepository;
         this.commentRepository = commentRepository;
+        this.postLikeRepository = postLikeRepository;
         this.s3Client = s3Client;
     }
 
@@ -152,8 +155,7 @@ public class PostService {
     @Transactional(readOnly = true)
     public Page<PostListResDto> getList(int page, int size) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User loginUser = userRepository.findById(Long.valueOf(authentication.getName()))
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        User loginUser = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         List<Long> followingUserIds = followRepository.findFollowingUserIds(loginUser.getId());
         List<Long> mutualFollowUserIds = followRepository.findMutualFollowUserIds(loginUser.getId());
@@ -180,20 +182,30 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PostDetailResDto getDetail(Long postId) {
-        // 게시물 조회 (없으면 예외 발생)
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("게시물을 찾을 수 없습니다."));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findById(Long.valueOf(authentication.getName())).orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        Post post = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("게시물을 찾을 수 없습니다."));
 
         // 게시물 좋아요 개수 조회
         Long postLikeCount = postRepository.countPostLikes(postId);
 
-        // 댓글 목록 조회 (댓글이 없을 경우 빈 리스트 반환)
+        // 댓글 목록 조회
         List<Comment> comments = commentRepository.findByPost(post);
         List<CommentListResDto> commentList = comments.stream()
                 .map(comment -> CommentListResDto.fromEntity(comment, commentRepository.countCommentLikes(comment.getId())))
                 .collect(Collectors.toList());
 
+        // 해시태그 목록 조회
+        List<String> hashTags = post.getHashTag().stream()
+                .map(postHashTag -> postHashTag.getHashTag().getHashTagName())
+                .collect(Collectors.toList());
+
+        // 사용자의 좋아요 여부 확인
+        boolean isLiked = postLikeRepository.existsByPostIdAndUserId(postId, user.getId());
+        String isLike = isLiked ? "Y" : "N";
+
         // DTO 변환 후 반환
-        return PostDetailResDto.fromEntity(post, postLikeCount, commentList);
+        return PostDetailResDto.fromEntity(post, postLikeCount, commentList, hashTags, isLike);
     }
 }
