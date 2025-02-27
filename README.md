@@ -205,7 +205,7 @@ flowchart TB
 <summary>화면 설계서</summary>
 <div markdown="1">
 
-![화면 설계서 Figma]
+![화면 설계서 Figma](figma.png)
 
 </div>
 </details>
