@@ -200,7 +200,20 @@ flowchart TB
 
 <br>
 
-## 8. 테이블 정의서(DDL 쿼리문 포함)
+## 8. 화면 설계서(DDL 쿼리문 포함)
+<details>
+<summary>화면 설계서</summary>
+<div markdown="1">
+
+![화면 설계서 Figma](https://www.figma.com/design/nHEVzvnrmFR7PLzI3D3C5z/twinstar_figma?node-id=0-1&p=f&t=DtCTXLqVXl3xh3xh-0)
+
+</div>
+</details>
+
+<br>
+
+
+## 9. 테이블 정의서(DDL 쿼리문 포함)
 <details>
 <summary>테이블 정의서</summary>
 <div markdown="1">
@@ -212,9 +225,9 @@ flowchart TB
 
 <br>
 
-## 9. 백업 계획
+## 10. 백업 계획
 
-### 9-1 Replication
+### 10-1 Replication
 
 DB 서버의 부하 분산과 데이터 백업을 위해 Replication을 적용하였습니다.
 
@@ -253,7 +266,7 @@ tail -f /var/log/mariadb-replication-slave-status.log
 </details>
 
 
-### 9-2 mysqldump
+### 10-2 mysqldump
 
 Replication은 실시간 복제를 담당하므로 거기에 더해서 이력을 남기기 위해서 cron으로 mysqldump를 스케줄링하였습니다.
 
@@ -296,7 +309,7 @@ crontab -e
 
 <br>
 
-## 10. 테스트 결과서(테스트 쿼리문 포함)
+## 11. 테스트 결과서(테스트 쿼리문 포함)
 
 <details>
 <summary>테스트 케이스 정의서</summary>
@@ -951,7 +964,7 @@ crontab -e
 
 <br>
 
-## 11. 트러블슈팅
+## 12. 트러블슈팅
 ||내용|
 |-|-|
 |1|쿼리문 작성 과정에서 트리거를 통한 로직 구현에 있어 자동 마감를 구현하고자 하였으나 트리거의 Update문과 DB 접근과 참가자를 수락하기 위한 Insert의 DB 접근이 동시에 일어나는 문제를 해결하지 못해 트리거를 삭제하게 되었습니다. 이부분의 해결을 위해서 충돌을 피하기 위해 트리거 문을 수정하는 작업을 진행했어야 됐던 것 같습니다.|
@@ -960,7 +973,7 @@ crontab -e
 
 <br>
 
-## 12. 팀 회고
+## 13. 팀 회고
 |팀원|회고 내용|
 |:---:|-|
 |장기현||
