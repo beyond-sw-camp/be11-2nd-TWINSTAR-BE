@@ -78,14 +78,12 @@ public class User extends BaseTimeEntity {
                 .build();
     }
 
-
     //    사용자 프로필 업데이트
-    public void updateProfile(String nickName, String profileTxt, Visibility idVisibility) {
-        UserProfileDto.builder()
-                .nickName(this.nickName)
-                .profileTxt(this.profileTxt)
-                .idVisibility(this.idVisibility)
-                .build();
+    public void updateProfile(String nickName, String profileTxt, Visibility idVisibility,Sex sex) {
+        this.nickName = nickName;
+        this.profileTxt = profileTxt;
+        this.idVisibility = idVisibility;
+        this.sex = sex;
     }
 
     //    프로필 이미지 변경

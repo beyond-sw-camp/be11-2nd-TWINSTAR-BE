@@ -3,6 +3,7 @@ package com.TwinStar.TwinStar.user.dto;
 import com.TwinStar.TwinStar.common.domain.Visibility;
 import com.TwinStar.TwinStar.post.domain.Post;
 import com.TwinStar.TwinStar.post.dto.ProfilePostResDto;
+import com.TwinStar.TwinStar.user.domain.Sex;
 import com.TwinStar.TwinStar.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,7 @@ public class UserProfileDto {
     private String nickName;
     private String profileImg;
     private String profileTxt;
+    private Sex sex;
     private Long followerCount;//나를 팔로우하는 사람의 수
     private Long followingCount;//내가 팔로우하는 사람의 수
     private Visibility idVisibility;
