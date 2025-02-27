@@ -454,149 +454,6 @@ crontab -e
 </div>
 </details>
 
-### 태그
-
-<details>
-<summary>취향</summary>
-<div markdown="1">
-
-
-<details>
-<summary>사용자 취향 호출</summary>
-<div markdown="1">
-
-![사용자 취향 호출](assets/images/사용자취향호출.PNG)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>사용자 취향 저장</summary>
-<div markdown="1">
-
-![사용자 취향 저장](assets/images/사용자취향저장.PNG)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>사용자 취향 삭제</summary>
-<div markdown="1">
-
-![사용자 취향 삭제](assets/images/사용자취향삭제.PNG)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>사용자 취향 수정</summary>
-<div markdown="1">
-
-![사용자 취향 수정](assets/images/사용자취향수정.PNG)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>게시글 취향 호출</summary>
-<div markdown="1">
-
-![게시글 취향 호출](assets/images/게시글취향호출.PNG)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>게시글 취향 저장</summary>
-<div markdown="1">
-
-![게시글 취향 저장](assets/images/게시글취향저장.PNG)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>게시글 취향 삭제</summary>
-<div markdown="1">
-
-![게시글 취향 삭제](assets/images/게시글취향삭제.PNG)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>게시글 취향 수정</summary>
-<div markdown="1">
-
-![게시글 취향 수정](assets/images/게시글취향수정.PNG)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>여행 코스 취향 호출</summary>
-<div markdown="1">
-
-![여행 코스 취향 호출](assets/images/여행코스취향호출.PNG)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>여행 코스 취향 저장</summary>
-<div markdown="1">
-
-![여행 코스 취향 저장](assets/images/여행코스취향저장.PNG)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>여행 코스 취향 삭제</summary>
-<div markdown="1">
-
-![여행 코스 취향 삭제](assets/images/여행코스취향삭제.PNG)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>여행 코스 취향 수정</summary>
-<div markdown="1">
-
-![여행 코스 취향 수정](assets/images/여행코스취향수정.PNG)
-
-</div>
-</details>
-
-
-
-</div>
-</details>
-
-
 
 ### 게시물
 
@@ -649,7 +506,7 @@ crontab -e
 ###
 
 <details>
-<summary>게시물 조회-작성일자 기준</summary>
+<summary>게시물 조회-인기게시물</summary>
 <div markdown="1">
 
 ![게시글 조회-작성자 기준](assets/images/게시글조회(작성일자기준).png)
@@ -660,7 +517,7 @@ crontab -e
 ###
 
 <details>
-<summary>게시글 조회-조회수 정렬</summary>
+<summary>게시글 조회-태그</summary>
 <div markdown="1">
 
 ![게시글 조회-조회수 높은순](assets/images/게시글조회(조회수높은순).png)
@@ -682,10 +539,10 @@ crontab -e
 ###
 
 <details>
-<summary>별점 등록</summary>
+<summary>좋아요 등록</summary>
 <div markdown="1">
 
-![별점 등록](assets/images/별점등록.png)
+![좋아요 등록](assets/images/별점등록.png)
 
 </div>
 </details>
@@ -693,21 +550,10 @@ crontab -e
 ###
 
 <details>
-<summary>별점 수정</summary>
+<summary>좋아요 삭제</summary>
 <div markdown="1">
 
-![별점 수정](assets/images/별점수정.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>별점 삭제</summary>
-<div markdown="1">
-
-![별점 삭제](assets/images/별점삭제.png)
+![좋아요 삭제](assets/images/별점삭제.png)
 
 </div>
 </details>
@@ -774,6 +620,39 @@ crontab -e
 <div markdown="1">
 
 ![댓글 좋아요 삭제](assets/images/댓글좋아요삭제.png)
+
+</div>
+</details>
+
+###
+
+<details>
+<summary>대댓글 등록</summary>
+<div markdown="1">
+
+![댓글 등록](assets/images/댓글등록.png)
+
+</div>
+</details>
+
+###
+
+<details>
+<summary>대댓글 좋아요 등록</summary>
+<div markdown="1">
+
+![대댓글 좋아요 등록](assets/images/댓글등록.png)
+
+</div>
+</details>
+
+###
+
+<details>
+<summary>대댓글 좋아요 취소</summary>
+<div markdown="1">
+
+![대댓글 좋아요 취소](assets/images/댓글등록.png)
 
 </div>
 </details>
