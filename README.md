@@ -205,7 +205,7 @@ flowchart TB
 <summary>화면 설계서</summary>
 <div markdown="1">
 
-![화면 설계서 Figma](https://www.figma.com/design/nHEVzvnrmFR7PLzI3D3C5z/twinstar_figma?node-id=0-1&p=f&t=DtCTXLqVXl3xh3xh-0)
+![화면 설계서 Figma]
 
 </div>
 </details>
