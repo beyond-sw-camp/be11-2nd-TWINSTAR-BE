@@ -315,6 +315,7 @@ public class UserService {
     }
 
 //    프로필 텍스트 수정
+    @Transactional
     public void updateProfileText(ProfileTextUpdateDto dto){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -326,12 +327,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        User.builder()
-                .nickName(dto.getNickName())
-                .profileTxt(dto.getProfileTxt())
-                .sex(dto.getSex())
-                .idVisibility(dto.getIdVisibility())
-                .build();
+        user.updateProfile(dto.getNickName(),dto.getProfileTxt(),dto.getIdVisibility(),dto.getSex());
 
         userRepository.save(user);
     }
