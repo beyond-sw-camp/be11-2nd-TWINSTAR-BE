@@ -200,7 +200,7 @@ flowchart TB
 
 <br>
 
-## 8. 화면 설계서(DDL 쿼리문 포함)
+## 8. 화면 설계서
 <details>
 <summary>화면 설계서</summary>
 <div markdown="1">
