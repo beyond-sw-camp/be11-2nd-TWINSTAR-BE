@@ -132,7 +132,7 @@ TwinStar는 점점 헤비해져가는 SNS들과는 다르게 최소한의 기본
 <summary>WBS</summary>
 <div markdown="1">
 
-![WBS](assets/images/WBS.png)
+![WBS](WBS.png)
 
 </div>
 </details>
