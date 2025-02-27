@@ -49,7 +49,7 @@ public class FollowService {
         Optional<Follow> existingFollow = followRepository.findByUserIdAndReceiveUserId(followRequest,receiveFollowRequest);
 
         String content= followRequest.getNickName()+"님이 회원님을 팔로우합니다.";
-        String url = "http://localhost:3000/user/detail/"+followRequest.getId();
+        String url = "http://localhost:3000/profile/"+followRequest.getId();
         if(!alarmRepository.existsByUrlAndContent(url,content)){
             alarmService.createAlarm(receiveFollowRequest,content,url);
         }
