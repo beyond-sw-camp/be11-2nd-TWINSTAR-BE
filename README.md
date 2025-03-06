@@ -258,49 +258,6 @@ flowchart TB
 ![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
 &nbsp;![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)
 ![POSTMAN](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
-
-
-### 10-2 mysqldump
-
-Replication은 실시간 복제를 담당하므로 거기에 더해서 이력을 남기기 위해서 cron으로 mysqldump를 스케줄링하였습니다.
-
-<details>
-<summary>백업 스크립트</summary>
-<div markdown="1">
-trip_crew_backup.sh
-
-```bash
-...
-backupDir="${1}/backup/${2}/"
-dateTime=$(date +%Y%m%d%H%M%S)
-
-mkdir -p ${backupDir}
-
-mysqldump -u${3} -p${4} ${2} > "${backupDir}${2}_${dateTime}.sql"
-
-find ${backupDir} -type f -name "*.sql" -mtime +7 -delete
-...
-```
-
-crontab -e
-```bash
-# 민감한 정보는 중괄호로 처리했습니다.
-...
-0 * * * * {scriptDir}/trip_crew_backup.sh {backupDir} trip_crew {username} {password}
-...
-```
-</div>
-</details>
-
-<details>
-<summary>결과</summary>
-<div markdown="1">
-
-![결과](assets/images/mysqldump-result.png)
-
-</div>
-</details>
-
 <br>
 
 ## 11. 테스트 결과서(테스트 쿼리문 포함)
