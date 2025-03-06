@@ -225,45 +225,39 @@ flowchart TB
 
 <br>
 
-## 10. 백업 계획
+## 🎮 기술 스택
 
-### 10-1 Replication
+### BACKEND
+![SPRING](https://img.shields.io/badge/Spring-green?style=for-the-badge&logo=Spring&logoColor=white)
+![SPRING BOOT](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=Spring%20Boot&logoColor=white)
+![SPRING SECURITY](https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white)
+![SPRING DATA JPA](https://img.shields.io/badge/Spring_Data_JPA-13C100?style=for-the-badge&logo=Spring%20Boot&logoColor=white)
+![WEBSOCKET](https://img.shields.io/badge/WebSocket-010101?style=for-the-badge&logo=socketdotio&logoColor=white)
+![STOMP](https://img.shields.io/badge/STOMP-010101?style=for-the-badge&logo=messenger&logoColor=white)
+![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white)
+![HIBERNATE](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=hibernate&logoColor=white)
+![DOCKER](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+### FRONTEND
+![Vue.js](https://img.shields.io/badge/vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
+![JavaScript](https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![HTML5](https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1867C0?style=for-the-badge&logo=css3&logoColor=white)
+![AXIOS](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)
+![VUE ROUTER](https://img.shields.io/badge/Vue_Router-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
+![VUETIFY](https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=#1867C0)
+###  DB
+![mariadb](https://img.shields.io/badge/mariadb-003545?style=for-the-badge&logo=mariadb&logoColor=white)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
+![amazons3](https://img.shields.io/badge/amazons3-569A31?style=for-the-badge)
+![RABBITMQ](https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white)
 
-DB 서버의 부하 분산과 데이터 백업을 위해 Replication을 적용하였습니다.
-
-<details>
-<summary>네트워크 구성도</summary>
-<div markdown="1">
-
-![네트워크 구성도](assets/images/네트워크구성도.png)
-
-</div>
-</details>
-
-실 서버에서 운영하다 보니 Replication이 충돌하는 일이 수시로 반복되었습니다.
-
-문제는 해결하였으나 충돌하여 내려간 Slave의 상태를 확인하기 어려워 따로 로그를 수집하였습니다.
-<details>
-<summary>/etc/crontab</summary>
-<div markdown="1">
-
-```bash
-...
-* * * * *       root    logtime=`date "+\%Y-\%m-\%d \%H:\%M:\%S"` && logquery=`mariadb -e "SHOW SLAVE STATUS \G" | grep -E "[^_]Master_Log_File|Read_Master_Log_Pos|Running|Last_Error"` && printf "${logtime}\n${logquery}\n\n" >> /var/log/mariadb-replication-slave-status.log
-...
-```
-</div>
-</details>
-
-<details>
-<summary>Slave Logging</summary>
-<div markdown="1">
-tail -f /var/log/mariadb-replication-slave-status.log
-
-![Slave Logging](assets/images/replication_slave_log.png)
-
-</div>
-</details>
+### 협업도구
+![Git](https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=Github&logoColor=white)
+![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
+&nbsp;![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)
+![POSTMAN](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 
 
 ### 10-2 mysqldump
