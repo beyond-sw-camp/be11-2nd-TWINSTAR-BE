@@ -1,0 +1,64 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: twinstar-backend
+  namespace: ts
+spec: 
+  replicas: 2 
+  selector:   
+    matchLabels:
+      app: twinstar-backend
+  template: 
+    metadata:
+      labels:
+        app: twinstar-backend
+    spec:
+      containers:  
+      - name: twinstar-backend
+        image: 156041438567.dkr.ecr.ap-northeast-2.amazonaws.com/twinstar-backend:latest
+        ports:
+        - containerPort: 8080
+        env: 
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef: 
+              name: ts-app-secrets
+              key: DB_HOST
+        - name: DB_PW
+          valueFrom:
+            secretKeyRef:
+              name: ts-app-secrets
+              key: DB_PW
+        - name: AWS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ts-app-secrets
+              key: AWS_KEY
+        - name: AWS_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: ts-app-secrets
+              key: AWS_SECRET
+        # 컨테이너 상태 확인 
+        readinessProbe:
+          httpGet:
+            # healthcheck 경로
+            path: /
+            port: 8080
+          # 컨테이너 시작 후 지연
+          initialDelaySeconds: 10
+          # 확인 반복 주기
+          periodSeconds: 10   
+--- 
+apiVersion: v1
+kind: Service 
+metadata:
+  name: twinstar-backend-service
+  namespace: ts 
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: twinstar-backend
