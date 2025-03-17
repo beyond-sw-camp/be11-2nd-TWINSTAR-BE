@@ -43,7 +43,7 @@ spec:
         readinessProbe:
           httpGet:
             # healthcheck 경로
-            path: /
+            path: /post/health
             port: 8080
           # 컨테이너 시작 후 지연
           initialDelaySeconds: 10
