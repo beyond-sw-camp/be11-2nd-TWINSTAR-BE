@@ -119,12 +119,15 @@
 
 <details>
 <summary>🗓️ WBS</summary>
+<br>
+
 ![WBS](https://github.com/user-attachments/assets/5508a623-ae54-42e9-b3d2-5313bfaf2a34)
 
 </details>
 
 <details>
 <summary>📌 ERD</summary>
+<br>
 
 ![ERD](erd.png)
 
