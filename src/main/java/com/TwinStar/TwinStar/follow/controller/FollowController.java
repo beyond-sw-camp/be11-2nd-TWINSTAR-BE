@@ -34,23 +34,23 @@ public class FollowController {
         boolean isFollowing = followService.toggleFollow(userId, receiveUserId);
 
         if (isFollowing) {
-            return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "팔로우 되었습니다.",null),HttpStatus.OK);
+            return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "팔로우 되었습니다.",isFollowing),HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "언팔로우 되었습니다.",null),HttpStatus.OK);
+            return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "언팔로우 되었습니다.",isFollowing),HttpStatus.OK);
         }
     }
 
     // 특정 유저의 팔로워 수 조회 (공개 API)
-    @GetMapping("/count/userId/{userId}")
+    @GetMapping("/count/follower/{userId}")
     public ResponseEntity<?> countFollowersByUserId(@PathVariable Long userId) {
-        Long count = followService.countByUserIdAndFollowYn(userId);
+        Long count = followService.countByReceiveUserIdAndFollowYn(userId);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), count+ "명",count),HttpStatus.OK);
     }
 
     // 특정 유저의 팔로잉 수 조회 (공개 API)
-    @GetMapping("/count/receiveUserId/{userId}")
+    @GetMapping("/count/following/{userId}")
     public ResponseEntity<?> countFollowingByUserId(@PathVariable Long userId) {
-        Long count = followService.countByReceiveUserIdAndFollowYn(userId);
+        Long count = followService.countByUserIdAndFollowYn(userId);
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), count+ "명",count),HttpStatus.OK);
     }
 

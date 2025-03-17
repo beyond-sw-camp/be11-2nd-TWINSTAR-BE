@@ -70,7 +70,7 @@ public class FollowService {
     }
 
     // 팔로워 수 조회
-    public Long countByUserIdAndFollowYn(Long userId) {
+    public Long countByReceiveUserIdAndFollowYn(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
         return Optional.ofNullable(followRepository.countByReceiveUserIdAndFollowYn(user, YN.Y))
@@ -78,7 +78,7 @@ public class FollowService {
     }
 
     // 팔로잉 수 조회
-    public Long countByReceiveUserIdAndFollowYn(Long userId) {
+    public Long countByUserIdAndFollowYn(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 //        return Optional.ofNullable(followRepository.countByUserIdAndFollowYn(user))
@@ -87,7 +87,7 @@ public class FollowService {
                 .orElse(0L);
     }
 
-    // 나를 팔로우한 유저 목록(팔로잉)
+    // (팔로워 목록)
     public Page<FollowDto> getFollowerList(Long userId, Pageable pageable) {
         User loginUser = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
@@ -103,7 +103,7 @@ public class FollowService {
         });
     }
 
-    // 내가 팔로우한 유저 목록
+    // (팔로잉 목록)
     public Page<FollowDto> getFollowingList(Long userId,Pageable pageable) {
         User loginUser = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));

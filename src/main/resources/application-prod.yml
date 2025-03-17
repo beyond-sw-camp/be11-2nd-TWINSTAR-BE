@@ -1,0 +1,45 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB  # 개별 파일 최대 크기
+      max-request-size: 100MB  # 전체 요청 최대 크기
+  rabbitmq:
+    host: rabbitmq-service
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+  redis:
+    host: redis-service
+    port: 6379
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://${DB_HOST}:3306/twinstar
+    username: admin
+    password: ${DB_PW}
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+  show_sql: true
+  properties:
+    hibernate:
+      default_batch_fetch_size: 100
+
+jwt:
+  expiration: 30
+  secretKey: dHdpbnN0YXJzZWNyZXRrZXl0d2luc3RhcnNlY3JldGtleXR3aW5zdGFyc2VjcmV0a2V5
+  expirationRt: 288000
+  secretKeyRt: dHdpbnN0YXJyZWZyZXNoc2VjcmV0a2V5dHdpbnN0YXJyZWZyZXNoc2VjcmV0a2V5dHdpbnN0YXJyZWZyZXNoc2VjcmV0a2V5
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_KEY}
+      secret-key: ${AWS_SECRET}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: twinstar-s3
