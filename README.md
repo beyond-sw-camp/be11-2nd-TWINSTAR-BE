@@ -105,30 +105,231 @@
 
 ---
 <br>
-<br>
 
 ## 🗓️ WBS
 ![WBS](https://github.com/user-attachments/assets/5508a623-ae54-42e9-b3d2-5313bfaf2a34)
 
-<br>
 <br>
 
 ## 📌 ERD
 ![ERD](erd.png)
 
 <br>
-<br>
 
 ## ⚙️ 시스템 아키텍처
 
+<br>
 
 ## 🖥️ UX/UX 단위테스트
+### 👤유저 관련 기능
+<details>
+<summary>회원가입</summary>
 
+![회원가입](https://github.com/user-attachments/assets/eae27735-e877-428a-a33e-24897951d2cf)
+
+- 이메일 형식 및 중복 이메일 검증
+- 비밀번호 검증 및 비밀번호 재확인
+- 닉네임 중복 검증
+
+</details>
+
+<details>
+<summary>로그인</summary>
+
+![로그인](https://github.com/user-attachments/assets/037eebea-78b8-4f68-bc5f-b5035dc4250a)
+
+</details>
+
+<details>
+<summary>유저 검색</summary>
+
+![유저검색](https://github.com/user-attachments/assets/b7be1a00-d3fe-4083-8b37-c214f52ff927)
+
+- 유저검색 후 프로필 이동
+
+</details>
+
+<details>
+<summary>프로필 편집</summary>
+
+![프로필편집](https://github.com/user-attachments/assets/33dec13d-7d6e-48a7-a41a-cdb0a8cc39c9)
+
+- 프로필사진 변경
+- 프로필 텍스트 변경
+
+</details>
+
+<details>
+<summary>팔로워 & 팔로잉 리스트</summary>
+
+![팔로워,팔로잉 리스트](https://github.com/user-attachments/assets/03145e1a-ca3f-4d1f-b398-a46511ead980)
+
+</details>
+<br>
+
+### 📝 게시물 기능
+<details>
+<summary>개인 프로필에서 상세페이지 조회</summary>
+
+![프로필상세게시물](https://github.com/user-attachments/assets/ff40395f-e44b-418f-bc59-bf796ec79454)
+
+- 개인 프로필 게시물 댓글 및 좋아요 수 보기
+- 게시물 상세 조회
+
+</details>
+
+<details>
+<summary>게시물 작성</summary>
+
+![게시물작성](https://github.com/user-attachments/assets/95828249-189a-449b-a36c-3d47e973d67d)
+
+- 파일 드래그앤드랍 가능
+- 해시태그 입력
+- 계정 공개범위 입력
+
+</details>
+
+<details>
+<summary>게시물 수정 및 삭제</summary>
+
+![게시물 수정 및 삭제](https://github.com/user-attachments/assets/c9a2930e-b62d-49cf-b0bf-734d917de771)
+
+</details>
+
+<details>
+<summary>게시물 좋아요</summary>
+
+![게시물 좋아요](https://github.com/user-attachments/assets/9aefbe68-bde7-4b0c-92ae-56f020d53693)
+
+- 게시물 좋아요 기능
+- 게시물 좋아요 리스트
+
+</details>
+
+<details>
+<summary>게시물 댓글 및 댓글 좋아요</summary>
+
+![댓글 및 댓글좋아요](https://github.com/user-attachments/assets/8c24552d-e3d0-46bc-9442-f43d8ba32e43)
+
+- 댓글 작성
+- 댓글 좋아요
+- 댓글 좋아요 리스트
+
+</details>
+
+<details>
+<summary>대댓글 작성 및 대댓글 좋아요, 답글 토글</summary>
+
+![대댓글 작성 및 대댓글 좋아요, 답글 토글](https://github.com/user-attachments/assets/abc6d2d6-e4b1-40ad-835e-948727229e60)
+
+</details>
+
+<details>
+<summary>대댓글 삭제</summary>
+
+![대댓글 삭제](https://github.com/user-attachments/assets/4407d3c8-b591-4688-af0e-11035b714f32)
+
+</details>
+
+<details>
+<summary>게시물 상단 팔로우 버튼</summary>
+
+![게시물 팔로우](https://github.com/user-attachments/assets/70e0e8c1-5e99-46c0-836a-602623a234d4)
+
+</details>
+
+<details>
+<summary>무한 스크롤링</summary>
+
+무한 스크롤링을 통해 사용자 경험을 개선하고, 페이지네이션 없이 연속적으로 콘텐츠를 로드할 수 있습니다.
+
+</details>
+<br>
+
+### 🔔 알림 기능
+<details>
+<summary>알림 텍스트를 클릭하면 해당 알림 내용에 맞는 페이지로 이동</summary>
+
+![알림 이동](https://github.com/user-attachments/assets/eee1ad36-a9c3-4f85-a2b8-3584b30c88e3)
+
+- 채팅
+- 게시물 좋아요, 댓글 등
+- 팔로우
+
+</details>
+
+<details>
+<summary>구글 알림팝업</summary>
+
+![알림창](https://github.com/user-attachments/assets/9ec0b076-f777-4d13-9070-96835a64d0c9)
+
+</details>
+<br>
+
+### 🗨️ 채팅
+<details>
+<summary>실시간 채팅</summary>
+
+![실시간 채팅](https://github.com/user-attachments/assets/a5a6a18f-9cf8-4d70-9ea6-29821df8abda)
+
+</details>
+
+<details>
+<summary>그룹채팅</summary>
+
+![그룹채팅](https://github.com/user-attachments/assets/58e0aa7f-a6c0-41cc-bc93-fcc3d076996c)
+
+</details>
+
+<details>
+<summary>방제목 변경</summary>
+
+![방제목변경](https://github.com/user-attachments/assets/1cdae7f4-a0af-4c7c-a3dd-6df6294abd69)
+
+</details>
+
+<details>
+<summary>채팅방 참여자 유저 목록</summary>
+
+![채팅방 참여자 유저 목록](https://github.com/user-attachments/assets/c4190bc6-ca47-4cf8-99c4-4d79fa6376ef)
+
+</details>
+
+<details>
+<summary>채팅방 삭제</summary>
+
+![채팅방삭제](https://github.com/user-attachments/assets/c49e2f5f-c93b-42fb-8e07-c21120fe9314)
+
+</details>
+<br>
+
+### 🔧관리자
+<details>
+<summary>유저 관리 - 닉네임 검색</summary>
+
+![닉네임검색](https://github.com/user-attachments/assets/5defbcf0-f5fe-47fa-99b0-6ef663111811)
+
+</details>
+
+<details>
+<summary>유저 관리 - 관리자 권한</summary>
+
+설명이 필요하면 여기에 추가하세요.
+
+</details>
+
+<details>
+<summary>계정 정지</summary>
+
+![계정정지](https://github.com/user-attachments/assets/485813ad-1c14-4ef2-b37e-5c37bbc2e5cb)
+
+</details>
+<br>
 
 ## 💬 팀 회고 - 기술적 경험 정리
 |팀원|회고 내용|
 |:---:|-|
-|장기현| WebSocket(STOMP)를 사용하여 실시간 1:1 채팅 및 그룹 채팅을 구현했지만, 다중 서버 환경에서는 WebSocket 세션이 서버 간 공유되지 않기 때문에 Redis Pub/Sub을 이용한 확장이 필요했습니다. 이를 적용하는 과정에서 세션 정보 동기화 문제와 메시지 유실 방지 방안을 고민해야 했지만, 결국 Redis를 활용한 메시지 브로드캐스팅을 통해 다중 서버에서도 안정적으로 동작하도록 개선할 수 있었습니다.<br><br> 또한, 좋아요 기능에서는 Redis를 활용하여 캐싱 및 비동기 처리 방식으로 성능을 최적화했습니다. 처음에는 좋아요 요청이 직접 DB에 반영되었으나, 트래픽 증가로 인해 부하가 발생할 가능성이 있었는데요, 이를 해결하기 위해 좋아요 데이터를 Redis에 먼저 저장하고, 일정 주기로 DB에 반영하는 방식을 적용하여 DB 부하를 줄이면서도 실시간 반영이 가능하도록 개선했습니다.<br><br> 알림 서비스의 경우, 처음에는 WebSocket을 사용할 계획이었으나, 단방향 메시지 전송이 주를 이루는 알림 시스템에는 SSE(Server-Sent Events)가 더 적합하다고 판단하여, SSE를 활용하면 WebSocket처럼 불필요한 연결 유지 비용 없이 클라이언트가 서버로부터 실시간 이벤트를 받을 수 있기 때문에 서버 리소스를 절약하면서도 안정적으로 알림을 전송할 수 있도록 구현했습니다.<br><br> 이번 경험을 통해 WebSocket과 SSE의 적절한 활용 방식, Redis를 이용한 성능 최적화 및 확장성 확보, 비동기 이벤트 처리 방식의 중요성을 배울 수 있었습니다. 다만, WebSocket을 다중 서버 환경에서 확장하는 과정이 쉽지 않았고, 다음번에는 WebSocket과 SSE를 혼합하여 더 유연한 실시간 시스템을 구축하고, Redis 사용 시 데이터 정리 전략을 명확히 수립하는 것이 필요하다고 느꼈습니다.<br><br> 팀원분들 다들 고생하셨습니다 :) |
+|장기현| WebSocket(STOMP)를 사용하여 실시간 1:1 채팅 및 그룹 채팅을 구현했지만, 다중 서버 환경에서는 WebSocket 세션이 서버 간 공유되지 않기 때문에 Redis Pub/Sub을 이용한 확장이 필요했습니다. 이를 적용하는 과정에서 세션 정보 동기화 문제와 메시지 유실 방지 방안을 고민해야 했지만, 결국 Redis를 활용한 메시지 브로드캐스팅을 통해 다중 서버에서도 안정적으로 동작하도록 개선할 수 있었습니다.<br><br> 또한, 좋아요 기능에서는 Redis를 활용하여 캐싱 및 비동기 처리 방식으로 성능을 최적화했습니다. 처음에는 좋아요 요청이 직접 DB에 반영되었으나, 트래픽 증가로 인해 부하가 발생할 가능성이 있었는데요, 이를 해결하기 위해 좋아요 데이터를 Redis에 먼저 저장하고, 이후에 DB에 반영하는 방식을 적용하여 실시간 반영이 가능하도록 개선했습니다.<br><br> 알림 서비스의 경우, 처음에는 WebSocket을 사용할 계획이었으나, 단방향 메시지 전송이 주를 이루는 알림 시스템에는 SSE(Server-Sent Events)가 더 적합하다고 판단하여, SSE를 활용하면 WebSocket처럼 불필요한 연결 유지 비용 없이 클라이언트가 서버로부터 실시간 이벤트를 받을 수 있기 때문에 서버 리소스를 절약하면서도 안정적으로 알림을 전송할 수 있도록 구현했습니다.<br><br> 이번 경험을 통해 WebSocket과 SSE의 적절한 활용 방식, Redis를 이용한 성능 최적화 및 확장성 확보, 비동기 이벤트 처리 방식의 중요성을 배울 수 있었습니다. 다만, WebSocket을 다중 서버 환경에서 확장하는 과정이 쉽지 않았고, 다음번에는 WebSocket과 SSE를 혼합하여 더 유연한 실시간 시스템을 구축하고, Redis 사용 시 데이터 정리 전략을 명확히 수립하는 것이 필요하다고 느꼈습니다.<br><br> 팀원분들 다들 고생하셨습니다 :) |
 |이재석|  |
 |이준서|  |
 |이태희|  |
