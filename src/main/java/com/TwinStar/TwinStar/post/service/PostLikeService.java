@@ -90,7 +90,7 @@ public class PostLikeService {
         // 게시글 좋아요 알림
         User receiver = post.getUser();
         String content = receiver.getNickName() + "님이 회원님의 게시물을 좋아합니다.";
-        String url = "http://localhost:3000/post/detail/" + post.getId();
+        String url = "https://www.alexandrelax.store/post/detail/" + post.getId();
         if (!alarmRepository.existsByUrlAndContent(url, content)) {
             alarmService.createAlarm(receiver, content, url);
         }

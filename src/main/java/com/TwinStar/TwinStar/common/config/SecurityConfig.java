@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable) // HTTP Basic 인증 비활성화
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션 미사용 (Stateless)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/create", "/user/doLogin", "/user/refresh-token","/connect/**","/user/check-email/{email}","/user/check-nickname/{nickname}").permitAll() // 인증 없이 접근 허용
+                        .requestMatchers("/user/create", "/user/doLogin", "/user/refresh-token","/connect/**","/user/check-email/{email}","/user/check-nickname/{nickname}","/post/health").permitAll() // 인증 없이 접근 허용
                         .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
                 )
                 // 정지된 사용자 로그인 차단 필터 추가
@@ -52,7 +52,7 @@ public class SecurityConfig {
 
     private CorsConfigurationSource corsConfiguration() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000","https://www.alexandrelax.store")); // 프론트엔드 도메인
+        configuration.setAllowedOrigins(List.of("http://localhost:3000","https://server.alexandrelax.store","https://www.alexandrelax.store")); // 프론트엔드 도메인
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 허용할 HTTP 메서드
         configuration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
         configuration.setAllowCredentials(true); // 쿠키, 인증 정보 포함 허용

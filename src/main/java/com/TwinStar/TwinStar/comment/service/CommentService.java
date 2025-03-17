@@ -49,7 +49,7 @@ public class CommentService {
 //        게시물 작성자에게 알림 보내기
         User receiver = post.getUser();
         String content = user.getNickName()+"님이 회원님의 게시물에 댓글을 작성했습니다.";
-        String url = "http://localhost:3000/post/detail/"+post.getId();
+        String url = "https://www.alexandrelax.store/post/detail/"+post.getId();
         alarmService.createAlarm(receiver, content, url);
 
         return dto.getPostId();

@@ -73,5 +73,9 @@ public class PostController {
         return new ResponseEntity<>(new CommonDto(HttpStatus.OK.value(), "게시물 조회 완료", postDetailResDto), HttpStatus.OK);
     }
 
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("OK");
+    }
 
 }

@@ -18,5 +18,10 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 COPY --from=stage1 /app/build/libs/*.jar app.jar
 
-# 실행 :CMD 또는 ENTRYPOINT를 통해 컨테이너를 배열 형태의 명령어로 실행
-ENTRYPOINT [ "java", "-jar", "app.jar"]
+# 한국 시간
+RUN apt update && apt install -y tzdata
+RUN ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+RUN echo "Asia/Seoul" > /etc/timezone
+
+# 실행
+ENTRYPOINT [ "java", "-jar", "app.jar" ]

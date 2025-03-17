@@ -100,7 +100,7 @@ public class CommentLikeService {
 
         User receiver = comment.getUser();
         String content = receiver.getNickName() + "님이 회원님의 댓글을 좋아합니다.";
-        String url = "http://localhost:3000/post/detail/" + comment.getPost().getId();
+        String url = "https://www.alexandrelax.store/post/detail/" + comment.getPost().getId();
         if(!alarmRepository.existsByUrlAndContent(url,content)){
             alarmService.createAlarm(receiver, content, url);
         }
