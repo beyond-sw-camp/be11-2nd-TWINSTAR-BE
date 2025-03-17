@@ -1,933 +1,354 @@
-
-<div align="center">
-  <img src="logo.png" alt="Twinstar Logo" width="800px" />
-</div>
-
-<div align="center">
-  <img src="twinstar.gif" alt="Twinstar Animation" width="800px" />
-</div>
-
   <div style="text-align: center;">
   <strong>Team TwinStar</strong>
-
-
 </div>
 
 | <a href="https://github.com/ki-hyun-Jang"><img src="https://avatars.githubusercontent.com/u/185437523?v=4" width="220px" /></a> | <a href="https://github.com/leejaeseok-98"><img src="https://avatars.githubusercontent.com/u/185016962?v=4" width="220px" /></a> | <a href="https://github.com/LetsSeeTerrapin"><img src="https://avatars.githubusercontent.com/u/188145635?v=4" width="220px" /></a> | <a href="https://github.com/SWEETP0T4T0"><img src="https://avatars.githubusercontent.com/u/185882822?v=4" width="220px" /></a> |
 | :---: | :---: | :---: | :---: |
-| 팀장 장기현 | 팀원 이재석 | 팀원 이준서 | 팀원 이태희 |
-
-
-
-<br>
-<br>
-<br>
-
-
-# 프로젝트 개요 
-
-## 1. 프로젝트 주제
-
-**[기본에 집중한 SNS 서비스]** </br></br>
-일상을 기록하고, 다른 사람들과 공유 할 수 있는 소셜 네트워크 서비스
-
-
-
-<br>
-
-## 2. 프로젝트 소개</br>
-</br>
-TwinStar는 점점 헤비해져가는 SNS들과는 다르게 최소한의 기본적인 서비스에 집중한 SNS 입니다.
-사용자 친화적인 인터페이스와 간결한 디자인을 통해, 누구나 쉽게 접근할 수 있는 플랫폼을 제공합니다.
-복잡한 기능 대신 핵심 소셜 기능에 집중하여, 진정한 소통의 가치를 전달하고자 합니다.
-
->
-
-<br>
-
-
-<br>
-
-## 3. 프로젝트 배경 및 필요성
-
-### 3-1. 도파민에 중독된 우리, 디톡스가 필요하다.
-<div align="center">
-  <img src="news.png" width="800px" />
-</div>
-<br>
-출처. 연합뉴스(https://www.yna.co.kr/view/MYH20240216019500641)
-</br>
-<br>
-</br>
-- **쏟아져 나오는 숏폼, 무방비하게 노출되는 우리**
-<br>
-</br>
-<br>
-초기 숏폼의 의도는 바쁜 현대인들이 짧은 시간 내에 정보를 주고받고, 빠르게 소통하며 창의적인 표현을 할 수 있도록 한 데에 있었습니다.</br>
-하지만 현재의 숏폼은 의미가 퇴색되어 자극적이고, 상업적인 컨텐츠들이 양산되고 있습니다.</br>
-또한 SNS는 사용자들을 지속적으로 유입시키고, 붙잡아두기 위해 숏폼을 최대한 노출시키는 방향으로 운영되고 있습니다.
-   
-### 3-2. 전 세계 인구의 60% 이상 SNS 이용 중.. 하루 평균 '150분'
-특히 일명 'MZ세대'의 경우 인구의 89% 이상 이용 중 인 것으로 확인 되었으며 평균적으로 2~3시간 가량 이용하며, 3시간 이상 이용 할 경우 일상생활에 지장을 줄 수 있음을 경고하고 있습니다.
-<br>
-</br>
-출처.정보통신정책연구원(www.kisdi.re.kr/report/view.do?key=m2101113025790&masterId=4333447&arrMasterId=4333447&artId=1674096) (세대별 SNS 이용 현황)
-
-### 3-3. 그러나 하루 1~2시간의 이용량은 삶의 만족도를 향상시킨다.
-너무 과한 사용은 독이 되지만, 적당히 소셜 커뮤니케이션을 활용할 경우 삶의 만족도를 향상시키며 사회성이 증진 될 수 있다는 연구결과에 주목하여 시간이 흐를수록 더욱 헤비해지는 기존의 SNS와는 다르게 라이트하고 기본에 충실한 SNS를 만들게 되었습니다. 
-
-### 3-4. 사용자 중심 서비스 구현
-기술적 트렌드에 휩쓸리지 않고, 사용자들의 실제 소통과 편의성을 최우선으로 고려한 플랫폼 구축에 주력합니다.
-과도한 정보 노출로 인한 부작용을 최소화하고, 건강한 디지털 커뮤니케이션 문화를 형성하기 위한 노력이 담겨 있습니다.
-
-<br>
-
-## 4. 프로젝트 주요 기능
-
-### 4-1. 회원가입
-기본적인 회원가입 기능입니다.
-
-### 4-2. 로그인
-기본적인 로그인 기능입니다.
-
-### 4-3. 회원 정보 수정
-자신의 profile을 꾸밀 수 있습니다.
-
-### 4-4. 게시물 등록 및 조회
-게시물을 작성 할 수 있고 타인의 게시물을 조회 가능합니다.
-
-### 4-5. 알림기능
-자신의 게시물이나 댓글에 이벤트가 발생할 시 실시간으로 알 수 있습니다.
-
-### 4-6. 채팅기능
-다른 사용자와 실시간으로 대화 할 수 있습니다.
-
-### 4-8. 태그
-사용자의 관심사를 게시물에 간략하게 입력 할 수 있습니다.
-
-### 4-9. 검색
-공통된 관심사를 가진 사람들의 게시물을 태그를 검색 함 으로써 찾을 수 있습니다.
-
-### 4-10. 실시간 인기 게시물
-현재 TwinStar 내에서 인기있는 게시물을 홈 화면에서 확인 할 수 있습니다.
-
-### 4-11. 신고기능
-비정상적인 행위를 하는 이용자를 신고할 수 있습니다.
-신고 시 관리자가 확인할 수 있는 신고 목록 페이지에 신고 사항이 등록되고, 관리자 판단 하에 신고를 승인하거나 반려할 수 있습니다.
-신고 승인 시 피신고자의 계정은 정해진 기간 동안 정지될 수 있습니다.
-
-<br>
-
-## 5. 요구사항 명세서
-<details>
-<summary>요구사항 정의서</summary>
-<div markdown="1">
-
-![요구사항 정의서](요구사항정의서.png)
-
-</div>
-</details>
-
-<details>
-<summary>WBS</summary>
-<div markdown="1">
-
-![WBS](WBS.png)
-
-</div>
-</details>
-
-<br>
-
-## 6. UML, 플로우차트
-<details>
-<summary>UML</summary>
-<div markdown="1">
-
-```mermaid
-flowchart TB
-    A("시작") --> B{"AWS 서비스\n연결 연동"}
-    B --> C("인스턴스 생성")
-    B --> D("NLB 연결")
-    
-    %% 인스턴스 생성 하위
-    C --> E("환경변수 세팅")
-    C --> F("DB 연결")
-    C --> G("GitHub Action")
-    C --> H("도메인 연결")
-    C --> I("서버 구동")
-    C --> X("이벤트 처리 연결")
-    
-    %% 이벤트 처리 하위 (SNS 알람 시스템)
-    X --> Y("Redis Pub/Sub")
-    Y --> Z("SSE 알람 전송")
-    
-    %% NLB 연결 하위
-    D --> M("라우팅 연결")
-    D --> S("테스트")
-    
-    M --> N("게시글 기능")
-    M --> O("회원 기능")
-    M --> P("파일 업로드")
-    M --> R("이벤트")
-```
-
-</div>
-</details>
-<details>
-<summary>플로우차트</summary>
-<div markdown="1">
-
-![플로우차트](플로우.png)
-
-</div>
-</details>
-
-<br>
-
-## 7. ERD
-<details>
-<summary>ERD</summary>
-<div markdown="1">
-
-![ERD](erd.png)
-
-</div>
-</details>
-
-</div>
-</details>
-
-<br>
-
-## 8. 화면 설계서
-<details>
-<summary>화면 설계서</summary>
-<div markdown="1">
-
-![화면 설계서 Figma](figma.png)
-
-</div>
-</details>
-
-<br>
-
-
-## 9. 테이블 정의서(DDL 쿼리문 포함)
-<details>
-<summary>테이블 정의서</summary>
-<div markdown="1">
-
-![테이블정의서](테이블정의서.png)
-
-</div>
-</details>
+| **팀장** 장기현 | **팀원** 이재석 | **팀원** 이준서 | **팀원** 이태희 |
 
 <br>
 
 ## 🎮 기술 스택
 
-### BACKEND
-![SPRING](https://img.shields.io/badge/Spring-green?style=for-the-badge&logo=Spring&logoColor=white)
+**Backend**
+<br>
+![SPRING](https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=Spring&logoColor=white)
 ![SPRING BOOT](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=Spring%20Boot&logoColor=white)
 ![SPRING SECURITY](https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white)
-![SPRING DATA JPA](https://img.shields.io/badge/Spring_Data_JPA-13C100?style=for-the-badge&logo=Spring%20Boot&logoColor=white)
+![SPRING DATA JPA](https://img.shields.io/badge/Spring_Data_JPA-6DB33F?style=for-the-badge&logo=Spring%20Boot&logoColor=white)
 ![WEBSOCKET](https://img.shields.io/badge/WebSocket-010101?style=for-the-badge&logo=socketdotio&logoColor=white)
-![STOMP](https://img.shields.io/badge/STOMP-010101?style=for-the-badge&logo=messenger&logoColor=white)
+![STOMP](https://img.shields.io/badge/STOMP-010101?style=for-the-badge)
 ![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white)
 ![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white)
 ![HIBERNATE](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=hibernate&logoColor=white)
 ![DOCKER](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-### FRONTEND
+<br>
+<br>
+<br>
+**Frontend**
+<br>
 ![Vue.js](https://img.shields.io/badge/vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![HTML5](https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1867C0?style=for-the-badge&logo=css3&logoColor=white)
 ![AXIOS](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)
 ![VUE ROUTER](https://img.shields.io/badge/Vue_Router-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
-![VUETIFY](https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=#1867C0)
-###  DB
+![VUETIFY](https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=white)
+<br>
+<br>
+<br>
+**Database**
+<br>
 ![mariadb](https://img.shields.io/badge/mariadb-003545?style=for-the-badge&logo=mariadb&logoColor=white)
 ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
-![amazons3](https://img.shields.io/badge/amazons3-569A31?style=for-the-badge)
 ![RABBITMQ](https://img.shields.io/badge/RabbitMQ-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white)
-
-### 협업도구
+<br>
+<br>
+<br>
+**AWS**
+<br>
+![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)
+![EKS](https://img.shields.io/badge/Amazon%20EKS-FF9900?style=for-the-badge&logo=kubernetes&logoColor=white)
+![S3](https://img.shields.io/badge/Amazon%20S3-569A31?style=for-the-badge&logo=amazon-s3&logoColor=white)
+![RDS](https://img.shields.io/badge/Amazon%20RDS-527FFF?style=for-the-badge&logo=amazon-rds&logoColor=white)
+![EC2](https://img.shields.io/badge/Amazon%20EC2-F38B00?style=for-the-badge&logo=amazon-ec2&logoColor=white)
+![CloudFront](https://img.shields.io/badge/Amazon%20CloudFront-EC7211?style=for-the-badge&logo=cloudflare&logoColor=white)
+![IAM](https://img.shields.io/badge/AWS%20IAM-FF4F8B?style=for-the-badge&logo=amazon-aws&logoColor=white)
+<br>
+<br>
+<br>
+**Ect Tool**
+<br>
 ![Git](https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=Github&logoColor=white)
 ![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
 &nbsp;![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)
 ![POSTMAN](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 <br>
+<br>
+<br>
 
-## 11. 테스트 결과서(테스트 쿼리문 포함)
-
+## ✏️ 기획
 <details>
-<summary>테스트 케이스 정의서</summary>
-<div markdown="1">
-
-![테스트 케이스 정의서](assets/images/테스트케이스.png)
-
-</div>
+<summary>📝 요구사항 명세서</summary>
+  
+| 화면 | 구현 기능 | 작성자 | 설명 |
+|------|-----------|------------|----------------------------------------------------------------------------------------------------|
+| 🟩 **로그인** | 회원가입 | 🔵 **장기현** | 아이디(필수), 비밀번호(필수), 성별(필수),<br> 닉네임 (중복검사, 필수) 입력 |
+| 🟩 **로그인** | 자동 로그인 | 🔵 **장기현** | 이전에 로그인화면에서 자동로그인 팝업 체크 후 로그인할 경우,<br> 이후 자동 로그인이 가능하다. |
+| 🟩 **로그인** | 이메일 중복 체크 | 🟡 **이재석** | 회원가입 시 이메일 중복 체크한다. |
+| 🟦 **프로필** | 개인 프로필 입력 | 🟡 **이재석** | 닉네임(필수, 중복X 변경O),<br> 프로필사진(선택), 성별(필수) 입력 |
+| 🟦 **프로필** | 프로필 사진 변경 가능 | 🟡 **이재석** | 프로필 사진은 jpg, jpeg, png 확장자만<br> 업로드 가능하며, 비울 수 있다. |
+| 🟦 **프로필** | 팔로우/팔로워 | 🟠 **이준서** | 회원이 팔로우한 목록, 팔로워 목록을 볼 수 있으며,<br> 각자 인원수가 나타난다. |
+| 🟦 **프로필** | 프로필 텍스트 변경 | 🟡 **이재석** | 프로필 내용을 변경할 수 있다. |
+| 🟦 **프로필** | 계정 공개 범위 변경 | 🟡 **이재석** | 계정 공개 범위 변경 가능하다. |
+| 🟦 **프로필** | 게시물 노출 | 🟡 **이재석** | 내가 올린 게시물들이 모여져 노출되어 있다. |
+| 🟦 **프로필** | 게시물 로딩 | 🟡 **이재석** | 12개씩 보이며, 스크롤링할 때마다 추가적으로 로드된다. |
+| 🟧 **게시글** | 게시글 작성 | 🔵 **장기현** | 사진, 동영상, 글을 작성할 수 있다.<br> 해시태그 및 맞팔로워 태그가 가능하다. |
+| 🟧 **게시글** | 게시물 게시일 | 🔵 **장기현** | 게시글 작성 시 1일전, 일주일전,<br> 한 달전, 일년전과 같은 방식으로 나타난다. |
+| 🟧 **게시글** | 게시물 범위 | 🔵 **장기현** | 게시자의 기준으로 게시물의 게시물 노출,<br> 댓글달기 범위 설정 가능 |
+| 🟧 **게시글** | 게시글 수정 | 🔵 **장기현** | 게시글을 수정할 수 있으며,<br> 사진과 동영상은 수정 불가. 텍스트와 태그 수정 가능 |
+| 🟧 **게시글** | 게시글 삭제 | 🔵 **장기현** | 게시글을 삭제할 수 있다. |
+| 🟧 **게시글** | 게시글 좋아요 | 🔵 **장기현** | 게시글에 좋아요를 할 수 있으며,<br> 좋아요 숫자 및 누가 눌렀는지 확인 가능 |
+| 🟧 **게시글** | 게시글 더보기 | 🔵 **장기현** | 게시글 내용이 길어지면<br> 더보기 버튼을 통해 전체 내용 확인 가능 |
+| 🟧 **게시글** | 게시글 목록 | 🔵 **장기현** | 팔로우한 사람들의 게시물을<br> 게시일시 기준 오름차순으로 볼 수 있다. |
+| 🟥 **댓글** | 댓글 작성 | 🔵 **장기현** | 게시글에는 댓글을 작성할 수 있으며<br> 맞팔로워는 태그가 가능하다. |
+| 🟥 **댓글** | 댓글 게시일 | 🔵 **장기현** | 댓글 작성 시 1일전, 일주일전,<br> 한 달전, 일년전과 같은 방식으로 나타난다. |
+| 🟥 **댓글** | 댓글 나열 | 🔵 **장기현** | 작성일 기준 오래된 순으로 나열된다. |
+| 🟥 **댓글** | 댓글 수정 | 🔵 **장기현** | 댓글을 수정할 수 있다. |
+| 🟥 **댓글** | 댓글 삭제 | 🔵 **장기현** | 댓글을 삭제할 수 있으며,<br> 삭제된 댓글입니다.로 표시된다. |
+| 🟥 **댓글** | 댓글 좋아요 | 🔵 **장기현** | 댓글에 좋아요를 할 수 있으며,<br> 좋아요 숫자 및 누가 눌렀는지 확인 가능 |
+| 🟪 **채팅** | 메시지 보내기 | 🔵 **장기현** | 유저는 다른 유저에게 메시지를 보낼 수 있다. |
+| 🟪 **채팅** | 메시지 받기 | 🔵 **장기현** | 유저는 다른 유저에게 메시지를 받을 수 있다. |
+| 🟪 **채팅** | 그룹채팅방 | 🔵 **장기현** | 그룹 채팅방을 개설하여<br> 여러 유저와 메시지를 주고받을 수 있다. |
+| 🟪 **채팅** | 메시지 시각 | 🔵 **장기현** | 보내거나 받은 메시지의 시간을 알 수 있다. |
+| 🟨 **이슈** | 팔로우 알림 | 🔵 **장기현** | 누군가 팔로우를 할 경우 알림이 온다. |
+| 🟨 **이슈** | 댓글 작성 알림 | 🔵 **장기현** | 내 게시글에 댓글이 작성될 경우 알림이 온다. |
+| 🟨 **이슈** | 대댓글 작성 알림 | 🔵 **장기현** | 내 댓글에 대댓글이 작성될 경우 알림이 온다. |
+| 🟨 **이슈** | 좋아요 알림 | 🔵 **장기현** | 내 댓글 또는 게시글에 좋아요를 누르면 알림이 온다. |
+| 🟦 **관리자** | 관리자 유저검색 | 🟡 **이재석** | 닉네임으로 유저 검색 가능 |
+| 🟦 **관리자** | 유저 상세 조회 | 🟡 **이재석** | 유저의 정지일, 계정 삭제 여부 등의 상세 정보를 조회 |
+| 🟦 **관리자** | 관리자 권한 부여 및 회수 | 🟡 **이재석** | 관리자가 유저에게<br> 관리자 권한 부여 및 회수 가능 |
+| 🟦 **관리자** | 관리자 계정 정지 | 🟡 **이재석** | 계정 정지가 가능하며 정지 기간을 설정할 수 있음 |
+| 🟩 **검색** | 닉네임 검색 | 🟡 **이재석** | 닉네임을 입력하면<br> 해당 유저와 비슷하거나 일치하는 유저를 검색 가능 |
+| 🏿 **기타** | 유저 간 차단 | 🟡 **이재석** | 유저 A가 유저 B를 차단하면<br> 해당 게시물 및 댓글, 프로필을 볼 수 없음 |
+| 🏿 **기타** | 팔로우 요청 | 🟠 **이준서** | 유저 간 팔로우 요청이 가능하다. |
+| 🏿 **기타** | 회원탈퇴 | 🟡 **이재석** | 회원탈퇴 기능 |
 </details>
 
-### 사용자
-
 <details>
-<summary>사용자</summary>
-<div markdown="1">
+<summary>🗓️ WBS</summary>
+<br>
 
-<details>
-<summary>회원관리</summary>
-<div markdown="1">
-<details>
-<summary>회원가입(아이디 중복 확인)</summary>
-<div markdown="1">
+![WBS](https://github.com/user-attachments/assets/5508a623-ae54-42e9-b3d2-5313bfaf2a34)
 
-![회원가입(아이디 중복 확인)](assets/images/회원가입.png)
-
-</div>
 </details>
 
-###
-
 <details>
-<summary>회원정보조회_아이디</summary>
-<div markdown="1">
+<summary>📌 ERD</summary>
+<br>
 
-![회원정보조회_아이디](assets/images/회원정보조회_아이디.png)
+![ERD](erd.png)
 
-</div>
 </details>
 
-###
+---
 
+## ⚙️ 시스템 아키텍처
 
+<br>
+
+## 🖥️ UX/UX 단위테스트
+### 👤유저 관련 기능
 <details>
-<summary>회원정보조회_성별</summary>
-<div markdown="1">
+<summary>회원가입</summary>
 
-![회원정보조회_성별](assets/images/회원정보조회_성별.png)
+![회원가입](https://github.com/user-attachments/assets/eae27735-e877-428a-a33e-24897951d2cf)
 
-</div>
+- 이메일 형식 및 중복 이메일 검증
+- 비밀번호 검증 및 비밀번호 재확인
+- 닉네임 중복 검증
+
 </details>
-
-###
-
-
-<details>
-<summary>관리자 등록 변경</summary>
-<div markdown="1">
-
-![관리자등록변경](assets/images/관리자_등록_변경.png)
-
-</div>
-</details>
-
-
-###
-
-
-
-<details>
-<summary>회원 정보 변경</summary>
-<div markdown="1">
-
-![회원정보변경](assets/images/회원_정보_변경_비번.png)
-
-</div>
-</details>
-
-###
-
-
-
-<details>
-<summary>회원 탈퇴</summary>
-<div markdown="1">
-
-![회원탈퇴](assets/images/회원탈퇴.png)
-
-</div>
-</details>
-
-
-###
-
-
-<details>
-<summary>회원 공개 정보 변경</summary>
-<div markdown="1">
-
-![회원공개정보변경](assets/images/회원공개정보변경.png)
-
-</div>
-</details>
-
-</div>
-</details>
-
-
-
-
-
 
 <details>
 <summary>로그인</summary>
-<div markdown="1">
 
+![로그인](https://github.com/user-attachments/assets/037eebea-78b8-4f68-bc5f-b5035dc4250a)
 
-<details>
-<summary>아이디 정보 조회(디비에 있는 경우)</summary>
-<div markdown="1">
-
-![아이디정보조회_있는경우](assets/images/아이디정보조회_있는경우.png)
-
-</div>
 </details>
 
-###
-
-
-
 <details>
-<summary>아이디 정보 조회(디비에 없는 경우)</summary>
-<div markdown="1">
+<summary>유저 검색</summary>
 
-![아이디정보조회_없는경우](assets/images/아이디정보조회_없는경우.png)
+![유저검색](https://github.com/user-attachments/assets/b7be1a00-d3fe-4083-8b37-c214f52ff927)
 
-</div>
+- 유저검색 후 프로필 이동
+
 </details>
 
-
-###
-
-
 <details>
-<summary>비밀번호 교체 주기 확인</summary>
-<div markdown="1">
+<summary>프로필 편집</summary>
 
-![비밀번호교체주기](assets/images/비밀번호교체주기.png)
+![프로필편집](https://github.com/user-attachments/assets/33dec13d-7d6e-48a7-a41a-cdb0a8cc39c9)
 
-</div>
+- 프로필사진 변경
+- 프로필 텍스트 변경
+
 </details>
 
-</div>
+<details>
+<summary>팔로워 & 팔로잉 리스트</summary>
+
+![팔로워,팔로잉 리스트](https://github.com/user-attachments/assets/03145e1a-ca3f-4d1f-b398-a46511ead980)
+
 </details>
-
-</div>
-</details>
-
-
-### 게시물
-
-<details>
-<summary>게시물</summary>
-<div markdown="1">
-
-<details>
-<summary>게시물 등록</summary>
-<div markdown="1">
-
-![게시글 등록](assets/images/게시글등록.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>게시물 임시 저장</summary>
-<div markdown="1">
-
-![게시글 임시저장](assets/images/게시글임시저장.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>게시물 수정</summary>
-<div markdown="1">
-
-![게시글 수정](assets/images/게시글수정.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>게시물 삭제</summary>
-<div markdown="1">
-
-![게시글 삭제](assets/images/게시글삭제.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>게시물 조회-인기게시물</summary>
-<div markdown="1">
-
-![게시글 조회-작성자 기준](assets/images/게시글조회(작성일자기준).png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>게시글 조회-태그</summary>
-<div markdown="1">
-
-![게시글 조회-조회수 높은순](assets/images/게시글조회(조회수높은순).png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>게시글 상세조회</summary>
-<div markdown="1">
-
-![게시글 상세조회](assets/images/게시글상세조회.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>좋아요 등록</summary>
-<div markdown="1">
-
-![좋아요 등록](assets/images/별점등록.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>좋아요 삭제</summary>
-<div markdown="1">
-
-![좋아요 삭제](assets/images/별점삭제.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>댓글 등록</summary>
-<div markdown="1">
-
-![댓글 등록](assets/images/댓글등록.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>댓글 수정</summary>
-<div markdown="1">
-
-![댓글 수정](assets/images/댓글수정.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>댓글 삭제</summary>
-<div markdown="1">
-
-![댓글 삭제](assets/images/댓글삭제.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>댓글 조회</summary>
-<div markdown="1">
-
-![댓글 조회](assets/images/댓글조회.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>댓글 좋아요 등록</summary>
-<div markdown="1">
-
-![댓글 좋아요 등록](assets/images/댓글좋아요등록.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>댓글 좋아요 삭제</summary>
-<div markdown="1">
-
-![댓글 좋아요 삭제](assets/images/댓글좋아요삭제.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>대댓글 등록</summary>
-<div markdown="1">
-
-![댓글 등록](assets/images/댓글등록.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>대댓글 좋아요 등록</summary>
-<div markdown="1">
-
-![대댓글 좋아요 등록](assets/images/댓글등록.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>대댓글 좋아요 취소</summary>
-<div markdown="1">
-
-![대댓글 좋아요 취소](assets/images/댓글등록.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>게시글 작성자 프로필 조회</summary>
-<div markdown="1">
-
-![게시글 작성자 프로필 조회](assets/images/게시글작성자프로필조회.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>댓글 작성자 프로필 조회</summary>
-<div markdown="1">
-
-![댓글 작성자 프로필 조회](assets/images/댓글작성자프로필조회.png)
-
-</div>
-</details>
-
-</div>
-</details>
-
-
-### 신고
-
-<details>
-<summary>신고</summary>
-<div markdown="1">
-
-
-<details>
-<summary>유저 신고</summary>
-<div markdown="1">
-
-![유저 신고](assets/images/여행후기신고.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>유저 신고 승인</summary>
-<div markdown="1">
-
-![유저 신고 승인](assets/images/여행후기신고승인.png)
-
-</div>
-</details>
-
-
-###
-
-<details>
-<summary>유저 신고 반려</summary>
-<div markdown="1">
-
-![유저 신고 반려](assets/images/여행후기신고반려.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>게시물 신고 </summary>
-<div markdown="1">
-
-![게시물 신고](assets/images/여행후기댓글신고.png)
-
-</div>
-</details>
-
-
-###
-
-<details>
-<summary>게시물 신고 승인 </summary>
-<div markdown="1">
-
-![게시물 신고 승인](assets/images/여행후기댓글신고승인.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>게시물 신고 반려 </summary>
-<div markdown="1">
-
-![게시물 신고 반려](assets/images/여행후기댓글신고반려.png)
-
-</div>
-</details>
-
-
-###
-
-<details>
-<summary>댓글 신고 </summary>
-<div markdown="1">
-
-![댓글 신고](assets/images/여행코스신고.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>댓글 신고 승인 </summary>
-<div markdown="1">
-
-![댓글 신고 승인](assets/images/코스신고승인.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>댓글 신고 반려 </summary>
-<div markdown="1">
-
-![댓글 신고 반려](assets/images/코스신고반려.png)
-
-</div>
-</details>
-
-
-###
-
-<details>
-<summary>신고 내역 조회 </summary>
-<div markdown="1">
-
-![신고 내역 조회](assets/images/신고내역조회.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>신고 내역 상세 조회-유저</summary>
-<div markdown="1">
-
-![신고 내역 상세 조회-유저](assets/images/신고내역상세조회_후기.png)
-
-</div>
-</details>
-
-
-###
-
-<details>
-<summary>신고 내역 상세 조회-게시물</summary>
-<div markdown="1">
-
-![신고 내역 상세 조회-게시물](assets/images/신고내역상세조회_댓글.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>신고 내역 상세 조회-댓글</summary>
-<div markdown="1">
-
-![신고 내역 상세 조회-댓글](assets/images/신고내역상세조회_코스.png)
-
-</div>
-</details>
-
-
-###
-
-<details>
-<summary>정지 이력 기록</summary>
-<div markdown="1">
-
-![정지 이력 기록](assets/images/정지이력기록.png)
-
-</div>
-</details>
-
-
-
-</div>
-</details>
-
-### 알림
-
-
-<details>
-<summary>알림</summary>
-<div markdown="1">
-
-<details>
-<summary>알림 템플릿 등록</summary>
-<div markdown="1">
-
-![알림 템플릿 등록](assets/images/alarm_insert.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>알림 템플릿 수정</summary>
-<div markdown="1">
-
-![알림 템플릿 수정](assets/images/alarm_update.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>알림 템플릿 삭제</summary>
-<div markdown="1">
-
-![알림 템플릿 삭제](assets/images/alarm_delete.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>알림 템플릿 조회</summary>
-<div markdown="1">
-
-![알림 템플릿 조회](assets/images/alarm_select.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>알림 템플릿 상세조회</summary>
-<div markdown="1">
-
-![알림 템플릿 상세조회](assets/images/alarm_detail_select.png)
-
-</div>
-</details>
-
-###
-
-<details>
-<summary>댓글 작성 알림 발송</summary>
-<div markdown="1">
-
-![댓글 작성 알림 발송](assets/images/리뷰%20댓글%20작성%20시%20리뷰%20작성자에게%20알림%20발송.png)
-
-</div>
-</details> 
-
-###
-
-<details>
-<summary>좋아요 알림 발송</summary>
-<div markdown="1">
-
-![좋아요 알림 발송](assets/images/리뷰%20별점%20시%20리뷰%20작성자에게%20알림%20발송.png)
-
-</div>
-</details> 
-
-###
-
-<details>
-<summary>신고 승인 시 알림발송</summary>
-<div markdown="1">
-
-![신고 승인 시 알림발송](assets/images/신고%20상태%20accept%20시%20신고자,%20신고당한%20자%20모두에게%20알림발송.png)
-
-</div>
-</details> 
-
-</div>
-</details>
-
 <br>
 
-## 12. 트러블슈팅
-||내용|
-|-|-|
-|1|쿼리문 작성 과정에서 트리거를 통한 로직 구현에 있어 자동 마감를 구현하고자 하였으나 트리거의 Update문과 DB 접근과 참가자를 수락하기 위한 Insert의 DB 접근이 동시에 일어나는 문제를 해결하지 못해 트리거를 삭제하게 되었습니다. 이부분의 해결을 위해서 충돌을 피하기 위해 트리거 문을 수정하는 작업을 진행했어야 됐던 것 같습니다.|
-|2|각자의 PC에서 작업을 하다가 효율성을 위해서 같은 DB서버를 사용하기로 하였을 때, 간단하게 생각했는데 Replication 적용을 하면서 많은 문제를 만나게 되었습니다. Replication을 적용하면 단순히 복제가 되는 것으로 생각을 했는데 Master의 변경 사항을 Slave에 그대로 Slave에 전달하는 구조를 이해하고 나서 해결의 실마리가 보였던 것 같습니다. 이후에 기존에 운영중이던 DB 중 불필요한 서비스를 내리고 추가로 나머지 DB는 Master를 Slave에 복제한 후에 Replication을 적용하여 해결하였습니다.|
-|3|프로젝트에서 알림 발송 쪽을 구현하면서 템플릿의 내용에 값들을 변경하여 알림을 발송하고 싶었습니다. 하지만 백엔드 측으로 구현가능한 내용을 데이터베이스로 처리하려다 보니 어려움을 겪었고 트리거와 REPLACE 함수를 이용해 만들어보았는데 그렇게 쿼리를 작성 하다보니 테이블 구조 쪽에 문제가 생겨 정규화가 전혀 진행되지 않은 테이블이 아니고선 구현이 되지 않는 상황을 맞닥뜨렸습니다. 이런 테이블 구조로는 쿼리를 복잡하게 짜서 칭찬을 받기보다 테이블 구조가 문제가 있다는 말을 듣게될 것 같아 강사님께도 질문드려보고 하였습니다. 하지만 데이터베이스 챕터를 한다고해서 꼭 서비스 측면을 데이터베이스로 구현할 필요가 없다는 것을 알아차리고 팀원들과 함께 고민한 끝에 뜻을 맞춰 하드코딩으로 알림 발송 트리거를 만들게되었습니다.|
+### 📝 게시물 기능
+<details>
+<summary>개인 프로필에서 상세페이지 조회</summary>
 
+![프로필상세게시물](https://github.com/user-attachments/assets/ff40395f-e44b-418f-bc59-bf796ec79454)
+
+- 개인 프로필 게시물 댓글 및 좋아요 수 보기
+- 게시물 상세 조회
+
+</details>
+
+<details>
+<summary>게시물 작성</summary>
+
+![게시물작성](https://github.com/user-attachments/assets/95828249-189a-449b-a36c-3d47e973d67d)
+
+- 파일 드래그앤드랍 가능
+- 해시태그 입력
+- 계정 공개범위 입력
+
+</details>
+
+<details>
+<summary>게시물 수정 및 삭제</summary>
+
+![게시물 수정 및 삭제](https://github.com/user-attachments/assets/c9a2930e-b62d-49cf-b0bf-734d917de771)
+
+</details>
+
+<details>
+<summary>게시물 좋아요</summary>
+
+![게시물 좋아요](https://github.com/user-attachments/assets/9aefbe68-bde7-4b0c-92ae-56f020d53693)
+
+- 게시물 좋아요 기능
+- 게시물 좋아요 리스트
+
+</details>
+
+<details>
+<summary>게시물 댓글 및 댓글 좋아요</summary>
+
+![댓글 및 댓글좋아요](https://github.com/user-attachments/assets/8c24552d-e3d0-46bc-9442-f43d8ba32e43)
+
+- 댓글 작성
+- 댓글 좋아요
+- 댓글 좋아요 리스트
+
+</details>
+
+<details>
+<summary>대댓글 작성 및 대댓글 좋아요, 답글 토글</summary>
+
+![대댓글 작성 및 대댓글 좋아요, 답글 토글](https://github.com/user-attachments/assets/abc6d2d6-e4b1-40ad-835e-948727229e60)
+
+</details>
+
+<details>
+<summary>대댓글 삭제</summary>
+
+![대댓글 삭제](https://github.com/user-attachments/assets/4407d3c8-b591-4688-af0e-11035b714f32)
+
+</details>
+
+<details>
+<summary>게시물 상단 팔로우 버튼</summary>
+
+![게시물 팔로우](https://github.com/user-attachments/assets/70e0e8c1-5e99-46c0-836a-602623a234d4)
+
+</details>
+
+<details>
+<summary>무한 스크롤링</summary>
+
+무한 스크롤링을 통해 사용자 경험을 개선하고, 페이지네이션 없이 연속적으로 콘텐츠를 로드할 수 있습니다.
+
+</details>
 <br>
 
-## 13. 팀 회고
+### 🔔 알림 기능
+<details>
+<summary>알림 텍스트를 클릭하면 해당 알림 내용에 맞는 페이지로 이동</summary>
+
+![알림 이동](https://github.com/user-attachments/assets/eee1ad36-a9c3-4f85-a2b8-3584b30c88e3)
+
+- 채팅
+- 게시물 좋아요, 댓글 등
+- 팔로우
+
+</details>
+
+<details>
+<summary>구글 알림팝업</summary>
+
+![알림창](https://github.com/user-attachments/assets/9ec0b076-f777-4d13-9070-96835a64d0c9)
+
+</details>
+<br>
+
+### 🗨️ 채팅
+<details>
+<summary>실시간 채팅</summary>
+
+![실시간 채팅](https://github.com/user-attachments/assets/a5a6a18f-9cf8-4d70-9ea6-29821df8abda)
+
+</details>
+
+<details>
+<summary>그룹채팅</summary>
+
+![그룹채팅](https://github.com/user-attachments/assets/58e0aa7f-a6c0-41cc-bc93-fcc3d076996c)
+
+</details>
+
+<details>
+<summary>방제목 변경</summary>
+
+![방제목변경](https://github.com/user-attachments/assets/1cdae7f4-a0af-4c7c-a3dd-6df6294abd69)
+
+</details>
+
+<details>
+<summary>채팅방 참여자 유저 목록</summary>
+
+![채팅방 참여자 유저 목록](https://github.com/user-attachments/assets/c4190bc6-ca47-4cf8-99c4-4d79fa6376ef)
+
+</details>
+
+<details>
+<summary>채팅방 삭제</summary>
+
+![채팅방삭제](https://github.com/user-attachments/assets/c49e2f5f-c93b-42fb-8e07-c21120fe9314)
+
+</details>
+<br>
+
+### 🔧관리자
+<details>
+<summary>유저 관리 - 닉네임 검색</summary>
+
+![닉네임검색](https://github.com/user-attachments/assets/5defbcf0-f5fe-47fa-99b0-6ef663111811)
+
+</details>
+
+<details>
+<summary>유저 관리 - 관리자 권한</summary>
+
+설명이 필요하면 여기에 추가하세요.
+
+</details>
+
+<details>
+<summary>계정 정지</summary>
+
+![계정정지](https://github.com/user-attachments/assets/485813ad-1c14-4ef2-b37e-5c37bbc2e5cb)
+
+</details>
+<br>
+
+## 💬 팀 회고 - 기술적 경험 정리
 |팀원|회고 내용|
 |:---:|-|
-|장기현||
-|이재석||
-|이준서||
-|이태희||
+|장기현| WebSocket(STOMP)를 사용하여 실시간 1:1 채팅 및 그룹 채팅을 구현했지만, 다중 서버 환경에서는 WebSocket 세션이 서버 간 공유되지 않기 때문에 Redis Pub/Sub을 이용한 확장이 필요했습니다. 이를 적용하는 과정에서 세션 정보 동기화 문제와 메시지 유실 방지 방안을 고민해야 했지만, 결국 Redis를 활용한 메시지 브로드캐스팅을 통해 다중 서버에서도 안정적으로 동작하도록 개선할 수 있었습니다.<br><br> 또한, 좋아요 기능에서는 Redis를 활용하여 캐싱 및 비동기 처리 방식으로 성능을 최적화했습니다. 처음에는 좋아요 요청이 직접 DB에 반영되었으나, 트래픽 증가로 인해 부하가 발생할 가능성이 있었는데요, 이를 해결하기 위해 좋아요 데이터를 Redis에 먼저 저장하고, 이후에 DB에 반영하는 방식을 적용하여 실시간 반영이 가능하도록 개선했습니다.<br><br> 알림 서비스의 경우, 처음에는 WebSocket을 사용할 계획이었으나, 단방향 메시지 전송이 주를 이루는 알림 시스템에는 SSE(Server-Sent Events)가 더 적합하다고 판단하여, SSE를 활용하면 WebSocket처럼 불필요한 연결 유지 비용 없이 클라이언트가 서버로부터 실시간 이벤트를 받을 수 있기 때문에 서버 리소스를 절약하면서도 안정적으로 알림을 전송할 수 있도록 구현했습니다.<br><br> 이번 경험을 통해 WebSocket과 SSE의 적절한 활용 방식, Redis를 이용한 성능 최적화 및 확장성 확보, 비동기 이벤트 처리 방식의 중요성을 배울 수 있었습니다. 다만, WebSocket을 다중 서버 환경에서 확장하는 과정이 쉽지 않았고, 다음번에는 WebSocket과 SSE를 혼합하여 더 유연한 실시간 시스템을 구축하고, Redis 사용 시 데이터 정리 전략을 명확히 수립하는 것이 필요하다고 느꼈습니다.<br><br> 팀원분들 다들 고생하셨습니다 :) |
+|이재석|  |
+|이준서|  |
+|이태희|  |
