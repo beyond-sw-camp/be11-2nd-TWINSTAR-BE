@@ -136,7 +136,7 @@
 ---
 
 ## ⚙️ 시스템 아키텍처
-![트윈스타 시스템 아키텍처 drawio](https://github.com/user-attachments/assets/c9176203-dcab-42bf-996c-f6a2c1ee7c48)
+![트윈스타 시스템 아키텍처 drawio](https://github.com/user-attachments/assets/ff8c49bb-0c3d-4012-a421-e0d795183f1e)
 
 <br>
 
